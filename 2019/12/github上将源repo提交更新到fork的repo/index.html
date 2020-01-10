@@ -154,7 +154,7 @@
 <meta property="og:site_name" content="Luffyao&#39;s Blog">
 <meta property="og:description" content="前言在github上 一般我们都是将别人的repo fork到自己的github repo。 然后阅读，修改 甚至是contribution。所以同步源repo的commit 尤为重要。因为你要始终保持与源repo同步。下面将描述下怎么去同步更新的步骤。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-01-08T03:01:13.801Z">
+<meta property="og:updated_time" content="2020-01-08T03:03:06.325Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="github上将源repo提交更新到fork的repo">
 <meta name="twitter:description" content="前言在github上 一般我们都是将别人的repo fork到自己的github repo。 然后阅读，修改 甚至是contribution。所以同步源repo的commit 尤为重要。因为你要始终保持与源repo同步。下面将描述下怎么去同步更新的步骤。">
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-01-08 11:01:13" itemprop="dateModified" datetime="2020-01-08T11:01:13+08:00">2020-01-08</time>
+                <time title="修改时间：2020-01-08 11:03:06" itemprop="dateModified" datetime="2020-01-08T11:03:06+08:00">2020-01-08</time>
               
             
           </span>
@@ -572,8 +572,7 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在github上 一般我们都是将别人的repo fork到自己的github repo。 然后阅读，修改 甚至是contribution。所以同步源repo的commit 尤为重要。因为你要始终保持与源repo同步。下面将描述下怎么去同步更新的步骤。<br><a id="more"></a></p>
 <h2 id="将源repo-https-link-加到自己本地-repo-的remote-upstream中。添加之后，如果你想查看是否加入成功。可以使用git-remote-v"><a href="#将源repo-https-link-加到自己本地-repo-的remote-upstream中。添加之后，如果你想查看是否加入成功。可以使用git-remote-v" class="headerlink" title="将源repo https link 加到自己本地 repo 的remote upstream中。添加之后，如果你想查看是否加入成功。可以使用git remote -v"></a>将源repo https link 加到自己本地 repo 的remote upstream中。添加之后，如果你想查看是否加入成功。可以使用git remote -v</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream https://github.com/ORIGINAL_OWENER/ORIGINAL_REPO.git</span><br></pre></td></tr></table></figure>
 <h2 id="fetch源repo的最新提交到本地，然后merge到自己的repo"><a href="#fetch源repo的最新提交到本地，然后merge到自己的repo" class="headerlink" title="fetch源repo的最新提交到本地，然后merge到自己的repo"></a>fetch源repo的最新提交到本地，然后merge到自己的repo</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch upstream</span><br><span class="line">git checkout master   #if you current branch isn't master</span><br><span class="line">git merge upstream/master</span><br></pre></td></tr></table></figure>
-<p>或者用下面这条命令代替上面三条命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">upstream代表远端源repo </span></span><br><span class="line"><span class="meta">#</span><span class="bash">master 代表你forked repo的master 分支 </span></span><br><span class="line">git pull upstream master</span><br></pre></td></tr></table></figure>
+<p>或者用下面这条命令代替上面三条命令<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">upstream代表远端源repo </span></span><br><span class="line"><span class="meta">#</span><span class="bash">master 代表你forked repo的master 分支 </span></span><br><span class="line">git pull upstream master</span><br></pre></td></tr></table></figure></p>
 <h2 id="将自己repo的合并后的，提交到github上。"><a href="#将自己repo的合并后的，提交到github上。" class="headerlink" title="将自己repo的合并后的，提交到github上。"></a>将自己repo的合并后的，提交到github上。</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
 <p><strong><em>Note:</em></strong> 如何强制覆盖github上的commit, <strong><em>此命令慎用</em></strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在合作开发的时候，还是时不时的rebase下是最好的，避免不必要的冲突麻烦。</p>
@@ -760,7 +759,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -789,7 +788,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -830,7 +831,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -962,7 +967,7 @@
       <i class="fa fa-area-chart"> 站点字数合计:</i>
     </span>
     
-    <span title="站点总字数">15k</span>
+    <span title="站点总字数">25k</span>
   
   
 </div>
