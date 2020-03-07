@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>如何在pod中做golang的profiling</title>
+    <url>/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>相比于C++在pod中做profiling， 那么对于云原生的golang来说就太方便了。下面我将讲述下我做golang profiling的具体过程和步骤。由于我们是基于Restful 接口的系统设计，所以以下profiling 都是基于http/pprof做的分析。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h3 id="1-注册HTTP的handlers到Server"><a href="#1-注册HTTP的handlers到Server" class="headerlink" title="1.注册HTTP的handlers到Server."></a>1.注册HTTP的handlers到Server.</h3><p>例如:<br><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// This is a function creating a HTTP2 server. and only registered profile and heap path,</span></span><br><span class="line"><span class="comment">// for others profiling path, you can add it according to yourself.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewServer</span><span class="params">(port <span class="keyword">string</span>, enableProfiling <span class="keyword">uint</span>)</span> *<span class="title">http</span>.<span class="title">Server</span></span> &#123;</span><br><span class="line">	handler := yourhandler</span><br><span class="line">	mux := http.NewServeMux()</span><br><span class="line"></span><br><span class="line">	mux.Handle(<span class="string">"/"</span>, handler)</span><br><span class="line">    <span class="comment">// here add a flag for eliminating disturbtion of between these functions.</span></span><br><span class="line">	<span class="keyword">if</span> enableProfiling != DISABLE_PROFILING &#123;</span><br><span class="line">		<span class="keyword">if</span> enableProfiling == ENABLE_PROFILE &#123;</span><br><span class="line">			mux.HandleFunc(<span class="string">"/debug/pprof/profile"</span>, pprof.Profile)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> enableProfiling == ENABLE_HEAP &#123;</span><br><span class="line">			mux.Handle(<span class="string">"/debug/pprof/heap"</span>, pprof.Handler(<span class="string">"heap"</span>))</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	h2s := &amp;http2.Server&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;http.Server&#123;</span><br><span class="line">		Addr:    port,</span><br><span class="line">		Handler: h2c.NewHandler(mux, h2s),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// then in the main function, you can invoke it.</span></span><br><span class="line">s := httpserver.NewServer(fmt.Sprintf(<span class="string">":%d"</span>, *listeningPort), *enableProfiling)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> err = s.ListenAndServe(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="comment">// Print Err log</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-部署code到pod中运行"><a href="#2-部署code到pod中运行" class="headerlink" title="2.部署code到pod中运行"></a>2.部署code到pod中运行</h3><p>创建image，更新到deployment里面。这里根据自己的环境进行部署。</p>
+<h3 id="3-暴露pod中的server的端口"><a href="#3-暴露pod中的server的端口" class="headerlink" title="3.暴露pod中的server的端口"></a>3.暴露pod中的server的端口</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">// you can use kubectl port-forward --help to view detailed useage.</span><br><span class="line"></span><br><span class="line">kubectl port-forward pods/yourpod port:port</span><br></pre></td></tr></table></figure>
+<h3 id="4-load测试"><a href="#4-load测试" class="headerlink" title="4.load测试"></a>4.load测试</h3><p>这里我用的是h2load.<br><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">h2load -D <span class="number">2</span> -c <span class="number">10</span> -m <span class="number">10</span> -H<span class="string">':method:POST'</span> -H<span class="string">'content-type:application/json'</span> your_restful_uri -d data.txt</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-Profiling-分析"><a href="#5-Profiling-分析" class="headerlink" title="5.Profiling 分析"></a>5.Profiling 分析</h3><p>你需要用pprof命令采集sample,然后对采集到的信息进行分析。</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">// more detailed <span class="keyword">command</span> usage you can refer <span class="keyword">to</span> http<span class="variable">s:</span>//golang.org/pkg/net/http/pprof/</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> tool pprof http://localhos<span class="variable">t:9001</span>/<span class="keyword">debug</span>/pprof/<span class="keyword">profile</span> </span><br><span class="line"><span class="keyword">go</span> tool pprof -alloc_objects http://localhos<span class="variable">t:9001</span>/<span class="keyword">debug</span>/pprof/heap</span><br><span class="line"><span class="keyword">go</span> tool pprof  http://localhos<span class="variable">t:9001</span>/<span class="keyword">debug</span>/pprof/heap</span><br></pre></td></tr></table></figure>
+<p>如何进行分析，可以参考<a href="https://golang.org/doc/diagnostics.html" target="_blank" rel="noopener">diagnostics</a>,如果你不能打开官方文档，可以参考<a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/" target="_blank" rel="noopener">performance optimization</a>,里面讲述了详细的profiling的使用。</p>
+<h4 id="使用火焰图分析"><a href="#使用火焰图分析" class="headerlink" title="使用火焰图分析"></a>使用火焰图分析</h4><ol>
+<li><p>安装go-torch</p>
+ <figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">go</span> <span class="built_in">get</span> github.<span class="keyword">com</span>/uber/<span class="keyword">go</span>-torch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 FlameGraph</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$WORK_PATH</span> &amp;&amp; git <span class="built_in">clone</span> https://github.com/brendangregg/FlameGraph.git</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$WORK_PATH</span>/FlameGraph</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装graphviz</p>
+ <figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">sudo apt-get install graphviz(<span class="name">ubuntu</span>)</span><br><span class="line">or </span><br><span class="line">yum install graphviz(<span class="name">CentOS</span>, Redhat)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用</p>
+ <figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">go</span>-torch -<span class="keyword">u</span> http://localhos<span class="variable">t:8888</span>/<span class="keyword">debug</span>/pprof/ -<span class="keyword">p</span> &gt; <span class="keyword">profile</span>-local.svg</span><br></pre></td></tr></table></figure>
+<p> 然后浏览器打开生成的文件profile-local.svg.</p>
+</li>
+</ol>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="https://golang.org/pkg/net/http/pprof/" target="_blank" rel="noopener">pprof</a></li>
+<li><a href="https://golang.org/doc/diagnostics.html" target="_blank" rel="noopener">diagnostics</a></li>
+<li><a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/" target="_blank" rel="noopener">performance optimization</a></li>
+<li><a href="https://www.jianshu.com/p/1e784c387f45" target="_blank" rel="noopener">install FlameGraph</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>MicroService</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>Profling</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>istio配置mtls</title>
     <url>/2020/01/istio%E9%85%8D%E7%BD%AEmtls/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="ISTIO-MTLS-SUMMARY"><a href="#ISTIO-MTLS-SUMMARY" class="headerlink" title="ISTIO MTLS SUMMARY"></a>ISTIO MTLS SUMMARY</h1><p><strong><em>THIS IS BASED ON ISTIO OFFICIAL PACKAGE ISTIO-1.3.5(FOLLOWING ALL OF ISTIO DOCS MUST OVER THE WALL,YOU CAN REFERENCE THE LATEST VERDION DOCS), BECAUSE OUR ENV VERSION IS BASED ON THIS VERSION.</em></strong></p>
