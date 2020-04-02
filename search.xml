@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>using operator-sdk to generate K8s CRD</title>
+    <url>/2020/04/using-operator-sdk-to-generate-K8s-CRD/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="What-is-CRD"><a href="#What-is-CRD" class="headerlink" title="What is CRD"></a>What is CRD</h2><p>The CustomResourceDefinition API resource allows you to define custom resources. Defining a CRD object creates a new custom resource with a name and schema that you specify. The Kubernetes API serves and handles the storage of your custom resource. The name of a CRD object must be a valid DNS subdomain name. more detailed info please refer to <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions" target="_blank" rel="noopener">CRD definition</a></p>
+<h2 id="What-is-operator-sdk"><a href="#What-is-operator-sdk" class="headerlink" title="What is operator-sdk"></a>What is operator-sdk</h2><p>The SDK provides the tools to build, test and package Operators. Initially, the SDK facilitates the marriage of an application’s business logic (for example, how to scale, upgrade, or backup) with the Kubernetes API to execute those operations. Over time, the SDK can allow engineers to make applications smarter and have the user experience of cloud services. Leading practices and code patterns that are shared across Operators are included in the SDK to help prevent reinventing the wheel.</p>
+<h2 id="operator-sdk-user-guide"><a href="#operator-sdk-user-guide" class="headerlink" title="operator-sdk user guide"></a>operator-sdk user guide</h2><p>This is official user guide. please refer to <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md" target="_blank" rel="noopener">user guide</a></p>
+<h2 id="operator-sdk-installation-guide"><a href="#operator-sdk-installation-guide" class="headerlink" title="operator-sdk installation guide"></a>operator-sdk installation guide</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">1. Download the <span class="keyword">release</span> <span class="built_in">binary</span></span><br><span class="line"><span class="keyword">Install</span> CLI <span class="keyword">in</span> Linux env.</span><br><span class="line"><span class="comment"># Set the release version variable</span></span><br><span class="line">$ RELEASE_VERSION=v0<span class="number">.16</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># Linux</span></span><br><span class="line">$ curl -LO https://github.com/<span class="keyword">operator</span>-framework/<span class="keyword">operator</span>-sdk/releases/download/$&#123;RELEASE_VERSION&#125;/<span class="keyword">operator</span>-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> <span class="keyword">Verify</span> the downloaded <span class="keyword">release</span> <span class="built_in">binary</span></span><br><span class="line"><span class="comment"># Linux</span></span><br><span class="line">$ curl -LO https://github.com/<span class="keyword">operator</span>-framework/<span class="keyword">operator</span>-sdk/releases/download/$&#123;RELEASE_VERSION&#125;/<span class="keyword">operator</span>-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu.asc</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> <span class="keyword">To</span> <span class="keyword">verify</span> a <span class="keyword">release</span> <span class="built_in">binary</span> <span class="keyword">using</span> the provided <span class="keyword">asc</span> files, place the <span class="built_in">binary</span> <span class="keyword">and</span> <span class="keyword">corresponding</span> <span class="keyword">asc</span> <span class="keyword">file</span> <span class="keyword">into</span> the same <span class="keyword">directory</span> <span class="keyword">and</span> <span class="keyword">use</span> the <span class="keyword">corresponding</span> command:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Linux</span></span><br><span class="line">$ gpg <span class="comment">--verify operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu.asc</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">If</span> you <span class="keyword">do</span> <span class="keyword">not</span> have the maintainers <span class="keyword">public</span> <span class="keyword">key</span> <span class="keyword">on</span> your machine, you will <span class="keyword">get</span> an <span class="keyword">error</span> message similar <span class="keyword">to</span> this:</span><br><span class="line"></span><br><span class="line">$ gpg <span class="comment">--verify operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-apple-darwin.asc</span></span><br><span class="line">$ gpg: assuming signed <span class="keyword">data</span> <span class="keyword">in</span> <span class="string">'operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-apple-darwin'</span></span><br><span class="line">$ gpg: Signature made Fri Apr  <span class="number">5</span> <span class="number">20</span>:<span class="number">03</span>:<span class="number">22</span> <span class="number">2019</span> CEST</span><br><span class="line">$ gpg:                <span class="keyword">using</span> RSA <span class="keyword">key</span> &lt;KEY_ID&gt;</span><br><span class="line">$ gpg: Can<span class="string">'t check signature: No public key</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">To download the key, use the following command, replacing $KEY_ID with the RSA key string provided in the output of the previous command:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ gpg --recv-key "$KEY_ID"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">You'</span>ll need <span class="keyword">to</span> specify a <span class="keyword">key</span> <span class="keyword">server</span> <span class="keyword">if</span> one hasn<span class="string">'t been configured. For example:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ gpg --keyserver keyserver.ubuntu.com --recv-key "$KEY_ID"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Now you should be able to verify the binary.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4. Install the release binary in your PATH</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Linux</span></span><br><span class="line"><span class="string">$ chmod +x operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu &amp;&amp; sudo mkdir -p /usr/local/bin/ &amp;&amp; sudo cp operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu /usr/local/bin/operator-sdk &amp;&amp; rm operator-sdk-$&#123;RELEASE_VERSION&#125;-x86_64-linux-gnu</span></span><br></pre></td></tr></table></figure>
+<p>This is official operator-sdk installation guide. more infors please refer to <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user/install-operator-sdk.md" target="_blank" rel="noopener">installation guide</a></p>
+<h2 id="operator-sdk-to-generate-K8s-CRD-example"><a href="#operator-sdk-to-generate-K8s-CRD-example" class="headerlink" title="operator-sdk to generate K8s CRD example"></a>operator-sdk to generate K8s CRD example</h2><ul>
+<li>Installation operator-sdk CLI.<br>  please reference <strong>operator-sdk installation guide chapter</strong>.</li>
+<li><p>Using operator-sdk to generate CRD.</p>
+<ol>
+<li><p>Generate a common framwork</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">operator-sdk new repo_name <span class="attribute">--repo</span>=repo_name <span class="attribute">--vendor</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>New API</p>
+</li>
+</ol>
+<ul>
+<li><p>Generate API </p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">operator-sdk <span class="builtin-name">add</span> api <span class="attribute">--api-version</span>=xxxx/v1alpha1 <span class="attribute">--kind</span>=<span class="variable">$kind</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Update api then use command “operator-sdk generate k8s” and “operator-sdk generate crds” to update your code and deploy.</p>
+</li>
+</ul>
+<ol start="3">
+<li>New a controller<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">operator-sdk <span class="builtin-name">add</span> controller <span class="attribute">--api-version</span>=xxxx/v1alpha1 <span class="attribute">--kind</span>=<span class="variable">$kind</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>Generate clientset</p>
+<ol>
+<li><p>Get code-generator.</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">go</span> <span class="meta">get</span> k8s.io/<span class="meta">code</span>-generator</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Add following annotations in your xxx_types.go file.</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">  	<span class="comment">// +genclient</span></span><br><span class="line"><span class="comment">// +genclient:noStatus</span></span><br><span class="line"><span class="comment">// +genclient:onlyVerbs=create,delete,update,get</span></span><br><span class="line"><span class="comment">// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object</span></span><br><span class="line"><span class="comment">// Xxxx is the Schema for the xxxxs API</span></span><br><span class="line"><span class="comment">// +kubebuilder:subresource:status</span></span><br><span class="line"><span class="comment">// +kubebuilder:resource:path=xxxxs,scope=Namespaced</span></span><br><span class="line">type Xxxx struct &#123;</span><br><span class="line">    metav1.TypeMeta `<span class="string">json:</span><span class="string">",inline"</span>`</span><br><span class="line">    metav1.ObjectMeta `<span class="string">json:</span><span class="string">"metadata,omitempty"</span>`</span><br><span class="line">    Spec XxxxSpec `<span class="string">json:</span><span class="string">"spec,omitempty"</span>`</span><br><span class="line">    Status XxxxStatus `<span class="string">json:</span><span class="string">"status,omitempty"</span>`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Generate clientset</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="variable">$GOPATH</span>/src/k8s.io/code-generator/generate-groups.sh<span class="built_in"> client </span>repo/pkg<span class="built_in">/client </span>repo/pkg/apis xxxx:v1alpha1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>deploy and test it.</p>
+</li>
+</ol>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MicroService</category>
+      </categories>
+      <tags>
+        <tag>K8s</tag>
+        <tag>client-go</tag>
+        <tag>operator-sdk</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何在pod中做golang的profiling</title>
     <url>/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>相比于C++在pod中做profiling， 那么对于云原生的golang来说就太方便了。下面我将讲述下我做golang profiling的具体过程和步骤。由于我们是基于Restful 接口的系统设计，所以以下profiling 都是基于http/pprof做的分析。</p>
