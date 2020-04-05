@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.luffyao.com/"/>
-  <updated>2020-04-02T02:25:01.407Z</updated>
+  <updated>2020-04-05T13:54:34.965Z</updated>
   <id>https://www.luffyao.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RFC7541 HPACK 总结</title>
+    <link href="https://www.luffyao.com/2020/04/hpack-summary/"/>
+    <id>https://www.luffyao.com/2020/04/hpack-summary/</id>
+    <published>2020-04-05T11:53:22.000Z</published>
+    <updated>2020-04-05T13:54:34.965Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="HTTP2" scheme="https://www.luffyao.com/categories/HTTP2/"/>
+    
+    
+      <category term="RFC7541" scheme="https://www.luffyao.com/tags/RFC7541/"/>
+    
+      <category term="hpack" scheme="https://www.luffyao.com/tags/hpack/"/>
+    
+  </entry>
   
   <entry>
     <title>using operator-sdk to generate K8s CRD</title>
