@@ -146,16 +146,18 @@
 
 
 
-  <meta name="description" content="good goog study, day day up">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Luffyao&#39;s Blog">
-<meta property="og:url" content="https://www.luffyao.com/page/2/index.html">
+  <meta name="description" content="上一篇k8s admission controller webhook(1)讲的是直接用client-go去编写的webhook server. 这篇将讲述如何使用K8S SIG controller-runtime 快速的写一个webhook server. 编写webhook server这次是直接用controller-runtime的webhook, 自己写一个handle处理逻辑就好了，">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s admission controller webhook(2)">
+<meta property="og:url" content="https://www.luffyao.com/2020/05/admission-controller-webhook/index.html">
 <meta property="og:site_name" content="Luffyao&#39;s Blog">
-<meta property="og:description" content="good goog study, day day up">
+<meta property="og:description" content="上一篇k8s admission controller webhook(1)讲的是直接用client-go去编写的webhook server. 这篇将讲述如何使用K8S SIG controller-runtime 快速的写一个webhook server. 编写webhook server这次是直接用controller-runtime的webhook, 自己写一个handle处理逻辑就好了，">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-17T05:31:44.400Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Luffyao&#39;s Blog">
-<meta name="twitter:description" content="good goog study, day day up">
+<meta name="twitter:title" content="k8s admission controller webhook(2)">
+<meta name="twitter:description" content="上一篇k8s admission controller webhook(1)讲的是直接用client-go去编写的webhook server. 这篇将讲述如何使用K8S SIG controller-runtime 快速的写一个webhook server. 编写webhook server这次是直接用controller-runtime的webhook, 自己写一个handle处理逻辑就好了，">
 
 
 
@@ -165,7 +167,7 @@
 
   
   
-  <link rel="canonical" href="https://www.luffyao.com/page/2/">
+  <link rel="canonical" href="https://www.luffyao.com/2020/05/admission-controller-webhook/">
 
 
 
@@ -175,7 +177,7 @@
   };
 </script>
 
-  <title>Luffyao's Blog</title>
+  <title>k8s admission controller webhook(2) | Luffyao's Blog</title>
   
 
 
@@ -223,8 +225,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -404,9 +405,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -421,7 +422,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/C-17-尝鲜之-structured-bindings/">
+    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2020/05/admission-controller-webhook/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Luffyao">
@@ -438,10 +439,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/C-17-尝鲜之-structured-bindings/" class="post-title-link" itemprop="url">C++17 尝鲜之 structured bindings</a>
+          <h1 class="post-title" itemprop="name headline">k8s admission controller webhook(2)
+
               
             
           </h1>
@@ -466,234 +465,12 @@
                 
               
 
-              <time title="创建时间：2019-12-08 10:44:12" itemprop="dateCreated datePublished" datetime="2019-12-08T10:44:12+08:00">2019-12-08</time>
+              <time title="创建时间：2020-05-17 13:04:02 / 修改时间：13:31:44" itemprop="dateCreated datePublished" datetime="2020-05-17T13:04:02+08:00">2020-05-17</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-04 11:06:06" itemprop="dateModified" datetime="2020-01-04T11:06:06+08:00">2020-01-04</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/CPlusPlus/" itemprop="url" rel="index"><span itemprop="name">CPlusPlus</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">759</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>老版本的C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为struct， 然后在将其返回。<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/C-17-尝鲜之-structured-bindings/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/如何抓取pod中的container的tcpdump/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Luffyao">
-      <meta itemprop="description" content="good goog study, day day up">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Luffyao's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/如何抓取pod中的container的tcpdump/" class="post-title-link" itemprop="url">如何抓取pod中的container的tcpdump</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-07 18:44:49" itemprop="dateCreated datePublished" datetime="2019-12-07T18:44:49+08:00">2019-12-07</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-04 11:06:06" itemprop="dateModified" datetime="2020-01-04T11:06:06+08:00">2020-01-04</time>
               
             
           </span>
@@ -727,218 +504,15 @@
           
 
           
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">1.4k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般情况下，想要抓取pod中的某个container的tcpdump，直接kubectl exec 进入那个container，然后就可以抓取了。但是如果当你的image没有安装bash等shell terminal，那我们就不能使用exec进入container了。所以此时我们就需要以下方法，通过自己编一个带有shell的image，然后docker exec 嵌入到pod中，再进行抓取tcpdump。<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/如何抓取pod中的container的tcpdump/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/如何在pod中的container-里面生成coredump-文件-并拷贝出来使用GDB-debug/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Luffyao">
-      <meta itemprop="description" content="good goog study, day day up">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Luffyao's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/如何在pod中的container-里面生成coredump-文件-并拷贝出来使用GDB-debug/" class="post-title-link" itemprop="url">如何在pod中的container里面生成coredump文件并拷贝出来使用GDB debug</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-02 21:35:01" itemprop="dateCreated datePublished" datetime="2019-12-02T21:35:01+08:00">2019-12-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-04 11:06:06" itemprop="dateModified" datetime="2020-01-04T11:06:06+08:00">2020-01-04</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MicroService/" itemprop="url" rel="index"><span itemprop="name">MicroService</span></a></span>
-
-                
-                
-              
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
           
-            
-            
-          
-
-          
-          
-
-          
-
-          
             <div class="post-symbolscount">
               
 
@@ -949,7 +523,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">2.1k</span>
+                <span title="本文字数">2.4k</span>
               
 
               
@@ -983,469 +557,135 @@
       
 
       
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是C++写的代码，crash tracing 并没有golang好，所以代码crash在pod中的container里面，很难调查。最多的也就是多加log，但是你懂的，添加log debug效率还是蛮低的。所以就要用coredump 去快速找到问题所在。但是就遇到文章的问题。你怎么去pod中的container生成coredump呢，然后拷到本地gdb呢?<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/如何在pod中的container-里面生成coredump-文件-并拷贝出来使用GDB-debug/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
+        <p><strong>上一篇<a href="https://luffyao.com/2020/05/k8s-webhook-admission-control/" target="_blank" rel="noopener">k8s admission controller webhook(1)</a>讲的是直接用client-go去编写的webhook server. 这篇将讲述如何使用K8S SIG controller-runtime 快速的写一个webhook server.</strong></p>
+<h3 id="编写webhook-server"><a href="#编写webhook-server" class="headerlink" title="编写webhook server"></a>编写webhook server</h3><p>这次是直接用controller-runtime的webhook, 自己写一个handle处理逻辑就好了，所以实现起来也是比上一版本更加简单明了。下面贴出主要处理逻辑，完整代码可参考<a href="https://github.com/Luffy110/k8s-dynamic-admission-webhook-example/blob/controller-runtime/webhookserver/validatingwebhook.go" target="_blank" rel="noopener">validating handler</a>.</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ValidatingHandler validates deployment,scale</span></span><br><span class="line"><span class="keyword">type</span> ValidatingHandler <span class="keyword">struct</span> &#123;</span><br><span class="line">	Client      client.Client</span><br><span class="line">	decoder     *admission.Decoder</span><br><span class="line">	serviceName <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewValidatingHandler</span><span class="params">(c client.Client, servicename <span class="keyword">string</span>)</span> *<span class="title">ValidatingHandler</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;ValidatingHandler&#123;</span><br><span class="line">		Client:      c,</span><br><span class="line">		serviceName: servicename,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(vh *ValidatingHandler)</span> <span class="title">Handle</span><span class="params">(ctx context.Context, req admission.Request)</span> <span class="title">admission</span>.<span class="title">Response</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> req.Kind.Kind &#123;</span><br><span class="line">	<span class="keyword">case</span> deploymentKind:</span><br><span class="line">		isAllow := <span class="literal">false</span></span><br><span class="line">		<span class="keyword">if</span> isAllow &#123;</span><br><span class="line">			<span class="keyword">return</span> admission.Allowed(<span class="string">""</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> admission.Denied(fmt.Sprintf(<span class="string">"The %s service doesn't allow update"</span>, req.Name))</span><br><span class="line">	<span class="keyword">case</span> scaleKind:</span><br><span class="line">		isAllow := <span class="literal">false</span></span><br><span class="line">		<span class="keyword">if</span> isAllow &#123;</span><br><span class="line">			<span class="keyword">return</span> admission.Allowed(<span class="string">""</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> admission.Denied(fmt.Sprintf(<span class="string">"The %s service doesn't allow update"</span>, req.Name))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> admission.Allowed(<span class="string">""</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// InjectDecoder injects the decoder.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(vh *ValidatingHandler)</span> <span class="title">InjectDecoder</span><span class="params">(d *admission.Decoder)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	vh.decoder = d</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后 你就可以直接在main函数中像下面这个调用即可。完整代码请参考<a href="https://github.com/Luffy110/k8s-dynamic-admission-webhook-example/blob/controller-runtime/cmd/example/example.go" target="_blank" rel="noopener">main.go</a>.</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options&#123;</span><br><span class="line">		Port:    *webhookServerPort,</span><br><span class="line">		CertDir: *certPath,</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err.Error())</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	hookServer := mgr.GetWebhookServer()</span><br><span class="line">	hookServer.Register(<span class="string">"/validate"</span>, &amp;webhook.Admission&#123;</span><br><span class="line">		Handler: webhookserver.NewValidatingHandler(mgr.GetClient(), *serviceName),</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := mgr.Start(signals.SetupSignalHandler()); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err.Error())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="编译代码并生成docker-image"><a href="#编译代码并生成docker-image" class="headerlink" title="编译代码并生成docker image"></a>编译代码并生成docker image</h3><p>可以参考我提供的简单<a href="https://github.com/Luffy110/k8s-dynamic-admission-webhook-example/blob/controller-runtime/build.sh" target="_blank" rel="noopener">build.sh</a>脚本编译代码和使用<a href="https://github.com/Luffy110/k8s-dynamic-admission-webhook-example/blob/controller-runtime/buildimage.sh" target="_blank" rel="noopener">buildimage.sh</a>脚本去构建docker镜像。</p>
+<p><strong>NOTE</strong>: buildimage.sh脚本中，我做了些处理，首先需要传入docker_user(如果你没有，你也可以随意指定一个即可)和构建的image的tag。然后我注释掉了docker push这个命令，防止有些读者还没有docker hub或其他仓库的账号。</p>
+<h3 id="添加相应的k8s资源"><a href="#添加相应的k8s资源" class="headerlink" title="添加相应的k8s资源"></a>添加相应的k8s资源</h3><p>安装相应的k8s资源即可，具体请参考<a href="https://github.com/Luffy110/k8s-dynamic-admission-webhook-example/tree/controller-runtime/helm" target="_blank" rel="noopener">resources</a>.</p>
+<p><strong>NOTE</strong>: 这里我为了方便管理这些资源，我使用了helm去管理了，如果你有helm相关的环境，你可直接使用<strong>helm install</strong>命令安装资源，如果你没有或者不熟悉，你可以使用<strong>kubectl apply</strong>命令一个个的部署，但是你需要修改资源中的Release.Namespace 到你安装的那个namespace下，例如如果你安装时没有指定namespace,则默认是default。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>例子中default的实现是拒绝任何对deployment和scale的修改。所以可以使用kubectl edit 命令修改deployment，或者使用kubectl scale 命令修改replicas。如果命令修改失败并提示”The %s service doesn’t allow update”，则说明自定义的validating webhook是可以工作的。然后可以加上自己的处理逻辑即可。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/" target="_blank" rel="noopener">Dynamic Admission Control</a></p>
+<p><a href="https://github.com/kubernetes-sigs/controller-runtime" target="_blank" rel="noopener">Controller runtime</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept!</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
         
       
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="Luffyao 微信支付">
+        <p>微信支付</p>
+      </div>
     
       
-    
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="Luffyao 支付宝">
+        <p>支付宝</p>
+      </div>
     
 
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Luffyao</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.luffyao.com/2020/05/admission-controller-webhook/" title="k8s admission controller webhook(2)">https://www.luffyao.com/2020/05/admission-controller-webhook/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
     
     <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/Profiling-C-with-Perf-in-the-linux-Env/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Luffyao">
-      <meta itemprop="description" content="good goog study, day day up">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Luffyao's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/Profiling-C-with-Perf-in-the-linux-Env/" class="post-title-link" itemprop="url">Profiling  C++ with Perf in the linux Env</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-01 20:32:51" itemprop="dateCreated datePublished" datetime="2019-12-01T20:32:51+08:00">2019-12-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-04 11:06:06" itemprop="dateModified" datetime="2020-01-04T11:06:06+08:00">2020-01-04</time>
-              
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MicroService/" itemprop="url" rel="index"><span itemprop="name">MicroService</span></a></span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/k8s/" rel="tag"><i class="fa fa-tag"></i> k8s</a>
           
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">641</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h2 id="Installation-perf"><a href="#Installation-perf" class="headerlink" title="Installation perf"></a>Installation perf</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uname -r    # check your system tools version for the third command</span><br><span class="line">sudo apt-get install linux-tools-common</span><br><span class="line">sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/Profiling-C-with-Perf-in-the-linux-Env/#more" rel="contents">
-                阅读全文 &raquo;
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/k8s-webhook-admission-control/" rel="next" title="k8s admission controller webhook(1)">
+                <i class="fa fa-chevron-left"></i> k8s admission controller webhook(1)
               </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/how-to-install-Docker-CE-in-the-Ubuntu-18-04/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Luffyao">
-      <meta itemprop="description" content="good goog study, day day up">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Luffyao's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/how-to-install-Docker-CE-in-the-Ubuntu-18-04/" class="post-title-link" itemprop="url">how to install Docker CE in the Ubuntu 18.04</a>
-              
             
-          </h1>
-        
+          </div>
 
-        <div class="post-meta">
-          <span class="post-time">
+          <span class="post-nav-divider"></span>
 
+          <div class="post-nav-prev post-nav-item">
             
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-01 19:39:15" itemprop="dateCreated datePublished" datetime="2019-12-01T19:39:15+08:00">2019-12-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-04 11:06:06" itemprop="dateModified" datetime="2020-01-04T11:06:06+08:00">2020-01-04</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MicroService/" itemprop="url" rel="index"><span itemprop="name">MicroService</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">549</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h2 id="following-offical-docs-to-install-it-a-perfect-method"><a href="#following-offical-docs-to-install-it-a-perfect-method" class="headerlink" title="following offical docs to install it a perfect method."></a>following offical docs to install it a perfect method.</h2><p>Docker CE offcial docs : <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">docker offical docs</a></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/how-to-install-Docker-CE-in-the-Ubuntu-18-04/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1455,228 +695,15 @@
   </article>
 
 
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.luffyao.com/2019/12/github上将源repo提交更新到fork的repo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Luffyao">
-      <meta itemprop="description" content="good goog study, day day up">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Luffyao's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/github上将源repo提交更新到fork的repo/" class="post-title-link" itemprop="url">github上将源repo提交更新到fork的repo</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-01 15:39:15" itemprop="dateCreated datePublished" datetime="2019-12-01T15:39:15+08:00">2019-12-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-01-08 11:03:06" itemprop="dateModified" datetime="2020-01-08T11:03:06+08:00">2020-01-08</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/github/" itemprop="url" rel="index"><span itemprop="name">github</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">617</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在github上 一般我们都是将别人的repo fork到自己的github repo。 然后阅读，修改 甚至是contribution。所以同步源repo的commit 尤为重要。因为你要始终保持与源repo同步。下面将描述下怎么去同步更新的步骤。<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/github上将源repo提交更新到fork的repo/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -1696,8 +723,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1888,6 +924,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#编写webhook-server"><span class="nav-number">1.</span> <span class="nav-text">编写webhook server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译代码并生成docker-image"><span class="nav-number">2.</span> <span class="nav-text">编译代码并生成docker image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加相应的k8s资源"><span class="nav-number">3.</span> <span class="nav-text">添加相应的k8s资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number"></span> <span class="nav-text">参考</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -2058,6 +1111,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
 
   
 
@@ -2074,33 +1131,16 @@
   
 
   
-    
-      
-    
-  
 
   
   
-  
-    <script src="/lib/quicklink/quicklink.umd.js"></script>
-    <script>
-      
-        window.addEventListener('load', () => {
-      
-        quicklink({
-          timeout: 3000,
-          priority: true,
-          ignores: [uri => uri.includes('#'),uri => uri == 'https://www.luffyao.com/page/2/',]
-        });
-      
-        });
-      
-    </script>
   
 
 
   
 
+
+  
 
 
   
@@ -2464,7 +1504,7 @@
   <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
   <script>
   
-    bookmark.loadBookmark();
+    bookmark.scrollToMark('auto', "#更多");
   
   </script>
 
