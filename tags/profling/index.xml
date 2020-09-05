@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Profling on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/profling/</link>
+    <description>Recent content in Profling on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 07 Mar 2020 12:53:42 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/profling/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何在 pod 中做 golang 的 profiling</title>
+      <link>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</link>
+      <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
+      <description>前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的</description>
+    </item>
+    
+  </channel>
+</rss>

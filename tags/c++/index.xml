@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/c&#43;&#43;/</link>
+    <description>Recent content in C&#43;&#43; on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 01 Dec 2019 20:32:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用 Perf 给 C&#43;&#43;代码做 Profiling</title>
+      <link>https://luffyao.com/2019/12/01/profiling-c-with-perf-in-the-linux-env/</link>
+      <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2019/12/01/profiling-c-with-perf-in-the-linux-env/</guid>
+      <description>安装 perf uname -r # check your system tools version for the third command sudo apt-get install linux-tools-common sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic 特别配置 sudo sysctl kernel.perf_event_paranoid=-1 sudo sysctl kernel.kptr_restrict=0 记录 perf 示例 选项 1: 启动应用程序后记录 perf ./application_name perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk &#39;{print</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43;17 on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/c&#43;&#43;17/</link>
+    <description>Recent content in C&#43;&#43;17 on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 08 Dec 2019 10:49:58 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/c++17/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C&#43;&#43; 17 尝鲜之 the overload pattern</title>
+      <link>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</link>
+      <pubDate>Sun, 08 Dec 2019 10:49:58 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</guid>
+      <description>&lt;p&gt;以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。&lt;/p&gt;
+
+&lt;p&gt;一般大家写出来的代码无非和我的差不多。
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;17 尝鲜之 structured bindings</title>
+      <link>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</link>
+      <pubDate>Sun, 08 Dec 2019 10:44:12 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
+      <description>&lt;p&gt;老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 
+
+但是 C++17 引入了 Structured Bindlings 这个特性。他是通过 &lt;strong&gt;&lt;em&gt;std::tuple, std::pair, std::array, and aggregate structures&lt;/em&gt;&lt;/strong&gt; 来实现多个返回值。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/</link>
+    <description>Recent content in Tags on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 01 Dec 2019 20:32:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C&#43;&#43;</title>
+      <link>https://luffyao.com/tags/c&#43;&#43;/</link>
+      <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;17</title>
+      <link>https://luffyao.com/tags/c&#43;&#43;17/</link>
+      <pubDate>Sun, 08 Dec 2019 10:49:58 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/c&#43;&#43;17/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Coredump</title>
+      <link>https://luffyao.com/tags/coredump/</link>
+      <pubDate>Mon, 02 Dec 2019 21:35:01 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/coredump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://luffyao.com/tags/docker/</link>
+      <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gerrit</title>
+      <link>https://luffyao.com/tags/gerrit/</link>
+      <pubDate>Fri, 20 Dec 2019 22:02:36 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/gerrit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://luffyao.com/tags/git/</link>
+      <pubDate>Sun, 01 Dec 2019 15:39:15 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Github</title>
+      <link>https://luffyao.com/tags/github/</link>
+      <pubDate>Sun, 01 Dec 2019 15:39:15 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/github/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hpack</title>
+      <link>https://luffyao.com/tags/hpack/</link>
+      <pubDate>Sun, 05 Apr 2020 19:53:22 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/hpack/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Iptables</title>
+      <link>https://luffyao.com/tags/iptables/</link>
+      <pubDate>Wed, 25 Dec 2019 09:10:41 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/iptables/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Istio</title>
+      <link>https://luffyao.com/tags/istio/</link>
+      <pubDate>Fri, 10 Jan 2020 16:51:03 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/istio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://luffyao.com/tags/kubernetes/</link>
+      <pubDate>Fri, 07 Aug 2020 21:28:37 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MTLS</title>
+      <link>https://luffyao.com/tags/mtls/</link>
+      <pubDate>Fri, 10 Jan 2020 16:51:03 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/mtls/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Netfilter</title>
+      <link>https://luffyao.com/tags/netfilter/</link>
+      <pubDate>Wed, 25 Dec 2019 09:10:41 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/netfilter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Operator-sdk</title>
+      <link>https://luffyao.com/tags/operator-sdk/</link>
+      <pubDate>Thu, 02 Apr 2020 09:11:11 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/operator-sdk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Perf</title>
+      <link>https://luffyao.com/tags/perf/</link>
+      <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/perf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Profling</title>
+      <link>https://luffyao.com/tags/profling/</link>
+      <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/profling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>RFC7541</title>
+      <link>https://luffyao.com/tags/rfc7541/</link>
+      <pubDate>Sun, 05 Apr 2020 19:53:22 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/rfc7541/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tcpdump</title>
+      <link>https://luffyao.com/tags/tcpdump/</link>
+      <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/tcpdump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>随笔</title>
+      <link>https://luffyao.com/tags/%E9%9A%8F%E7%AC%94/</link>
+      <pubDate>Sat, 14 Dec 2019 13:22:05 +0800</pubDate>
+      
+      <guid>https://luffyao.com/tags/%E9%9A%8F%E7%AC%94/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

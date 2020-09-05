@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="istio 配置 mtls" />
+    <meta property="og:title" content="istio 配置 mtls" />
+    <meta property="twitter:title" content="istio 配置 mtls" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>istio 配置 mtls-Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">Tech</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/istio" title="istio">
+                            istio
+                        </a>
+                        
+                        <a class="tag" href="/tags/mtls" title="mTLS">
+                            mTLS
+                        </a>
+                        
+                    </div>
+                    <h1>istio 配置 mtls</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Friday, January 10, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#istio-mtls-summary">ISTIO MTLS SUMMARY</a>
+<ul>
+<li><a href="#test-flow">Test Flow</a></li>
+<li><a href="#update-meshpolicy-from-permissive-to-strict">Update MeshPolicy from PERMISSIVE to STRICT</a></li>
+<li><a href="#generate-ca-key-and-cert">Generate CA ,key and cert</a></li>
+<li><a href="#intergration-mtls">Intergration MTLS</a>
+<ul>
+<li><a href="#incoming-traffic-with-mtls-ingressgateway">Incoming Traffic with MTLS (Ingressgateway)</a></li>
+<li><a href="#outgoing-traffic-with-mtls-serviceentry">Outgoing Traffic with MTLS (ServiceEntry)</a></li>
+</ul></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#questions">Questions</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="istio-mtls-summary">ISTIO MTLS SUMMARY</h1>
+
+<p><strong><em>THIS IS BASED ON ISTIO OFFICIAL PACKAGE ISTIO-1.3.5(FOLLOWING ALL OF ISTIO DOCS MUST OVER THE WALL,YOU CAN REFERENCE THE LATEST VERDION DOCS), BECAUSE OUR ENV VERSION IS BASED ON THIS VERSION.</em></strong></p>
+
+<h2 id="test-flow">Test Flow</h2>
+
+<p>TODO</p>
+
+<h2 id="update-meshpolicy-from-permissive-to-strict">Update MeshPolicy from PERMISSIVE to STRICT</h2>
+
+<p><strong>NOTE: More infor about this in our ENV, please look at following Question section Q2</strong></p>
+
+<p>Reference link <a href="https://archive.istio.io/v1.3/docs/reference/config/istio.authentication.v1alpha1/#MutualTls-Mode">MutlalTls-Mode</a></p>
+
+<pre><code>kubectl get meshpolicy
+kubectl edit meshpolicy
+
+</code></pre>
+
+<pre><code>///// then manually update mtls.mode to STRICT
+</code></pre>
+
+<h2 id="generate-ca-key-and-cert">Generate CA ,key and cert</h2>
+
+<p>You can reference this link <a href="https://archive.istio.io/v1.3/docs/tasks/traffic-management/ingress/secure-ingress-mount/">secure-ingress-mount</a></p>
+
+<pre><code>git clone https://github.com/nicholasjackson/mtls-go-example
+cd mtls-go-example
+
+/////// Note: change &lt;password&gt;  to any value you like
+
+./generate.sh your_fqdn &lt;password&gt;
+mkdir ../your_fqdn &amp;&amp; mv 1_root 2_intermediate 3_application 4_client ../your_fqdn &amp;&amp; cd ..
+
+</code></pre>
+
+<p>Then all of CA key and cert moved into your_fqdn DIR.</p>
+
+<p><strong>NOTE: Following all of create sceret command must under the same DIR with your_fqdn.</strong></p>
+
+<h2 id="intergration-mtls">Intergration MTLS</h2>
+
+<h3 id="incoming-traffic-with-mtls-ingressgateway">Incoming Traffic with MTLS (Ingressgateway)</h3>
+
+<ol>
+<li>Deploy a httpbin service under default namespace and enabled sidecar injection</li>
+</ol>
+
+<p>Reference command: <strong>kubectl apply -f &lt;(istioctl kube-inject -f httpbin.yaml)</strong></p>
+
+<pre><code>   ################################################################   ##################################
+   # httpbin service
+   ################################################################   ##################################
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: httpbin
+     labels:
+       app: httpbin
+   spec:
+     ports:
+     - name: http
+       port: 8000
+       targetPort: 80
+     selector:
+       app: httpbin
+   ---
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: httpbin
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: httpbin
+         version: v1
+     template:
+       metadata:
+         labels:
+           app: httpbin
+           version: v1
+       spec:
+         containers:
+         - image: docker.io/kennethreitz/httpbin
+           imagePullPolicy: IfNotPresent
+           name: httpbin
+           ports:
+           - containerPort: 80
+</code></pre>
+
+<ol>
+<li>Create two secrets <strong>istio-ingressgateway-certs</strong> and <strong>istio-ingressgateway-ca-certs</strong> under <strong>istio-system</strong> namespace</li>
+</ol>
+
+<pre><code>kubectl create -n istio-system secret tls istio-ingressgateway-certs --key your_fqdn/3_application/private/your_fqdn.key.pem --cert   your_fqdn/3_application/certs/your_fqdn.cert.pem
+
+kubectl create -n istio-system secret generic istio-ingressgateway-ca-certs --from-file=your_fqdn/2_intermediate/certs/ca-chain.cert.pem
+
+</code></pre>
+
+<ol>
+<li>Define a Gateway and VirtualService and DestinationRule
+```
+kubectl apply -f - &lt;&lt;EOF
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+ name: httpbin-gateway
+spec:
+ selector:
+   istio: ingressgateway # use istio default ingress gateway
+ servers:
+
+<ul>
+<li>port:
+ number: 443
+ name: https
+ protocol: HTTPS
+tls:
+ mode: MUTUAL
+ serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+ privateKey: /etc/istio/ingressgateway-certs/tls.key
+ caCertificates: /etc/istio/ingressgateway-ca-certs/ca-chain.cert.pem
+hosts:
+
+<ul>
+<li>&ldquo;*&rdquo;
+EOF
+```
+<br /></li>
+</ul></li>
+</ul></li>
+</ol>
+
+<pre><code>   kubectl apply -f - &lt;&lt;EOF
+   apiVersion: networking.istio.io/v1alpha3
+   kind: VirtualService
+   metadata:
+     name: httpbin
+   spec:
+     hosts:
+     - &quot;your_fqdn&quot;
+     gateways:
+     - httpbin-gateway
+     http:
+     - match:
+       - uri:
+           prefix: /status
+       - uri:
+           prefix: /delay
+       route:
+       - destination:
+           port:
+             number: 8000
+           host: httpbin
+   EOF
+</code></pre>
+
+<pre><code>   kubectl apply -f - &lt;&lt;EOF
+   apiVersion: &quot;networking.istio.io/v1alpha3&quot;
+   kind: DestinationRule
+   metadata:
+     name: httpbin
+   spec:
+     host: &quot;httpbin&quot;
+     trafficPolicy:
+       tls:
+         mode: ISTIO_MUTUAL
+   EOF
+</code></pre>
+
+<ol>
+<li><p>Check Cert and CA</p>
+
+<pre><code>kubectl exec -it $(kubectl get pods -n istio-system| grep ingress | awk -F &quot; &quot; '{print $1}') -n istio-system -- ls /etc/istio/ingressgateway-certs/
+kubectl exec -it $(kubectl get pods -n istio-system| grep ingress | awk -F &quot; &quot; '{print $1}') -n istio-system -- ls /etc/istio/ingressgateway-ca-certs/
+</code></pre></li>
+
+<li><p>Using CURL command to test it.</p></li>
+</ol>
+
+<p><strong>NOTE: 31390 is NodePort, because in minikube we haven&rsquo;t EXTERNAL-IP, so we must use Node port. detailed message please reference link <a href="https://archive.istio.io/v1.3/docs/tasks/traffic-management/ingress/ingress-control/">ingress-control</a></strong></p>
+
+<pre><code>curl -HHost:your_fqdn --resolve    your_fqdn:31390:10.120.20.63 --cacert    your_fqdn/2_intermediate/certs/ca-chain.cert.pem --cert    your_fqdn/4_client/certs/your_fqdn.cert.pem --key    your_fqdn/4_client/private/your_fqdn.key.pem https://your_fqdn:31390/status/418 -v
+</code></pre>
+
+<p>The successful mark is you will see a teapot</p>
+
+<h3 id="outgoing-traffic-with-mtls-serviceentry">Outgoing Traffic with MTLS (ServiceEntry)</h3>
+
+<ol>
+<li><p>Create an <strong>external</strong> namespace</p>
+
+<pre><code>kubectl create namespace external
+</code></pre></li>
+
+<li><p>Create client secret under <strong>external</strong> namespace
+```
+kubectl create -n external secret tls testsleep &ndash;key your_fqdn/4_client/private/your_fqdn.key.pem &ndash;cert   your_fqdn/4_client/certs/your_fqdn.cert.pem</p></li>
+</ol>
+
+<p>kubectl create -n external secret generic ca &ndash;from-file=your_fqdn/2_intermediate/certs/ca-chain.cert.pem</p>
+
+<pre><code>
+3. Deploy sleep service under **external** namespace.
+
+   **NOTE: Following files ,you must install it under external namespace.**
+
+* Deploy sleep under **external** namespace and enable injection.
+
+   Reference command: ***kubectl apply -f &lt;(istioctl kube-inject -f sleep.yaml) -n external***
+
+</code></pre>
+
+<p>#### contents of the sleep.yaml
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: sleep</p>
+
+<hr />
+
+<p>apiVersion: v1
+   kind: Service
+   metadata:
+     name: sleep
+     labels:
+       app: sleep
+   spec:
+     ports:
+     - port: 80
+       name: http
+     selector:
+       app: sleep</p>
+
+<hr />
+
+<p>apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: sleep
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: sleep
+     template:
+       metadata:
+         labels:
+           app: sleep
+         annotations:
+           sidecar.istio.io/inject: &ldquo;true&rdquo;
+           sidecar.istio.io/userVolume: &lsquo;{&ldquo;client-secret&rdquo;:   {&ldquo;secret&rdquo;:{&ldquo;secretName&rdquo;:&ldquo;testsleep&rdquo;}},&ldquo;ca-secret&rdquo;:   {&ldquo;secret&rdquo;:{&ldquo;secretName&rdquo;:&ldquo;ca&rdquo;}}}&rsquo;
+           sidecar.istio.io/userVolumeMount: &lsquo;{&ldquo;client-secret&rdquo;:   {&ldquo;mountPath&rdquo;:&ldquo;/etc/client-cert/&rdquo;,&ldquo;readOnly&rdquo;:true},   &ldquo;ca-secret&rdquo;:{&ldquo;mountPath&rdquo;:&ldquo;/etc/ca-cert/&rdquo;}}&rsquo;
+       spec:
+         serviceAccountName: sleep
+         containers:
+         - name: sleep
+           image: governmentpaas/curl-ssl
+           command: [&ldquo;/bin/sleep&rdquo;, &ldquo;3650d&rdquo;]
+           imagePullPolicy: IfNotPresent</p>
+
+<hr />
+
+<pre><code>
+* Deploy VS,DR, SE under **external** namespace
+
+   Reference command: ***kubectl apply -f xxxx.yaml -n external***
+
+</code></pre>
+
+<p>#### contents of the XXXX.yaml
+   apiVersion: networking.istio.io/v1alpha3
+   kind: VirtualService
+   metadata:
+     name: test-external
+     namespace: external
+   spec:
+     hosts:
+     - your_fqdn
+     http:
+     - match:
+       - port: 31380
+       route:
+       - destination:
+           host: your_fqdn
+           port:
+             number: 31390</p>
+
+<hr />
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: DestinationRule
+   metadata:
+     name: test-external
+   spec:
+     host: your_fqdn
+     trafficPolicy:
+       loadBalancer:
+         simple: ROUND_ROBIN
+       portLevelSettings:
+       - port:
+           number: 31390
+         tls:
+           mode: MUTUAL
+           clientCertificate: /etc/client-cert/tls.crt
+           privateKey: /etc/client-cert/tls.key
+           caCertificates: /etc/ca-cert/ca-chain.cert.pem</p>
+
+<hr />
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+     - your_fqdn
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL</p>
+
+<pre><code>
+4. Check CA and Cert
+</code></pre>
+
+<p>kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c istio-proxy -n external &ndash; ls /etc/client-cert/
+   kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c istio-proxy -n external &ndash; ls /etc/ca-cert/</p>
+
+<pre><code>
+5. Test Client.
+* kubectl exec into sleep container.
+</code></pre>
+
+<p>kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c sleep -n external &ndash; /bin/sh</p>
+
+<pre><code>
+* Testing
+</code></pre>
+
+<p>curl -HHost:your_fqdn &ndash;resolve your_fqdn:31380:10.120.20.63 -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
+
+<p>curl -HHost:your_fqdn &ndash;resolve your_fqdn:31390:10.120.20.63 -svL <a href="http://your_fqdn:31390/status/418">http://your_fqdn:31390/status/418</a></p>
+
+<pre><code>
+  The successful mark is you will see a teapot
+
+## Test Analysis(IP and FQDN)
+
+1. update VS, DR supports wildcard. please look at following example.
+   
+</code></pre>
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: VirtualService
+   metadata:
+     name: test-external
+     namespace: external
+   spec:
+     hosts:
+     - &ldquo;<em>.com&rdquo;
+     http:
+     - match:
+       - port: 31380
+       route:
+       - destination:
+           host: &ldquo;</em>.com&rdquo;
+           port:
+             number: 31390</p>
+
+<hr />
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: DestinationRule
+   metadata:
+     name: test-external
+   spec:
+     host: &ldquo;*.com&rdquo;
+     trafficPolicy:
+       loadBalancer:
+         simple: ROUND_ROBIN
+       portLevelSettings:
+       - port:
+           number: 31390
+         tls:
+           mode: MUTUAL
+           clientCertificate: /etc/client-cert/tls.crt
+           privateKey: /etc/client-cert/tls.key
+           caCertificates: /etc/ca-cert/ca-chain.cert.pem</p>
+
+<pre><code>
+2. update SE to support FQDN and IP.
++ test wildcard
+
+   **NOTE: this scenario,&quot;resolution&quot; field must fills in &quot;NONE&quot;, otherwise appear an error when configuration.**
+</code></pre>
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - &lsquo;*.com&rsquo;
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: NONE
+     location: MESH_EXTERNAL</p>
+
+<pre><code>
+</code></pre>
+
+<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a>
+   / # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
+
+<pre><code>   Test result:(maybe need other configuration) :503.
+
++ test IP only.
+</code></pre>
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - &lsquo;*.com&rsquo;
+     endpoints:
+       - address: 10.120.20.63
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: STATIC
+     location: MESH_EXTERNAL</p>
+
+<pre><code>
+</code></pre>
+
+<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
+
+<pre><code>   Test result: OK. haven't DNS resolution.
+
+</code></pre>
+
+<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
+
+<pre><code>   Test result: 502
+
++ test FQDN only.
+</code></pre>
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - &lsquo;*.com&rsquo;
+     endpoints:
+       - address: your_fqdn
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL</p>
+
+<pre><code>
+</code></pre>
+
+<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
+
+<pre><code>   Test result: OK. have DNS resolution.
+
++ test both FQDN and IP.
+</code></pre>
+
+<p>apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - &lsquo;*.com&rsquo;
+     endpoints:
+       - address: your_fqdn
+       - address: 10.120.20.63
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL</p>
+
+<pre><code>
+</code></pre>
+
+<p>/ # curl -HHost:your_fqdn -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
+
+<pre><code>   Test result: OK , have DNS resolution
+   
+</code></pre>
+
+<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
+
+<pre><code>   Test result: OK, haven't DNS resolution
+   
+</code></pre>
+
+<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
+
+<pre><code>   Test result: OK.
+   
+</code></pre>
+
+<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a>
+   ```
+   Test result: 502</p>
+
+<ol>
+<li>Test Analysis</li>
+<li>IP Only.</li>
+</ol>
+
+<p>Even only we have IP, we still must override Host header to match VS host. so here has a problem.</p>
+
+<ul>
+<li>FQDN Only.</li>
+</ul>
+
+<p>This is OK. if FQDN can match VS host.</p>
+
+<ul>
+<li>Both IP and FQDN.</li>
+</ul>
+
+<p>Here still have a problem the same as only IP scenario.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>C1. If want to transfor port from 31380 to 31390 as above client Test, you must add 31380 port message into related ServiceEntry,otherwise curl connection will be reset by peer(this is because if you didn&rsquo;t add 31380 port message in SE, the sleep service doesn&rsquo;t listen 0.0.0.0 31380.). so if we have many different port need transfor, then we must add port into related SE.</p>
+
+<h2 id="questions">Questions</h2>
+
+<p>Q1. Testing ingressgateway HTTP Protocol is HTTP2.0, but Through sleep container, HTTP Protocol is HTTP1.1. Is this normal phenomenon?<br />
+A1. using <strong>&rdquo;&ndash;http2-prior-knowledge&rdquo;</strong> in the curl command ,then HTTP protocol is HTTP2. so this isn&rsquo;t an issue.</p>
+
+<p>Q2. If i set meshpolicy tls mode is PERMISSIVE . then i can&rsquo;t install httpbin DR, the test also can success. but if i set it to STRICT, then test will failed. so maybe in our ENV, we don&rsquo;t need set mode to STRICT(default is PERMISSIVE), because our ENV internal service communications don&rsquo;t use TLS as our previous ARCH.</p>
+
+<p>Q3. If we use directly IPs to send out to external service, we must override Host header to match VS host, otherwise we have 502 error.</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" data-toggle="tooltip" data-placement="top" title="深入理解 iptables 工作原理">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/" data-toggle="tooltip" data-placement="top" title="如何在 pod 中做 golang 的 profiling">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

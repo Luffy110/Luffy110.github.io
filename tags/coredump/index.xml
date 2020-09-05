@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coredump on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/coredump/</link>
+    <description>Recent content in Coredump on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 02 Dec 2019 21:35:01 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/coredump/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug</title>
+      <link>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</link>
+      <pubDate>Mon, 02 Dec 2019 21:35:01 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</guid>
+      <description>前言 为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是 C++写的代码，crash tracing 并没有 golang 好，所以代码 crash 在 pod 中的 container 里面，</description>
+    </item>
+    
+  </channel>
+</rss>

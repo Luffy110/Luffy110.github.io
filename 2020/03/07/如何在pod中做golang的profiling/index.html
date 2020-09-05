@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="如何在 pod 中做 golang 的 profiling" />
+    <meta property="og:title" content="如何在 pod 中做 golang 的 profiling" />
+    <meta property="twitter:title" content="如何在 pod 中做 golang 的 profiling" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>如何在 pod 中做 golang 的 profiling-Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">Tech</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        <a class="tag" href="/tags/profling" title="Profling">
+                            Profling
+                        </a>
+                        
+                    </div>
+                    <h1>如何在 pod 中做 golang 的 profiling</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Saturday, March 7, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#操作步骤">操作步骤</a>
+<ul>
+<li><a href="#注册-http-的-handlers-到-server">注册 HTTP 的 handlers 到 Server.</a></li>
+<li><a href="#部署-code-到-pod-中运行">部署 code 到 pod 中运行</a></li>
+<li><a href="#暴露-pod-中的-server-的端口">暴露 pod 中的 server 的端口</a></li>
+<li><a href="#load-测试">load 测试</a></li>
+<li><a href="#profiling-分析">Profiling 分析</a>
+<ul>
+<li><a href="#使用火焰图分析">使用火焰图分析</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考文章">参考文章</a></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="前言">前言</h1>
+
+<p>相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的系统设计，所以以下 profiling 都是基于 http/pprof 做的分析。</p>
+
+<h1 id="操作步骤">操作步骤</h1>
+
+<h2 id="注册-http-的-handlers-到-server">注册 HTTP 的 handlers 到 Server.</h2>
+
+<p>例如：</p>
+
+<pre><code class="language-go">// This is a function creating a HTTP2 server. and only registered profile and heap path,
+// for others profiling path, you can add it according to yourself.
+func NewServer(port string, enableProfiling uint) *http.Server {
+	handler := yourhandler
+	mux := http.NewServeMux()
+
+	mux.Handle(&quot;/&quot;, handler)
+    // here add a flag for eliminating disturbtion of between these functions.
+	if enableProfiling != DISABLE_PROFILING {
+		if enableProfiling == ENABLE_PROFILE {
+			mux.HandleFunc(&quot;/debug/pprof/profile&quot;, pprof.Profile)
+		} else if enableProfiling == ENABLE_HEAP {
+			mux.Handle(&quot;/debug/pprof/heap&quot;, pprof.Handler(&quot;heap&quot;))
+		}
+	}
+
+	h2s := &amp;http2.Server{}
+
+	return &amp;http.Server{
+		Addr:    port,
+		Handler: h2c.NewHandler(mux, h2s),
+	}
+}
+
+// then in the main function, you can invoke it.
+s := httpserver.NewServer(fmt.Sprintf(&quot;:%d&quot;, *listeningPort), *enableProfiling)
+
+if err = s.ListenAndServe(); err != nil {
+	// Print Err log
+}
+</code></pre>
+
+<h2 id="部署-code-到-pod-中运行">部署 code 到 pod 中运行</h2>
+
+<p>创建 image，更新到 deployment 里面。这里根据自己的环境进行部署。</p>
+
+<h2 id="暴露-pod-中的-server-的端口">暴露 pod 中的 server 的端口</h2>
+
+<pre><code class="language-shell">// you can use kubectl port-forward --help to view detailed useage.
+
+kubectl port-forward pods/yourpod port:port
+</code></pre>
+
+<h2 id="load-测试">load 测试</h2>
+
+<p>这里我用的是 h2load.</p>
+
+<pre><code>h2load -D 2 -c 10 -m 10 -H':method:POST' -H'content-type:application/json' your_restful_uri -d data.txt
+</code></pre>
+
+<h2 id="profiling-分析">Profiling 分析</h2>
+
+<p>你需要用 pprof 命令采集 sample, 然后对采集到的信息进行分析。</p>
+
+<pre><code>// more detailed command usage you can refer to https://golang.org/pkg/net/http/pprof/
+
+go tool pprof http://localhost:9001/debug/pprof/profile 
+go tool pprof -alloc_objects http://localhost:9001/debug/pprof/heap
+go tool pprof  http://localhost:9001/debug/pprof/heap
+
+</code></pre>
+
+<p>如何进行分析，可以参考 <a href="https://golang.org/doc/diagnostics.html">diagnostics</a>, 如果你不能打开官方文档，可以参考 <a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/">performance optimization</a>, 里面讲述了详细的 profiling 的使用。</p>
+
+<h3 id="使用火焰图分析">使用火焰图分析</h3>
+
+<ol>
+<li><p>安装 go-torch</p>
+
+<pre><code>go get github.com/uber/go-torch
+</code></pre></li>
+
+<li><p>安装 FlameGraph</p>
+
+<pre><code>cd $WORK_PATH &amp;&amp; git clone https://github.com/brendangregg/FlameGraph.git
+export PATH=$PATH:$WORK_PATH/FlameGraph
+</code></pre></li>
+
+<li><p>安装 graphviz</p>
+
+<pre><code>sudo apt-get install graphviz(ubuntu)
+or 
+yum install graphviz(CentOS, Redhat)
+</code></pre></li>
+
+<li><p>使用</p>
+
+<pre><code>go-torch -u http://localhost:8888/debug/pprof/ -p &gt; profile-local.svg 
+</code></pre>
+
+<p>然后浏览器打开生成的文件 profile-local.svg.</p></li>
+</ol>
+
+<h1 id="参考文章">参考文章</h1>
+
+<p><a href="https://golang.org/pkg/net/http/pprof/">pprof</a></p>
+
+<p><a href="https://golang.org/doc/diagnostics.html">diagnostics</a></p>
+
+<p><a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/">performance optimization</a></p>
+
+<p><a href="https://www.jianshu.com/p/1e784c387f45">install FlameGraph</a></p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/" data-toggle="tooltip" data-placement="top" title="istio 配置 mtls">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/04/02/using-operator-sdk-to-generate-k8s-crd/" data-toggle="tooltip" data-placement="top" title="使用 operator-sdk 生成一个CRD">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

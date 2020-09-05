@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="" />
+    <meta property="og:title" content="" />
+    <meta property="twitter:title" content="" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Docker-Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/tags/docker/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">Tech</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<header class="intro-header" style="background-image: url('/img/home-bg-jeep.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Luffyao&#39;s Blog </h1>
+                    
+		    <span class="subheading">Do one thing, Do it well!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+  
+<div class="container">
+    <div class="row">
+        
+        
+   	    <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container
+        ">
+            
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/">
+        <h2 class="post-title">
+            如何在 pod 中做 golang 的 profiling
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Saturday, March 7, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/">
+        <h2 class="post-title">
+            如何抓取 pod 中的 container 的 tcpdump
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            前言 一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell t
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Saturday, December 7, 2019
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/">
+        <h2 class="post-title">
+            如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            前言 为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是 C++写的代码，crash tracing 并没有 golang 好，所以代码 crash 在 pod 中的 container 里面，
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Monday, December 2, 2019
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2019/12/01/how-to-install-docker-ce-in-the-ubuntu-18-04/">
+        <h2 class="post-title">
+            Ubuntu 18.04 上安装 Docker CE
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            安装 官方网站上选择一个合适的安装方法。请参考 官方文档。 注意 Maybe you will appear docker-ce-cli not found issue,when using following command which written by docker formal docs to install docker ce. you can refernce my solution to solve it. 使用 Docker 官方文档编写的以下
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Sunday, December 1, 2019
+    
+    
+    </p>
+
+</div>
+<hr>
+
+
+            
+
+
+
+       	</div>
+        
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
+             
+            
+                
+            
+                
+                    <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                        C&#43;&#43;17
+                    </a>
+                
+            
+                
+            
+                
+                    <a href="/tags/docker" title="Docker">
+                        Docker
+                    </a>
+                
+            
+                
+            
+                
+                    <a href="/tags/kubernetes" title="Kubernetes">
+                        Kubernetes
+                    </a>
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+        </div>
+    </section>
+    
+
+    
+	
+    <section class="visible-md visible-lg">
+	<hr><h5><a href="/top/about">ABOUT ME</a></h5>
+        <div class="short-about">
+            
+            <a href="/top/about">
+               <img src="/img/avatar.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>软件开发工程师，云原生技术爱好者</p>
+            
+           
+           <ul class="list-inline"> 
+               
+               <li>
+                   <a href='/tags/docker/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                       <span class="fa-stack fa-lg">
+                           <i class="fa fa-circle fa-stack-2x"></i>
+                           <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/Luffy110">
+                       <span class="fa-stack fa-lg">
+                           <i class="fa fa-circle fa-stack-2x"></i>
+                           <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+            
+            
+               
+               
+               
+               
+                </ul>
+            </div>
+    </section>
+	
+    
+    
+
+    
+    
+</div>
+
+	</div>
+</div>
+
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='/tags/docker/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

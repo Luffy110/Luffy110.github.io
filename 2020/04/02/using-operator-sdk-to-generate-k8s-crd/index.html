@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="使用 operator-sdk 生成一个CRD" />
+    <meta property="og:title" content="使用 operator-sdk 生成一个CRD" />
+    <meta property="twitter:title" content="使用 operator-sdk 生成一个CRD" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>使用 operator-sdk 生成一个CRD-Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2020/04/02/using-operator-sdk-to-generate-k8s-crd/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">Tech</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        <a class="tag" href="/tags/operator-sdk" title="operator-sdk">
+                            operator-sdk
+                        </a>
+                        
+                    </div>
+                    <h1>使用 operator-sdk 生成一个CRD</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Thursday, April 2, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#what-is-crd">What is CRD</a></li>
+<li><a href="#what-is-operator-sdk">What is operator-sdk</a></li>
+<li><a href="#user-guide">user guide</a></li>
+<li><a href="#installation-guide">installation guide</a></li>
+<li><a href="#example">example</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h2 id="what-is-crd">What is CRD</h2>
+
+<p>The CustomResourceDefinition API resource allows you to define custom resources. Defining a CRD object creates a new custom resource with a name and schema that you specify. The Kubernetes API serves and handles the storage of your custom resource. The name of a CRD object must be a valid DNS subdomain name. more detailed info please refer to <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">CRD definition</a></p>
+
+<h2 id="what-is-operator-sdk">What is operator-sdk</h2>
+
+<p>The SDK provides the tools to build, test and package Operators. Initially, the SDK facilitates the marriage of an application’s business logic (for example, how to scale, upgrade, or backup) with the Kubernetes API to execute those operations. Over time, the SDK can allow engineers to make applications smarter and have the user experience of cloud services. Leading practices and code patterns that are shared across Operators are included in the SDK to help prevent reinventing the wheel.</p>
+
+<h2 id="user-guide">user guide</h2>
+
+<p>This is an official user guide. please reference the <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md">user guide</a>.</p>
+
+<h2 id="installation-guide">installation guide</h2>
+
+<pre><code>1. Download the release binary
+Install CLI in Linux env.
+# Set the release version variable
+$ RELEASE_VERSION=v0.16.0
+# Linux
+$ curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
+
+2. Verify the downloaded release binary
+# Linux
+$ curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu.asc
+
+3. To verify a release binary using the provided asc files, place the binary and corresponding asc file into the same directory and use the corresponding command:
+
+# Linux
+$ gpg --verify operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu.asc
+
+If you do not have the maintainers public key on your machine, you will get an error message similar to this:
+
+$ gpg --verify operator-sdk-${RELEASE_VERSION}-x86_64-apple-darwin.asc
+$ gpg: assuming signed data in 'operator-sdk-${RELEASE_VERSION}-x86_64-apple-darwin'
+$ gpg: Signature made Fri Apr  5 20:03:22 2019 CEST
+$ gpg:                using RSA key &lt;KEY_ID&gt;
+$ gpg: Can't check signature: No public key
+
+To download the key, use the following command, replacing $KEY_ID with the RSA key string provided in the output of the previous command:
+
+$ gpg --recv-key &quot;$KEY_ID&quot;
+
+You'll need to specify a key server if one hasn't been configured. For example:
+
+$ gpg --keyserver keyserver.ubuntu.com --recv-key &quot;$KEY_ID&quot;
+
+Now you should be able to verify the binary.
+
+4. Install the release binary in your PATH
+
+# Linux
+$ chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu &amp;&amp; sudo mkdir -p /usr/local/bin/ &amp;&amp; sudo cp operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu /usr/local/bin/operator-sdk &amp;&amp; rm operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
+</code></pre>
+
+<p>This is an official operator-sdk installation guide. more information please refer to <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user/install-operator-sdk.md">installation guide</a>.</p>
+
+<h2 id="example">example</h2>
+
+<ul>
+<li><p>Installation operator-sdk CLI.</p>
+
+<p>please reference <strong>installation guide section</strong>.</p></li>
+
+<li><p>Using operator-sdk to generate a CRD.</p>
+
+<ol>
+<li>Generate a common framwork</li>
+</ol>
+
+<pre><code>operator-sdk new repo_name --repo=repo_name --vendor=true
+</code></pre>
+
+<ol>
+<li>New a API</li>
+</ol>
+
+<ul>
+<li>Generate a API</li>
+</ul>
+
+<pre><code>operator-sdk add api --api-version=xxxx/v1alpha1 --kind=$kind
+</code></pre>
+
+<ul>
+<li>update the API contents then using &ldquo;operator-sdk generate k8s&rdquo; and &ldquo;operator-sdk generate crds&rdquo; commands to update your code and deploy.</li>
+</ul>
+
+<ol>
+<li>New a controller</li>
+</ol>
+
+<pre><code>operator-sdk add controller --api-version=xxxx/v1alpha1 --kind=$kind
+</code></pre></li>
+
+<li><p>Generate a clientset</p>
+
+<ol>
+<li>Get code-generator</li>
+</ol>
+
+<pre><code>go get k8s.io/code-generator
+</code></pre>
+
+<ol>
+<li>Add following annotations in your xxx_types.go file</li>
+</ol>
+
+<pre><code>    // +genclient
+    // +genclient:noStatus
+    // +genclient:onlyVerbs=create,delete,update,get
+    // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    // Xxxx is the Schema for the xxxxs API
+    // +kubebuilder:subresource:status
+    // +kubebuilder:resource:path=xxxxs,scope=Namespaced
+    type Xxxx struct {
+        metav1.TypeMeta `json:&quot;,inline&quot;`
+        metav1.ObjectMeta `json:&quot;metadata,omitempty&quot;`
+        Spec XxxxSpec `json:&quot;spec,omitempty&quot;`
+        Status XxxxStatus `json:&quot;status,omitempty&quot;`
+    }
+</code></pre>
+
+<ol>
+<li>Generate a clientset</li>
+</ol>
+
+<pre><code>$GOPATH/src/k8s.io/code-generator/generate-groups.sh client repo/pkg/client repo/pkg/apis xxxx:v1alpha1
+</code></pre>
+
+<ol>
+<li>deploy and test it.</li>
+</ol></li>
+</ul>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/" data-toggle="tooltip" data-placement="top" title="如何在 pod 中做 golang 的 profiling">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/04/05/hpack-summary/" data-toggle="tooltip" data-placement="top" title="RFC7541 HPACK 总结">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
