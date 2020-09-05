@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://luffyao.com/img/home-bg-jeep.jpg">
-    <meta property="twitter:image" content="https://luffyao.com/img/home-bg-jeep.jpg" />
+    <meta property="og:image" content="https://luffyao.com/img/home-bg.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/img/home-bg.jpg" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>TECH-Luffyao&#39;s Blog</title>
+    <title>TECH-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
     <link rel="canonical" href="/categories/tech/">
 
@@ -100,10 +100,6 @@
                         </li>
                         
                         <li>
-                            <a href="/categories/tech">Tech</a>
-                        </li>
-                        
-                        <li>
                             <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
                         </li>
                         
@@ -156,14 +152,14 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home-bg-jeep.jpg')">
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
                 <div class="site-heading">
                     <h1>Luffyao&#39;s Blog </h1>
                     
-		    <span class="subheading">Do one thing, Do it well!</span>
+		    <span class="subheading">Do one thing, Do it well!!!</span>
                 </div>
             </div>
         </div>
@@ -187,19 +183,103 @@
             
 
 <div class="post-preview">
-    <a href="https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/">
+    <a href="https://luffyao.com/2020/08/07/clientgo/">
         <h2 class="post-title">
-            gerrit 自动添加 reviewers
+            client-go 学习总结
         </h2>
 	
         <div class="post-content-preview">
 	
-            前言 我想用过 gerrit 的同学都知道，这个真的是个神 code review 工具，可以 verify, view, 还可以 cherry-pick 等等功能。这里我不做过多解释。有需要的可以自行百度了解基本知识。 但是就是
+            前言 目前在云原生社区的 Kubernetes 源码研习社中和广大学友们共同学习郑东旭大佬的 kubernetes 源码剖析这本书。当前正在开展第一期学习活动，第五章节 client-go 的学习。之所以从
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by Luffyao Friday, December 20, 2019
+    Posted by Luffyao Friday, August 7, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2020/07/25/vminstallk8s/">
+        <h2 class="post-title">
+            本地 ubuntu18.04 VM 安装 k8s
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            安装步骤 安装虚拟机 安装至少需要安装两个 ubuntu 虚拟机，根据个人需求，和电脑配置，这里我是两个虚拟机，一个 master ，一个 node 。每个虚拟机 2 CPU，4G 内存。
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Saturday, July 25, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2020/05/17/admission-controller-webhook/">
+        <h2 class="post-title">
+            controller-runtime 实现准入 webhook
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Sunday, May 17, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2020/05/13/k8s-webhook-admission-control/">
+        <h2 class="post-title">
+            client-go 实现准入 webhook
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            什么是准入 webhook 准入 webhooks 是一个接收 admission 请求并对其做些处理的 HTTP 回调。你可以定义两种准入 webhook,validating admission webhook and mutating admission webhook。mutating admission webhook 首先被调用，然后
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Wednesday, May 13, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="https://luffyao.com/2020/04/05/hpack-summary/">
+        <h2 class="post-title">
+            RFC7541 HPACK 总结
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            概括 HPACK 是一个新的可以消除 header 字段冗余，限制已知安全攻击的脆弱性和在受限的环境中有限的内存使用的压缩器。RFC7541 定义了两个表，分别是一张静
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Sunday, April 5, 2020
     
     
     </p>
@@ -210,6 +290,15 @@
 
             
 
+
+<ul class="pager">
+    
+    
+    <li class="next">
+        <a href="/categories/tech/page/2/">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
 
 
        	</div>
@@ -231,13 +320,15 @@
              
             
                 
-            
-                
                     <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
                         C&#43;&#43;17
                     </a>
                 
             
+                
+                    <a href="/tags/coredump" title="Coredump">
+                        Coredump
+                    </a>
                 
             
                 
@@ -247,6 +338,28 @@
                 
             
                 
+                    <a href="/tags/gerrit" title="Gerrit">
+                        Gerrit
+                    </a>
+                
+            
+                
+                    <a href="/tags/hpack" title="HPACK">
+                        HPACK
+                    </a>
+                
+            
+                
+                    <a href="/tags/iptables" title="Iptables">
+                        Iptables
+                    </a>
+                
+            
+                
+                    <a href="/tags/istio" title="Istio">
+                        Istio
+                    </a>
+                
             
                 
                     <a href="/tags/kubernetes" title="Kubernetes">
@@ -255,29 +368,57 @@
                 
             
                 
-            
+                    <a href="/tags/netfilter" title="Netfilter">
+                        Netfilter
+                    </a>
                 
             
                 
-            
+                    <a href="/tags/operator-sdk" title="Operator-sdk">
+                        Operator-sdk
+                    </a>
                 
             
                 
-            
+                    <a href="/tags/perf" title="Perf">
+                        Perf
+                    </a>
                 
             
                 
-            
+                    <a href="/tags/profling" title="Profling">
+                        Profling
+                    </a>
                 
             
                 
-            
+                    <a href="/tags/tcpdump" title="Tcpdump">
+                        Tcpdump
+                    </a>
                 
             
                 
-            
+                    <a href="/tags/git" title="git">
+                        git
+                    </a>
                 
             
+                
+                    <a href="/tags/github" title="github">
+                        github
+                    </a>
+                
+            
+                
+                    <a href="/tags/mtls" title="mTLS">
+                        mTLS
+                    </a>
+                
+            
+                
+                    <a href="/tags/%E9%9A%8F%E7%AC%94" title="随笔">
+                        随笔
+                    </a>
                 
             
         </div>

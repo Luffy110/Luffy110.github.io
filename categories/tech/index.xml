@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tech on Luffyao&#39;s Blog</title>
+    <title>TECH on Luffyao&#39;s Blog</title>
     <link>https://luffyao.com/categories/tech/</link>
-    <description>Recent content in Tech on Luffyao&#39;s Blog</description>
+    <description>Recent content in TECH on Luffyao&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 07 Aug 2020 21:28:37 +0800</lastBuildDate>
@@ -95,6 +95,15 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       
       <guid>https://luffyao.com/2019/12/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</guid>
       <description>前言 今天刚好放假，有空来整理下 iptables 的工作原理。对于 iptables/netfilter 的接触，还是之前研究 k8s service load balancing 时深入学习了下工作原理。 概念理解 下面摘录下官方的定义： netfilter is a set</description>
+    </item>
+    
+    <item>
+      <title>gerrit 自动添加 reviewers</title>
+      <link>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</link>
+      <pubDate>Fri, 20 Dec 2019 22:02:36 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</guid>
+      <description>前言 我想用过 gerrit 的同学都知道，这个真的是个神 code review 工具，可以 verify, view, 还可以 cherry-pick 等等功能。这里我不做过多解释。有需要的可以自行百度了解基本知识。 但是就是</description>
     </item>
     
     <item>

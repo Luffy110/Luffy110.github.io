@@ -6,19 +6,10 @@
     <description>Recent content in Tags on Luffyao&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Dec 2019 20:32:51 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 08 Dec 2019 10:49:58 +0800</lastBuildDate>
     
 	<atom:link href="https://luffyao.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>C&#43;&#43;</title>
-      <link>https://luffyao.com/tags/c&#43;&#43;/</link>
-      <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
-      
-      <guid>https://luffyao.com/tags/c&#43;&#43;/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>C&#43;&#43;17</title>
@@ -75,7 +66,7 @@
     </item>
     
     <item>
-      <title>Hpack</title>
+      <title>HPACK</title>
       <link>https://luffyao.com/tags/hpack/</link>
       <pubDate>Sun, 05 Apr 2020 19:53:22 +0800</pubDate>
       
@@ -152,15 +143,6 @@
       <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
       
       <guid>https://luffyao.com/tags/profling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>RFC7541</title>
-      <link>https://luffyao.com/tags/rfc7541/</link>
-      <pubDate>Sun, 05 Apr 2020 19:53:22 +0800</pubDate>
-      
-      <guid>https://luffyao.com/tags/rfc7541/</guid>
       <description></description>
     </item>
     
