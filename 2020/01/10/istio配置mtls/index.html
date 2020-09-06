@@ -194,6 +194,11 @@
 </header>
 
 
+<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
 
 
 <article>
@@ -426,108 +431,108 @@ kubectl create -n external secret generic ca --from-file=your_fqdn/2_intermediat
 
 <p>Reference command: <strong><em>kubectl apply -f &lt;(istioctl kube-inject -f sleep.yaml) -n external</em></strong></p>
 
-<pre><code class="language-yaml">  #### contents of the sleep.yaml
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: sleep
-  ---
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: sleep
-    labels:
-      app: sleep
-  spec:
-    ports:
-    - port: 80
-      name: http
-    selector:
-      app: sleep
-  ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: sleep
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        app: sleep
-    template:
-      metadata:
-        labels:
-          app: sleep
-        annotations:
-          sidecar.istio.io/inject: &quot;true&quot;
-          sidecar.istio.io/userVolume: '{&quot;client-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;testsleep&quot;}},&quot;ca-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;ca&quot;}}}'
-          sidecar.istio.io/userVolumeMount: '{&quot;client-secret&quot;: {&quot;mountPath&quot;:&quot;/etc/client-cert/&quot;,&quot;readOnly&quot;:true},&quot;ca-secret&quot;:{&quot;mountPath&quot;:&quot;/etc/ca-cert/&quot;}}'
-      spec:
-        serviceAccountName: sleep
-        containers:
-        - name: sleep
-          image: governmentpaas/curl-ssl
-          command: [&quot;/bin/sleep&quot;, &quot;3650d&quot;]
-          imagePullPolicy: IfNotPresent
-  ---
+<pre><code class="language-yaml">   ###contents of the sleep.yaml
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: sleep
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: sleep
+     labels:
+       app: sleep
+   spec:
+     ports:
+     - port: 80
+       name: http
+     selector:
+       app: sleep
+   ---
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: sleep
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: sleep
+     template:
+       metadata:
+         labels:
+           app: sleep
+         annotations:
+           sidecar.istio.io/inject: &quot;true&quot;
+           sidecar.istio.io/userVolume: '{&quot;client-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;testsleep&quot;}},&quot;ca-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;ca&quot;}}}'
+           sidecar.istio.io/userVolumeMount: '{&quot;client-secret&quot;: {&quot;mountPath&quot;:&quot;/etc/client-cert/&quot;,&quot;readOnly&quot;:true},&quot;ca-secret&quot;:{&quot;mountPath&quot;:&quot;/etc/ca-cert/&quot;}}'
+       spec:
+         serviceAccountName: sleep
+         containers:
+         - name: sleep
+           image: governmentpaas/curl-ssl
+           command: [&quot;/bin/sleep&quot;, &quot;3650d&quot;]
+           imagePullPolicy: IfNotPresent
+   ---
 </code></pre></li>
 
 <li><p>Deploy VS,DR, SE under <strong>external</strong> namespace</p>
 
 <p>Reference command: <strong><em>kubectl apply -f xxxx.yaml -n external</em></strong></p>
 
-<pre><code class="language-yaml">  #### contents of the XXXX.yaml
-  apiVersion: networking.istio.io/v1alpha3
-  kind: VirtualService
-  metadata:
-    name: test-external
-    namespace: external
-  spec:
-    hosts:
-    - your_fqdn
-    http:
-    - match:
-      - port: 31380
-      route:
-      - destination:
-          host: your_fqdn
-          port:
-            number: 31390
-  ---
-  apiVersion: networking.istio.io/v1alpha3
-  kind: DestinationRule
-  metadata:
-    name: test-external
-  spec:
-    host: your_fqdn
-    trafficPolicy:
-      loadBalancer:
-        simple: ROUND_ROBIN
-      portLevelSettings:
-      - port:
-          number: 31390
-        tls:
-          mode: MUTUAL
-          clientCertificate: /etc/client-cert/tls.crt
-          privateKey: /etc/client-cert/tls.key
-          caCertificates: /etc/ca-cert/ca-chain.cert.pem
-  ---
-  apiVersion: networking.istio.io/v1alpha3
-  kind: ServiceEntry
-  metadata:
-    name: test-external
-  spec:
-    hosts:
-    - your_fqdn
-    ports:
-    - number: 31380
-      name: http
-      protocol: HTTP
-    - number: 31390
-      name: https
-      protocol: HTTPS
-    resolution: DNS
-    location: MESH_EXTERNAL
+<pre><code class="language-yaml">   #### contents of the XXXX.yaml
+   apiVersion: networking.istio.io/v1alpha3
+   kind: VirtualService
+   metadata:
+     name: test-external
+     namespace: external
+   spec:
+     hosts:
+     - your_fqdn
+     http:
+     - match:
+       - port: 31380
+       route:
+       - destination:
+           host: your_fqdn
+           port:
+             number: 31390
+   ---
+   apiVersion: networking.istio.io/v1alpha3
+   kind: DestinationRule
+   metadata:
+     name: test-external
+   spec:
+     host: your_fqdn
+     trafficPolicy:
+       loadBalancer:
+         simple: ROUND_ROBIN
+       portLevelSettings:
+       - port:
+           number: 31390
+         tls:
+           mode: MUTUAL
+           clientCertificate: /etc/client-cert/tls.crt
+           privateKey: /etc/client-cert/tls.key
+           caCertificates: /etc/ca-cert/ca-chain.cert.pem
+   ---
+   apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+     - your_fqdn
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL
 </code></pre></li>
 </ul></li>
 
@@ -594,7 +599,6 @@ curl -HHost:your_fqdn --resolve your_fqdn:31390:10.120.20.63 -svL http://your_fq
           clientCertificate: /etc/client-cert/tls.crt
           privateKey: /etc/client-cert/tls.key
           caCertificates: /etc/ca-cert/ca-chain.cert.pem
-   
 </code></pre></li>
 
 <li><p>update SE to support FQDN and IP</p>
@@ -604,128 +608,128 @@ curl -HHost:your_fqdn --resolve your_fqdn:31390:10.120.20.63 -svL http://your_fq
 
 <p><strong>NOTE: this scenario,&ldquo;resolution&rdquo; field must fills in &ldquo;NONE&rdquo;, otherwise appear an error when configuration.</strong></p>
 
-<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
-  kind: ServiceEntry
-  metadata:
-    name: test-external
-  spec:
-    hosts:
-     - '*.com'
-    ports:
-    - number: 31380
-      name: http
-      protocol: HTTP
-    - number: 31390
-      name: https
-      protocol: HTTPS
-    resolution: NONE
-    location: MESH_EXTERNAL
+<pre><code class="language-yaml">   apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - '*.com'
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: NONE
+     location: MESH_EXTERNAL
 </code></pre>
 
-<pre><code class="language-shell">  # curl -HHost:your_fqdn --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
-  # curl -HHost:your_fqdn --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
+<pre><code class="language-shell"># curl -HHost:your_fqdn --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+# curl -HHost:your_fqdn --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
 </code></pre>
 
 <p>Test result:(maybe need other configuration) :503.</p></li>
 
 <li><p>test IP only</p>
 
-<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
-  kind: ServiceEntry
-  metadata:
-    name: test-external
-  spec:
-    hosts:
-     - '*.com'
-    endpoints:
-      - address: 10.120.20.63
-    ports:
-    - number: 31380
-      name: http
-      protocol: HTTP
-    - number: 31390
-      name: https
-      protocol: HTTPS
-    resolution: STATIC
-    location: MESH_EXTERNAL
+<pre><code class="language-yaml">   apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - '*.com'
+     endpoints:
+       - address: 10.120.20.63
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: STATIC
+     location: MESH_EXTERNAL
 </code></pre>
 
-<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+<pre><code class="language-shell"># curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
 </code></pre>
 
 <p>Test result: OK. haven&rsquo;t DNS resolution.</p>
 
-<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+<pre><code class="language-shell"># curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
 </code></pre>
 
 <p>Test result: 502</p></li>
 
 <li><p>test FQDN only</p>
 
-<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
-  kind: ServiceEntry
-  metadata:
-    name: test-external
-  spec:
-    hosts:
-     - '*.com'
-    endpoints:
-      - address: your_fqdn
-    ports:
-    - number: 31380
-      name: http
-      protocol: HTTP
-    - number: 31390
-      name: https
-      protocol: HTTPS
-    resolution: DNS
-    location: MESH_EXTERNAL
+<pre><code class="language-yaml">   apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - '*.com'
+     endpoints:
+       - address: your_fqdn
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL
 </code></pre>
 
-<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+<pre><code class="language-shell"># curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
 </code></pre>
 
 <p>Test result: OK. have DNS resolution.</p></li>
 
 <li><p>test both FQDN and IP</p>
 
-<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
-  kind: ServiceEntry
-  metadata:
-    name: test-external
-  spec:
-    hosts:
-     - '*.com'
-    endpoints:
-      - address: your_fqdn
-      - address: 10.120.20.63
-    ports:
-    - number: 31380
-      name: http
-      protocol: HTTP
-    - number: 31390
-      name: https
-      protocol: HTTPS
-    resolution: DNS
-    location: MESH_EXTERNAL
+<pre><code class="language-yaml">   apiVersion: networking.istio.io/v1alpha3
+   kind: ServiceEntry
+   metadata:
+     name: test-external
+   spec:
+     hosts:
+      - '*.com'
+     endpoints:
+       - address: your_fqdn
+       - address: 10.120.20.63
+     ports:
+     - number: 31380
+       name: http
+       protocol: HTTP
+     - number: 31390
+       name: https
+       protocol: HTTPS
+     resolution: DNS
+     location: MESH_EXTERNAL
 </code></pre>
 
-<pre><code class="language-shell">  # curl -HHost:your_fqdn -svL http://your_fqdn:31380/status/418
+<pre><code class="language-shell"># curl -HHost:your_fqdn -svL http://your_fqdn:31380/status/418
 </code></pre>
 
 <p>Test result: OK , have DNS resolution</p>
 
-<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+<pre><code class="language-shell"># curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
 </code></pre>
 
 <p>Test result: OK, haven&rsquo;t DNS resolution</p>
 
-<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
+<pre><code class="language-shell"># curl   --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
 </code></pre>
 
 <p>Test result: OK.</p>
 
-<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+<pre><code class="language-shell"># curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
 </code></pre>
 
 <p>Test result: 502</p></li>
