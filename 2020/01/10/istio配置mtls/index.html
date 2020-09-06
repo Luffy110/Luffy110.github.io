@@ -222,6 +222,7 @@
 <li><a href="#incoming-traffic-with-mtls-ingressgateway">Incoming Traffic with MTLS (Ingressgateway)</a></li>
 <li><a href="#outgoing-traffic-with-mtls-serviceentry">Outgoing Traffic with MTLS (ServiceEntry)</a></li>
 </ul></li>
+<li><a href="#test-analysis-ip-and-fqdn">Test Analysis(IP and FQDN)</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
 <li><a href="#questions">Questions</a></li>
 </ul></li>
@@ -244,7 +245,7 @@
 
 <p>Reference link <a href="https://archive.istio.io/v1.3/docs/reference/config/istio.authentication.v1alpha1/#MutualTls-Mode">MutlalTls-Mode</a></p>
 
-<pre><code>kubectl get meshpolicy
+<pre><code class="language-shell">kubectl get meshpolicy
 kubectl edit meshpolicy
 
 </code></pre>
@@ -256,7 +257,7 @@ kubectl edit meshpolicy
 
 <p>You can reference this link <a href="https://archive.istio.io/v1.3/docs/tasks/traffic-management/ingress/secure-ingress-mount/">secure-ingress-mount</a></p>
 
-<pre><code>git clone https://github.com/nicholasjackson/mtls-go-example
+<pre><code class="language-shell">git clone https://github.com/nicholasjackson/mtls-go-example
 cd mtls-go-example
 
 /////// Note: change &lt;password&gt;  to any value you like
@@ -275,520 +276,477 @@ mkdir ../your_fqdn &amp;&amp; mv 1_root 2_intermediate 3_application 4_client ..
 <h3 id="incoming-traffic-with-mtls-ingressgateway">Incoming Traffic with MTLS (Ingressgateway)</h3>
 
 <ol>
-<li>Deploy a httpbin service under default namespace and enabled sidecar injection</li>
-</ol>
+<li><p>Deploy a httpbin service under default namespace and enabled sidecar injection</p>
 
 <p>Reference command: <strong>kubectl apply -f &lt;(istioctl kube-inject -f httpbin.yaml)</strong></p>
 
-<pre><code>   ################################################################   ##################################
-   # httpbin service
-   ################################################################   ##################################
-   apiVersion: v1
-   kind: Service
-   metadata:
-     name: httpbin
-     labels:
-       app: httpbin
-   spec:
-     ports:
-     - name: http
-       port: 8000
-       targetPort: 80
-     selector:
-       app: httpbin
-   ---
-   apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: httpbin
-   spec:
-     replicas: 1
-     selector:
-       matchLabels:
-         app: httpbin
-         version: v1
-     template:
-       metadata:
-         labels:
-           app: httpbin
-           version: v1
-       spec:
-         containers:
-         - image: docker.io/kennethreitz/httpbin
-           imagePullPolicy: IfNotPresent
-           name: httpbin
-           ports:
-           - containerPort: 80
-</code></pre>
+<pre><code class="language-yaml">  apiVersion: v1
+  kind: Service
+  metadata:
+    name: httpbin
+    labels:
+      app: httpbin
+  spec:
+    ports:
+    - name: http
+      port: 8000
+      targetPort: 80
+    selector:
+      app: httpbin
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: httpbin
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: httpbin
+        version: v1
+    template:
+      metadata:
+        labels:
+          app: httpbin
+          version: v1
+      spec:
+        containers:
+        - image: docker.io/kennethreitz/httpbin
+          imagePullPolicy: IfNotPresent
+          name: httpbin
+          ports:
+          - containerPort: 80
+</code></pre></li>
 
-<ol>
-<li>Create two secrets <strong>istio-ingressgateway-certs</strong> and <strong>istio-ingressgateway-ca-certs</strong> under <strong>istio-system</strong> namespace</li>
-</ol>
+<li><p>Create two secrets <strong>istio-ingressgateway-certs</strong> and <strong>istio-ingressgateway-ca-certs</strong> under <strong>istio-system</strong> namespace</p>
 
-<pre><code>kubectl create -n istio-system secret tls istio-ingressgateway-certs --key your_fqdn/3_application/private/your_fqdn.key.pem --cert   your_fqdn/3_application/certs/your_fqdn.cert.pem
-
+<pre><code class="language-shell">kubectl create -n istio-system secret tls istio-ingressgateway-certs --key your_fqdn/3_application/private/your_fqdn.key.pem --cert your_fqdn/3_applicationcerts/your_fqdn.cert.pem
 kubectl create -n istio-system secret generic istio-ingressgateway-ca-certs --from-file=your_fqdn/2_intermediate/certs/ca-chain.cert.pem
+</code></pre></li>
 
+<li><p>Define a Gateway and VirtualService and DestinationRule</p>
+
+<pre><code class="language-yaml">  kubectl apply -f - &lt;&lt;EOF
+  apiVersion: networking.istio.io/v1alpha3
+  kind: Gateway
+  metadata:
+    name: httpbin-gateway
+  spec:
+    selector:
+      istio: ingressgateway # use istio default ingress gateway
+    servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: MUTUAL
+        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+        privateKey: /etc/istio/ingressgateway-certs/tls.key
+        caCertificates: /etc/istio/ingressgateway-ca-certs/ca-chain.cert.pem
+      hosts:
+      - &quot;*&quot;
+  EOF
 </code></pre>
 
-<ol>
-<li>Define a Gateway and VirtualService and DestinationRule
-```
-kubectl apply -f - &lt;&lt;EOF
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
+<pre><code class="language-yaml">  kubectl apply -f - &lt;&lt;EOF
+  apiVersion: networking.istio.io/v1alpha3
+  kind: VirtualService
+  metadata:
+    name: httpbin
+  spec:
+    hosts:
+    - &quot;your_fqdn&quot;
+    gateways:
+    - httpbin-gateway
+    http:
+    - match:
+      - uri:
+          prefix: /status
+      - uri:
+          prefix: /delay
+      route:
+      - destination:
+          port:
+            number: 8000
+          host: httpbin
+  EOF
+</code></pre>
+
+<pre><code class="language-yaml">kubectl apply -f - &lt;&lt;EOF
+apiVersion: &quot;networking.istio.io/v1alpha3&quot;
+kind: DestinationRule
 metadata:
- name: httpbin-gateway
+  name: httpbin
 spec:
- selector:
-   istio: ingressgateway # use istio default ingress gateway
- servers:
-
-<ul>
-<li>port:
- number: 443
- name: https
- protocol: HTTPS
-tls:
- mode: MUTUAL
- serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
- privateKey: /etc/istio/ingressgateway-certs/tls.key
- caCertificates: /etc/istio/ingressgateway-ca-certs/ca-chain.cert.pem
-hosts:
-
-<ul>
-<li>&ldquo;*&rdquo;
+  host: &quot;httpbin&quot;
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
 EOF
-```
-<br /></li>
-</ul></li>
-</ul></li>
-</ol>
+</code></pre></li>
 
-<pre><code>   kubectl apply -f - &lt;&lt;EOF
-   apiVersion: networking.istio.io/v1alpha3
-   kind: VirtualService
-   metadata:
-     name: httpbin
-   spec:
-     hosts:
-     - &quot;your_fqdn&quot;
-     gateways:
-     - httpbin-gateway
-     http:
-     - match:
-       - uri:
-           prefix: /status
-       - uri:
-           prefix: /delay
-       route:
-       - destination:
-           port:
-             number: 8000
-           host: httpbin
-   EOF
-</code></pre>
-
-<pre><code>   kubectl apply -f - &lt;&lt;EOF
-   apiVersion: &quot;networking.istio.io/v1alpha3&quot;
-   kind: DestinationRule
-   metadata:
-     name: httpbin
-   spec:
-     host: &quot;httpbin&quot;
-     trafficPolicy:
-       tls:
-         mode: ISTIO_MUTUAL
-   EOF
-</code></pre>
-
-<ol>
 <li><p>Check Cert and CA</p>
 
-<pre><code>kubectl exec -it $(kubectl get pods -n istio-system| grep ingress | awk -F &quot; &quot; '{print $1}') -n istio-system -- ls /etc/istio/ingressgateway-certs/
+<pre><code class="language-shell">kubectl exec -it $(kubectl get pods -n istio-system| grep ingress | awk -F &quot; &quot; '{print $1}') -n istio-system -- ls /etc/istio/ingressgateway-certs/
 kubectl exec -it $(kubectl get pods -n istio-system| grep ingress | awk -F &quot; &quot; '{print $1}') -n istio-system -- ls /etc/istio/ingressgateway-ca-certs/
 </code></pre></li>
 
-<li><p>Using CURL command to test it.</p></li>
-</ol>
+<li><p>Using CURL command to test it.</p>
 
 <p><strong>NOTE: 31390 is NodePort, because in minikube we haven&rsquo;t EXTERNAL-IP, so we must use Node port. detailed message please reference link <a href="https://archive.istio.io/v1.3/docs/tasks/traffic-management/ingress/ingress-control/">ingress-control</a></strong></p>
 
-<pre><code>curl -HHost:your_fqdn --resolve    your_fqdn:31390:10.120.20.63 --cacert    your_fqdn/2_intermediate/certs/ca-chain.cert.pem --cert    your_fqdn/4_client/certs/your_fqdn.cert.pem --key    your_fqdn/4_client/private/your_fqdn.key.pem https://your_fqdn:31390/status/418 -v
+<pre><code class="language-shell">curl -HHost:your_fqdn --resolve your_fqdn:31390:10.120.20.63 --cacert  your_fqdn/2_intermediate/certs/ca-chain.cert.pem --cert your_fqdn/4_client/certs/your_fqdn.cert.pem --key your_fqdn/4_client/private/your_fqdn.key.pem https://your_fqdn:31390/status/418 -v
 </code></pre>
 
-<p>The successful mark is you will see a teapot</p>
+<p>The successful mark is you will see a teapot</p></li>
+</ol>
 
 <h3 id="outgoing-traffic-with-mtls-serviceentry">Outgoing Traffic with MTLS (ServiceEntry)</h3>
 
 <ol>
 <li><p>Create an <strong>external</strong> namespace</p>
 
-<pre><code>kubectl create namespace external
+<pre><code class="language-shell">kubectl create namespace external
 </code></pre></li>
 
-<li><p>Create client secret under <strong>external</strong> namespace
-```
-kubectl create -n external secret tls testsleep &ndash;key your_fqdn/4_client/private/your_fqdn.key.pem &ndash;cert   your_fqdn/4_client/certs/your_fqdn.cert.pem</p></li>
+<li><p>Create client secret under <strong>external</strong> namespace</p>
+
+<pre><code class="language-shell">kubectl create -n external secret tls testsleep --key your_fqdn/4_client/private/your_fqdn.key.pem --cert your_fqdn/4_client/certs/your_fqdn.cert.pem
+
+kubectl create -n external secret generic ca --from-file=your_fqdn/2_intermediate/certs/ca-chain.cert.pem
+</code></pre></li>
+
+<li><p>Deploy sleep service under <strong>external</strong> namespace.</p>
+
+<p><strong>NOTE: Following files ,you must install it under external namespace.</strong></p>
+
+<ul>
+<li><p>Deploy sleep under <strong>external</strong> namespace and enable injection.</p>
+
+<p>Reference command: <strong><em>kubectl apply -f &lt;(istioctl kube-inject -f sleep.yaml) -n external</em></strong></p>
+
+<pre><code class="language-yaml">  #### contents of the sleep.yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: sleep
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: sleep
+    labels:
+      app: sleep
+  spec:
+    ports:
+    - port: 80
+      name: http
+    selector:
+      app: sleep
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: sleep
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: sleep
+    template:
+      metadata:
+        labels:
+          app: sleep
+        annotations:
+          sidecar.istio.io/inject: &quot;true&quot;
+          sidecar.istio.io/userVolume: '{&quot;client-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;testsleep&quot;}},&quot;ca-secret&quot;: {&quot;secret&quot;: {&quot;secretName&quot;:&quot;ca&quot;}}}'
+          sidecar.istio.io/userVolumeMount: '{&quot;client-secret&quot;: {&quot;mountPath&quot;:&quot;/etc/client-cert/&quot;,&quot;readOnly&quot;:true},&quot;ca-secret&quot;:{&quot;mountPath&quot;:&quot;/etc/ca-cert/&quot;}}'
+      spec:
+        serviceAccountName: sleep
+        containers:
+        - name: sleep
+          image: governmentpaas/curl-ssl
+          command: [&quot;/bin/sleep&quot;, &quot;3650d&quot;]
+          imagePullPolicy: IfNotPresent
+  ---
+</code></pre></li>
+
+<li><p>Deploy VS,DR, SE under <strong>external</strong> namespace</p>
+
+<p>Reference command: <strong><em>kubectl apply -f xxxx.yaml -n external</em></strong></p>
+
+<pre><code class="language-yaml">  #### contents of the XXXX.yaml
+  apiVersion: networking.istio.io/v1alpha3
+  kind: VirtualService
+  metadata:
+    name: test-external
+    namespace: external
+  spec:
+    hosts:
+    - your_fqdn
+    http:
+    - match:
+      - port: 31380
+      route:
+      - destination:
+          host: your_fqdn
+          port:
+            number: 31390
+  ---
+  apiVersion: networking.istio.io/v1alpha3
+  kind: DestinationRule
+  metadata:
+    name: test-external
+  spec:
+    host: your_fqdn
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+      portLevelSettings:
+      - port:
+          number: 31390
+        tls:
+          mode: MUTUAL
+          clientCertificate: /etc/client-cert/tls.crt
+          privateKey: /etc/client-cert/tls.key
+          caCertificates: /etc/ca-cert/ca-chain.cert.pem
+  ---
+  apiVersion: networking.istio.io/v1alpha3
+  kind: ServiceEntry
+  metadata:
+    name: test-external
+  spec:
+    hosts:
+    - your_fqdn
+    ports:
+    - number: 31380
+      name: http
+      protocol: HTTP
+    - number: 31390
+      name: https
+      protocol: HTTPS
+    resolution: DNS
+    location: MESH_EXTERNAL
+</code></pre></li>
+</ul></li>
+
+<li><p>Check CA and Cert</p>
+
+<pre><code class="language-shell">kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &quot; &quot; '{print $1}') -c istio-proxy -n external -- ls /etc/client-cert/
+kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &quot; &quot; '{print $1}') -c istio-proxy -n external -- ls /etc/ca-cert/
+</code></pre></li>
+
+<li><p>Test Client</p>
+
+<ul>
+<li><p>kubectl exec into sleep container</p>
+
+<pre><code class="language-shell">kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &quot; &quot; '{print $1}') -c sleep -n external -- /bin/sh
+</code></pre></li>
+
+<li><p>Testing</p>
+
+<pre><code class="language-shell">curl -HHost:your_fqdn --resolve your_fqdn:31380:10.120.20.63 -svL http://your_fqdn:31380/status/418
+curl -HHost:your_fqdn --resolve your_fqdn:31390:10.120.20.63 -svL http://your_fqdn:31390/status/418
+</code></pre></li>
+</ul>
+
+<p>The successful mark is you will see a teapot</p></li>
 </ol>
 
-<p>kubectl create -n external secret generic ca &ndash;from-file=your_fqdn/2_intermediate/certs/ca-chain.cert.pem</p>
-
-<pre><code>
-3. Deploy sleep service under **external** namespace.
-
-   **NOTE: Following files ,you must install it under external namespace.**
-
-* Deploy sleep under **external** namespace and enable injection.
-
-   Reference command: ***kubectl apply -f &lt;(istioctl kube-inject -f sleep.yaml) -n external***
-
-</code></pre>
-
-<p>#### contents of the sleep.yaml
-   apiVersion: v1
-   kind: ServiceAccount
-   metadata:
-     name: sleep</p>
-
-<hr />
-
-<p>apiVersion: v1
-   kind: Service
-   metadata:
-     name: sleep
-     labels:
-       app: sleep
-   spec:
-     ports:
-     - port: 80
-       name: http
-     selector:
-       app: sleep</p>
-
-<hr />
-
-<p>apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: sleep
-   spec:
-     replicas: 1
-     selector:
-       matchLabels:
-         app: sleep
-     template:
-       metadata:
-         labels:
-           app: sleep
-         annotations:
-           sidecar.istio.io/inject: &ldquo;true&rdquo;
-           sidecar.istio.io/userVolume: &lsquo;{&ldquo;client-secret&rdquo;:   {&ldquo;secret&rdquo;:{&ldquo;secretName&rdquo;:&ldquo;testsleep&rdquo;}},&ldquo;ca-secret&rdquo;:   {&ldquo;secret&rdquo;:{&ldquo;secretName&rdquo;:&ldquo;ca&rdquo;}}}&rsquo;
-           sidecar.istio.io/userVolumeMount: &lsquo;{&ldquo;client-secret&rdquo;:   {&ldquo;mountPath&rdquo;:&ldquo;/etc/client-cert/&rdquo;,&ldquo;readOnly&rdquo;:true},   &ldquo;ca-secret&rdquo;:{&ldquo;mountPath&rdquo;:&ldquo;/etc/ca-cert/&rdquo;}}&rsquo;
-       spec:
-         serviceAccountName: sleep
-         containers:
-         - name: sleep
-           image: governmentpaas/curl-ssl
-           command: [&ldquo;/bin/sleep&rdquo;, &ldquo;3650d&rdquo;]
-           imagePullPolicy: IfNotPresent</p>
-
-<hr />
-
-<pre><code>
-* Deploy VS,DR, SE under **external** namespace
-
-   Reference command: ***kubectl apply -f xxxx.yaml -n external***
-
-</code></pre>
-
-<p>#### contents of the XXXX.yaml
-   apiVersion: networking.istio.io/v1alpha3
-   kind: VirtualService
-   metadata:
-     name: test-external
-     namespace: external
-   spec:
-     hosts:
-     - your_fqdn
-     http:
-     - match:
-       - port: 31380
-       route:
-       - destination:
-           host: your_fqdn
-           port:
-             number: 31390</p>
-
-<hr />
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: DestinationRule
-   metadata:
-     name: test-external
-   spec:
-     host: your_fqdn
-     trafficPolicy:
-       loadBalancer:
-         simple: ROUND_ROBIN
-       portLevelSettings:
-       - port:
-           number: 31390
-         tls:
-           mode: MUTUAL
-           clientCertificate: /etc/client-cert/tls.crt
-           privateKey: /etc/client-cert/tls.key
-           caCertificates: /etc/ca-cert/ca-chain.cert.pem</p>
-
-<hr />
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: ServiceEntry
-   metadata:
-     name: test-external
-   spec:
-     hosts:
-     - your_fqdn
-     ports:
-     - number: 31380
-       name: http
-       protocol: HTTP
-     - number: 31390
-       name: https
-       protocol: HTTPS
-     resolution: DNS
-     location: MESH_EXTERNAL</p>
-
-<pre><code>
-4. Check CA and Cert
-</code></pre>
-
-<p>kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c istio-proxy -n external &ndash; ls /etc/client-cert/
-   kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c istio-proxy -n external &ndash; ls /etc/ca-cert/</p>
-
-<pre><code>
-5. Test Client.
-* kubectl exec into sleep container.
-</code></pre>
-
-<p>kubectl exec -it $(kubectl get pods -n external| grep sleep | awk -F &ldquo; &rdquo; &lsquo;{print $1}&rsquo;) -c sleep -n external &ndash; /bin/sh</p>
-
-<pre><code>
-* Testing
-</code></pre>
-
-<p>curl -HHost:your_fqdn &ndash;resolve your_fqdn:31380:10.120.20.63 -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
-
-<p>curl -HHost:your_fqdn &ndash;resolve your_fqdn:31390:10.120.20.63 -svL <a href="http://your_fqdn:31390/status/418">http://your_fqdn:31390/status/418</a></p>
-
-<pre><code>
-  The successful mark is you will see a teapot
-
-## Test Analysis(IP and FQDN)
-
-1. update VS, DR supports wildcard. please look at following example.
-   
-</code></pre>
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: VirtualService
-   metadata:
-     name: test-external
-     namespace: external
-   spec:
-     hosts:
-     - &ldquo;<em>.com&rdquo;
-     http:
-     - match:
-       - port: 31380
-       route:
-       - destination:
-           host: &ldquo;</em>.com&rdquo;
-           port:
-             number: 31390</p>
-
-<hr />
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: DestinationRule
-   metadata:
-     name: test-external
-   spec:
-     host: &ldquo;*.com&rdquo;
-     trafficPolicy:
-       loadBalancer:
-         simple: ROUND_ROBIN
-       portLevelSettings:
-       - port:
-           number: 31390
-         tls:
-           mode: MUTUAL
-           clientCertificate: /etc/client-cert/tls.crt
-           privateKey: /etc/client-cert/tls.key
-           caCertificates: /etc/ca-cert/ca-chain.cert.pem</p>
-
-<pre><code>
-2. update SE to support FQDN and IP.
-+ test wildcard
-
-   **NOTE: this scenario,&quot;resolution&quot; field must fills in &quot;NONE&quot;, otherwise appear an error when configuration.**
-</code></pre>
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: ServiceEntry
-   metadata:
-     name: test-external
-   spec:
-     hosts:
-      - &lsquo;*.com&rsquo;
-     ports:
-     - number: 31380
-       name: http
-       protocol: HTTP
-     - number: 31390
-       name: https
-       protocol: HTTPS
-     resolution: NONE
-     location: MESH_EXTERNAL</p>
-
-<pre><code>
-</code></pre>
-
-<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a>
-   / # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
-
-<pre><code>   Test result:(maybe need other configuration) :503.
-
-+ test IP only.
-</code></pre>
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: ServiceEntry
-   metadata:
-     name: test-external
-   spec:
-     hosts:
-      - &lsquo;*.com&rsquo;
-     endpoints:
-       - address: 10.120.20.63
-     ports:
-     - number: 31380
-       name: http
-       protocol: HTTP
-     - number: 31390
-       name: https
-       protocol: HTTPS
-     resolution: STATIC
-     location: MESH_EXTERNAL</p>
-
-<pre><code>
-</code></pre>
-
-<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
-
-<pre><code>   Test result: OK. haven't DNS resolution.
-
-</code></pre>
-
-<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
-
-<pre><code>   Test result: 502
-
-+ test FQDN only.
-</code></pre>
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: ServiceEntry
-   metadata:
-     name: test-external
-   spec:
-     hosts:
-      - &lsquo;*.com&rsquo;
-     endpoints:
-       - address: your_fqdn
-     ports:
-     - number: 31380
-       name: http
-       protocol: HTTP
-     - number: 31390
-       name: https
-       protocol: HTTPS
-     resolution: DNS
-     location: MESH_EXTERNAL</p>
-
-<pre><code>
-</code></pre>
-
-<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
-
-<pre><code>   Test result: OK. have DNS resolution.
-
-+ test both FQDN and IP.
-</code></pre>
-
-<p>apiVersion: networking.istio.io/v1alpha3
-   kind: ServiceEntry
-   metadata:
-     name: test-external
-   spec:
-     hosts:
-      - &lsquo;*.com&rsquo;
-     endpoints:
-       - address: your_fqdn
-       - address: 10.120.20.63
-     ports:
-     - number: 31380
-       name: http
-       protocol: HTTP
-     - number: 31390
-       name: https
-       protocol: HTTPS
-     resolution: DNS
-     location: MESH_EXTERNAL</p>
-
-<pre><code>
-</code></pre>
-
-<p>/ # curl -HHost:your_fqdn -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
-
-<pre><code>   Test result: OK , have DNS resolution
-   
-</code></pre>
-
-<p>/ # curl -HHost:your_fqdn  &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a></p>
-
-<pre><code>   Test result: OK, haven't DNS resolution
-   
-</code></pre>
-
-<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://your_fqdn:31380/status/418">http://your_fqdn:31380/status/418</a></p>
-
-<pre><code>   Test result: OK.
-   
-</code></pre>
-
-<p>/ # curl   &ndash;http2-prior-knowledge -svL <a href="http://10.120.20.63:31380/status/418">http://10.120.20.63:31380/status/418</a>
-   ```
-   Test result: 502</p>
+<h2 id="test-analysis-ip-and-fqdn">Test Analysis(IP and FQDN)</h2>
 
 <ol>
-<li>Test Analysis</li>
-<li>IP Only.</li>
+<li><p>update VS, DR supports wildcard. please look at following example.</p>
+
+<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
+  kind: VirtualService
+  metadata:
+    name: test-external
+    namespace: external
+  spec:
+    hosts:
+    - &quot;*.com&quot;
+    http:
+    - match:
+      - port: 31380
+      route:
+      - destination:
+          host: &quot;*.com&quot;
+          port:
+            number: 31390
+  ---
+  apiVersion: networking.istio.io/v1alpha3
+  kind: DestinationRule
+  metadata:
+    name: test-external
+  spec:
+    host: &quot;*.com&quot;
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+      portLevelSettings:
+      - port:
+          number: 31390
+        tls:
+          mode: MUTUAL
+          clientCertificate: /etc/client-cert/tls.crt
+          privateKey: /etc/client-cert/tls.key
+          caCertificates: /etc/ca-cert/ca-chain.cert.pem
+   
+</code></pre></li>
+
+<li><p>update SE to support FQDN and IP</p>
+
+<ul>
+<li><p>test wildcard</p>
+
+<p><strong>NOTE: this scenario,&ldquo;resolution&rdquo; field must fills in &ldquo;NONE&rdquo;, otherwise appear an error when configuration.</strong></p>
+
+<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
+  kind: ServiceEntry
+  metadata:
+    name: test-external
+  spec:
+    hosts:
+     - '*.com'
+    ports:
+    - number: 31380
+      name: http
+      protocol: HTTP
+    - number: 31390
+      name: https
+      protocol: HTTPS
+    resolution: NONE
+    location: MESH_EXTERNAL
+</code></pre>
+
+<pre><code class="language-shell">  # curl -HHost:your_fqdn --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+  # curl -HHost:your_fqdn --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
+</code></pre>
+
+<p>Test result:(maybe need other configuration) :503.</p></li>
+
+<li><p>test IP only</p>
+
+<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
+  kind: ServiceEntry
+  metadata:
+    name: test-external
+  spec:
+    hosts:
+     - '*.com'
+    endpoints:
+      - address: 10.120.20.63
+    ports:
+    - number: 31380
+      name: http
+      protocol: HTTP
+    - number: 31390
+      name: https
+      protocol: HTTPS
+    resolution: STATIC
+    location: MESH_EXTERNAL
+</code></pre>
+
+<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+</code></pre>
+
+<p>Test result: OK. haven&rsquo;t DNS resolution.</p>
+
+<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+</code></pre>
+
+<p>Test result: 502</p></li>
+
+<li><p>test FQDN only</p>
+
+<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
+  kind: ServiceEntry
+  metadata:
+    name: test-external
+  spec:
+    hosts:
+     - '*.com'
+    endpoints:
+      - address: your_fqdn
+    ports:
+    - number: 31380
+      name: http
+      protocol: HTTP
+    - number: 31390
+      name: https
+      protocol: HTTPS
+    resolution: DNS
+    location: MESH_EXTERNAL
+</code></pre>
+
+<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+</code></pre>
+
+<p>Test result: OK. have DNS resolution.</p></li>
+
+<li><p>test both FQDN and IP</p>
+
+<pre><code class="language-yaml">  apiVersion: networking.istio.io/v1alpha3
+  kind: ServiceEntry
+  metadata:
+    name: test-external
+  spec:
+    hosts:
+     - '*.com'
+    endpoints:
+      - address: your_fqdn
+      - address: 10.120.20.63
+    ports:
+    - number: 31380
+      name: http
+      protocol: HTTP
+    - number: 31390
+      name: https
+      protocol: HTTPS
+    resolution: DNS
+    location: MESH_EXTERNAL
+</code></pre>
+
+<pre><code class="language-shell">  # curl -HHost:your_fqdn -svL http://your_fqdn:31380/status/418
+</code></pre>
+
+<p>Test result: OK , have DNS resolution</p>
+
+<pre><code class="language-shell">  # curl -HHost:your_fqdn  --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+</code></pre>
+
+<p>Test result: OK, haven&rsquo;t DNS resolution</p>
+
+<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://your_fqdn:31380/status/418
+</code></pre>
+
+<p>Test result: OK.</p>
+
+<pre><code class="language-shell">  # curl   --http2-prior-knowledge -svL http://10.120.20.63:31380/status/418
+</code></pre>
+
+<p>Test result: 502</p></li>
+</ul></li>
+
+<li><p>Test Analysis</p>
+
+<ul>
+<li><p>IP Only.</p>
+
+<p>Even only we have IP, we still must override Host header to match VS host. so here has a problem.</p></li>
+
+<li><p>FQDN Only.</p>
+
+<p>This is OK. if FQDN can match VS host.</p></li>
+
+<li><p>Both IP and FQDN.</p>
+
+<p>Here still have a problem the same as only IP scenario.</p></li>
+</ul></li>
 </ol>
-
-<p>Even only we have IP, we still must override Host header to match VS host. so here has a problem.</p>
-
-<ul>
-<li>FQDN Only.</li>
-</ul>
-
-<p>This is OK. if FQDN can match VS host.</p>
-
-<ul>
-<li>Both IP and FQDN.</li>
-</ul>
-
-<p>Here still have a problem the same as only IP scenario.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 

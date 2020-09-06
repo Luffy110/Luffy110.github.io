@@ -34,9 +34,9 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>C&#43;&#43;17-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>Searches-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
-    <link rel="canonical" href="/tags/c&#43;&#43;17/">
+    <link rel="canonical" href="/search/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -168,7 +168,6 @@
 
 
 
-  
 <div class="container">
     <div class="row">
         
@@ -181,56 +180,113 @@
             post-container
         ">
             
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-<div class="post-preview">
-    <a href="https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/">
-        <h2 class="post-title">
-            C&#43;&#43; 17 尝鲜之 the overload pattern
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            <p>以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。</p>
+<div id="search-searchbar"></div>
+ <div class="post-list" id="search-hits">
+ </div>
 
-<p>一般大家写出来的代码无非和我的差不多。
-</p>
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Sunday, December 8, 2019
-    
-    
-    </p>
+<script>
+const search = instantsearch({
+  appId: '',
+  indexName: '',
+  apiKey: ''
+});
 
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/">
-        <h2 class="post-title">
-            C&#43;&#43;17 尝鲜之 structured bindings
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 但
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Sunday, December 8, 2019
-    
-    
-    </p>
-
-</div>
-<hr>
+const hitTemplate = function(hit) {
 
 
-            
+  let date = '';
+  if (hit.date) {
+    date = moment.unix(hit.date).format('MMM D, YYYY');
+  }
+  let url = `${hit.url}#${hit.anchor}`;
+  const title = hit._highlightResult.title.value;
+
+  let breadcrumbs = '';
+  if (hit._highlightResult.headings) {
+    breadcrumbs = hit._highlightResult.headings.map(match => {
+      return `<span class="post-breadcrumb">${match.value}</span>`
+    }).join(' > ')
+  }
+
+  let content = "" ; 
+  if (hit._highlightResult.content){
+      content = hit._highlightResult.content.value;
+  }
+  else{
+      content = hit.summary;
+  }
 
 
+  return `
+    <div class="post-item">
+      <span class="post-meta">${date}</span>
+      <h2><a class="post-link" href="${url}">${title}</a></h2>
+      <a href="${url}" class="post-breadcrumbs">${breadcrumbs}</a>
+      <div class="post-snippet">${content}</div>
+    </div>
+  `;
+}
+
+
+search.addWidget(
+  instantsearch.widgets.searchBox({
+    container: '#search-searchbar',
+    placeholder: 'Search into posts...',
+    poweredBy: true // This is required if you're on the free Community plan
+  })
+);
+
+search.addWidget(
+  instantsearch.widgets.hits({
+    container: '#search-hits',
+    templates: {
+      item: hitTemplate
+    }
+  })
+);
+
+search.start();
+</script>
+
+<style>
+.ais-search-box {
+  max-width: 100%;
+  margin-bottom: 15px;
+}
+.post-item {
+  margin-bottom: 30px;
+}
+.post-link .ais-Highlight {
+  color: #111;
+  font-style: normal;
+  text-decoration: underline;
+}
+.post-breadcrumbs {
+  color: #424242;
+  display: block;
+}
+.post-breadcrumb {
+  font-size: 18px;
+  color: #424242;
+}
+.post-breadcrumb .ais-Highlight {
+  font-weight: bold;
+  font-style: normal;
+}
+.post-snippet .ais-Highlight {
+  color: #2a7ae2;
+  font-style: normal;
+  font-weight: bold;
+}
+.post-snippet img {
+  display: none;
+}
+</style>
 
        	</div>
         
@@ -373,7 +429,7 @@
            <ul class="list-inline"> 
                
                <li>
-                   <a href='/tags/c&#43;&#43;17/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                   <a href='/search/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
                        <span class="fa-stack fa-lg">
                            <i class="fa fa-circle fa-stack-2x"></i>
                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -423,8 +479,6 @@
 
 
 
-
-
 <footer>
     <div class="container">
         <div class="row">
@@ -432,7 +486,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/tags/c&#43;&#43;17/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                       <a href='/search/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>

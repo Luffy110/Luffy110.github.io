@@ -236,82 +236,73 @@
 <h2 id="在-helm-chart-里面加上一个-initcontainer">在 helm chart 里面加上一个 initContainer</h2>
 
 <ul>
-<li>在 deployment.yaml 里面添加一个 initContainer 和 volume</li>
+<li><p>在 deployment.yaml 里面添加一个 initContainer 和 volume</p>
+
+<pre><code class="language-yaml">    volumes:
+    - name: dumps
+      emptyDir: {}
+    initContainers:
+    - name: {{ .Values.initContainers.coredumps.service.name }}
+      image: &quot;{{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{.Values.initContainers.coredumps.images.name }}:{{ .Values.initContainers.coredumps.images.tag}}&quot;
+      command: ['sh', '-c', 'ulimit -c unlimited; echo &quot;{{ .Values.initContainers.coredumps.service.dst }}/core.%e.%p.%h.%t&quot; &gt; /proc/sys/kernel/core_pattern;']
+      securityContext:
+        privileged: true
+</code></pre></li>
+
+<li><p>为需要生成 coredump 的 container 加上个 volumeMounts.</p>
+
+<pre><code class="language-yaml">    volumeMounts:
+    - name: dumps
+      mountPath: {{ .Values.initContainers.coredumps.service.dst }}
+</code></pre></li>
+
+<li><p>添加下面 code 在你的 value.yaml 里面 （如何你在第一步里面是 hardcode 的话，这里可以省略）</p>
+
+<pre><code class="language-yaml">  # here image i used suse, you can use &quot;docker pull registry.suse.com/suse/sles12sp4&quot; pull ito your local
+  # and then use &quot;docker tag xxx bbb&quot; command to retag it(this command can omit if you usorigin tag directly)
+  initContainers:
+    coredumps:
+      images:
+        name: xxx
+        tag: 1.xxx
+      service:
+        name: coredumps
+        dst: /root/dumps
+</code></pre></li>
 </ul>
-
-<pre><code class="language-yaml">   volumes:
-   - name: dumps
-     emptyDir: {}
-   initContainers:
-   - name: {{ .Values.initContainers.coredumps.service.name }}
-     image: &quot;{{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{    .Values.initContainers.coredumps.images.name }}:{{ .Values.initContainers.coredumps.images.tag }}&quot;
-     command: ['sh', '-c', 'ulimit -c unlimited; echo &quot;{{    .Values.initContainers.coredumps.service.dst }}/core.%e.%p.%h.%t&quot; &gt; /proc/sys/kernel/   core_pattern;']
-     securityContext:
-       privileged: true
-</code></pre>
-
-<ul>
-<li>为需要生成 coredump 的 container 加上个 volumeMounts.</li>
-</ul>
-
-<pre><code class="language-yaml">   volumeMounts:
-   - name: dumps
-     mountPath: {{ .Values.initContainers.coredumps.service.dst }}
-</code></pre>
-
-<ul>
-<li>添加下面 code 在你的 value.yaml 里面 （如何你在第一步里面是 hardcode 的话，这里可以省略）</li>
-</ul>
-
-<pre><code class="language-yaml">   # here image i used suse, you can use &quot;docker pull registry.suse.com/suse/sles12sp4&quot; pull ito     your local
-   # and then use &quot;docker tag xxx bbb&quot; command to retag it(this command can omit if you usorigin     tag directly)   
-   initContainers:
-     coredumps:
-       images:
-         name: xxx
-         tag: 1.xxx
-       service:
-         name: coredumps
-         dst: /root/dumps
-</code></pre>
 
 <h2 id="用-debug-模式编译代码-然后-docker-build-一个-image">用 debug 模式编译代码，然后 docker build 一个 image</h2>
 
 <ul>
-<li>可参考下面命令生成 image</li>
-</ul>
+<li><p>可参考下面命令生成 image</p>
 
-<pre><code class="language-shell">   # &quot;.&quot; means current directory
-   docker build XXXX .
-</code></pre>
+<pre><code class="language-shell">  // &quot;.&quot; means current directory
+  docker build XXXX .
+</code></pre></li>
+</ul>
 
 <h2 id="更新你的-image-到-deployment-里面">更新你的 image 到 deployment 里面</h2>
 
 <p>这里有两个方案：</p>
 
 <ul>
-<li>用下面命令直接在线修改你的 deployment, k8s 通过重启 pod 动态生效。</li>
-</ul>
+<li><p>用下面命令直接在线修改你的 deployment, k8s 通过重启 pod 动态生效。</p>
 
-<pre><code class="language-shell">   kubectl edit deploy your_deployment_name
-</code></pre>
+<pre><code class="language-shell">  kubectl edit deploy your_deployment_name
+</code></pre></li>
 
-<ul>
-<li>修改本地 deployment.yaml 文件，然后在 kubectl upgrade 更新（基于 helm install 的方式）.
-
-<br /></li>
+<li><p>修改本地 deployment.yaml 文件，然后在 kubectl upgrade 更新（基于 helm install 的方式）.</p></li>
 </ul>
 
 <h2 id="找到你挂载的-coredump-文件映射到本地的具体目录">找到你挂载的 coredump 文件映射到本地的具体目录</h2>
 
 <ul>
-<li>可参考下面命令
-<br /></li>
-</ul>
+<li><p>可参考下面命令</p>
 
-<pre><code class="language-shell">   docker ps | grep ApplicationName  #to found container id .
-   docker inspect container id | grep dump #to found dir that docker volume mapped local dir.
-</code></pre>
+<pre><code class="language-shell"> docker ps | grep ApplicationName  #to found container id .
+ docker inspect container id | grep dump #to found dir that docker volume mapped local dir.
+</code></pre></li>
+</ul>
 
 <h2 id="将生成的-coredump-文件拷贝到你本地目录">将生成的 coredump 文件拷贝到你本地目录</h2>
 

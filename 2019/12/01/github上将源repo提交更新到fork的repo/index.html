@@ -215,9 +215,9 @@
 <li>
 <ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#将源-repo-https-link-加到自己本地-repo-的-remote-upstream-中-添加之后-如果你想查看是否加入成功-可以使用-git-remote-v">将源 repo https link 加到自己本地 repo 的 remote upstream 中。添加之后，如果你想查看是否加入成功。可以使用 git remote -v</a></li>
-<li><a href="#fetch-源-repo-的最新提交到本地-然后-merge-到自己的-repo">fetch 源 repo 的最新提交到本地，然后 merge 到自己的 repo</a></li>
-<li><a href="#将自己-repo-的合并后的-提交到-github-上">将自己 repo 的合并后的，提交到 github 上。</a></li>
+<li><a href="#添加-upstream">添加 upstream</a></li>
+<li><a href="#fetch-源-repo">fetch 源 repo</a></li>
+<li><a href="#合并并提交">合并并提交</a></li>
 <li><a href="#总结">总结</a></li>
 </ul></li>
 </ul>
@@ -229,23 +229,29 @@
 
 <p>在 github 上 一般我们都是将别人的 repo fork 到自己的 github repo。 然后阅读，修改 甚至是 contribution。所以同步源 repo 的 commit 尤为重要。因为你要始终保持与源 repo 同步。下面将描述下怎么去同步更新的步骤。</p>
 
-<h2 id="将源-repo-https-link-加到自己本地-repo-的-remote-upstream-中-添加之后-如果你想查看是否加入成功-可以使用-git-remote-v">将源 repo https link 加到自己本地 repo 的 remote upstream 中。添加之后，如果你想查看是否加入成功。可以使用 git remote -v</h2>
+<h2 id="添加-upstream">添加 upstream</h2>
+
+<p>将源 repo https link 加到自己本地 repo 的 remote upstream 中。添加之后，如果你想查看是否加入成功。可以使用 <code>git remote -v</code></p>
 
 <pre><code class="language-shell">git remote add upstream https://github.com/ORIGINAL_OWENER/ORIGINAL_REPO.git
 </code></pre>
 
-<h2 id="fetch-源-repo-的最新提交到本地-然后-merge-到自己的-repo">fetch 源 repo 的最新提交到本地，然后 merge 到自己的 repo</h2>
+<h2 id="fetch-源-repo">fetch 源 repo</h2>
+
+<p>fetch 源 repo 的最新提交到本地，然后 merge 到自己的 repo</p>
 
 <pre><code class="language-shell">git fetch upstream
 git rebase upstream/branch
 </code></pre>
 
-<h2 id="将自己-repo-的合并后的-提交到-github-上">将自己 repo 的合并后的，提交到 github 上。</h2>
+<h2 id="合并并提交">合并并提交</h2>
+
+<p>将自己的 repo 合并后，提交到 github 上</p>
 
 <pre><code class="language-shell">git push origin branch
 </code></pre>
 
-<p><strong><em>Note:</em></strong> 如何强制覆盖 github 上的 commit, <strong><em>此命令慎用</em></strong></p>
+<p><strong><em>Note:</em></strong> 有些时候，我们会遇到push失败的问题，我们将需要强制提交，从而覆盖 github 上的 commit, <strong><em>此命令慎用</em></strong></p>
 
 <pre><code class="language-shell">git push -f origin branch
 </code></pre>

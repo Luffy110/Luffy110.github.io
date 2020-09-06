@@ -142,9 +142,7 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       <pubDate>Sun, 08 Dec 2019 10:44:12 +0800</pubDate>
       
       <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
-      <description>&lt;p&gt;老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 
-
-但是 C++17 引入了 Structured Bindlings 这个特性。他是通过 &lt;strong&gt;&lt;em&gt;std::tuple, std::pair, std::array, and aggregate structures&lt;/em&gt;&lt;/strong&gt; 来实现多个返回值。&lt;/p&gt;</description>
+      <description>老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 但</description>
     </item>
     
     <item>
@@ -190,6 +188,15 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       
       <guid>https://luffyao.com/2019/12/01/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/</guid>
       <description>前言 在 github 上 一般我们都是将别人的 repo fork 到自己的 github repo。 然后阅读，修改 甚至是 contribution。所以同步源 repo 的 commit 尤为重要。因为你要始终保</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://luffyao.com/search/placeholder/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://luffyao.com/search/placeholder/</guid>
+      <description></description>
     </item>
     
   </channel>

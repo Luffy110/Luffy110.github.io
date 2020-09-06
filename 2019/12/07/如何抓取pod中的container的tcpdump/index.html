@@ -215,7 +215,7 @@
 <li>
 <ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#自己-build-一个装有-tcpdump-的-image">自己 build 一个装有 tcpdump 的 image</a></li>
+<li><a href="#构建一个带有-tcpdump-的镜像">构建一个带有 tcpdump 的镜像</a></li>
 <li><a href="#抓取-tcpdump">抓取 tcpdump</a></li>
 <li><a href="#将-tcpdump-文件拷出-container-到本地-用-wireshark-进行分析">将 tcpdump 文件拷出 container 到本地，用 wireshark 进行分析</a></li>
 <li><a href="#总结">总结</a></li>
@@ -229,26 +229,23 @@
 
 <p>一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell terminal，那我们就不能使用 exec 进入 container 了。所以此时我们就需要以下方法，通过自己编一个带有 shell 的 image，然后 docker exec 嵌入到 pod 中，再进行抓取 tcpdump。</p>
 
-<h2 id="自己-build-一个装有-tcpdump-的-image">自己 build 一个装有 tcpdump 的 image</h2>
+<h2 id="构建一个带有-tcpdump-的镜像">构建一个带有 tcpdump 的镜像</h2>
 
 <ul>
-<li>先 pull 一个 base image alpine:3.9.2，然后 docker run 这个 image，在进入对应的 container，安装 tcpdump，再开另一个 terminal，提交生成一个新的 image。下面命令可供参考：
-<br /></li>
+<li><p>先 pull 一个 base image alpine:3.9.2，然后 docker run 这个 image，在进入对应的 container，安装 tcpdump，再开另一个 terminal，提交生成一个新的 image。下面命令可供参考：</p>
+
+<pre><code class="language-shell"> docker run -it --name=alpine alpine:3.9.2
+ # install tcpdump
+ apk add tcpdump
+ # switch another terminal and exec this command
+ docker commit alpine aaa:tag
+</code></pre></li>
 </ul>
-
-<pre><code class="language-shell">  docker run -it --name=alpine alpine:3.9.2
-
-  # install tcpdump
-  apk add tcpdump
-
-  # switch another terminal and exec this command
-  docker commit alpine aaa:tag
-</code></pre>
 
 <h2 id="抓取-tcpdump">抓取 tcpdump</h2>
 
 <ul>
-<li><p>将你的 image 运行，然后嵌到想要的 container 的 network 上，然后进入到你自己 image 运行的 container 里面抓取 tcpdump。</p>
+<li><p>将你的 image 运行，然后嵌到想要的 container 的 network 上，然后进入到你自己 image 运行的 container 里面抓取 tcpdump</p>
 
 <pre><code class="language-shell"># display all of the container and found containerId that you want.
 docker ps | grep your service

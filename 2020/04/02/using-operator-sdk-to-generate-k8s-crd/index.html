@@ -216,9 +216,9 @@
 <ul>
 <li><a href="#what-is-crd">What is CRD</a></li>
 <li><a href="#what-is-operator-sdk">What is operator-sdk</a></li>
-<li><a href="#user-guide">user guide</a></li>
-<li><a href="#installation-guide">installation guide</a></li>
-<li><a href="#example">example</a></li>
+<li><a href="#user-guide">User guide</a></li>
+<li><a href="#installation-guide">Installation guide</a></li>
+<li><a href="#example">Example</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -233,11 +233,11 @@
 
 <p>The SDK provides the tools to build, test and package Operators. Initially, the SDK facilitates the marriage of an application’s business logic (for example, how to scale, upgrade, or backup) with the Kubernetes API to execute those operations. Over time, the SDK can allow engineers to make applications smarter and have the user experience of cloud services. Leading practices and code patterns that are shared across Operators are included in the SDK to help prevent reinventing the wheel.</p>
 
-<h2 id="user-guide">user guide</h2>
+<h2 id="user-guide">User guide</h2>
 
 <p>This is an official user guide. please reference the <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md">user guide</a>.</p>
 
-<h2 id="installation-guide">installation guide</h2>
+<h2 id="installation-guide">Installation guide</h2>
 
 <pre><code>1. Download the release binary
 Install CLI in Linux env.
@@ -281,7 +281,7 @@ $ chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu &amp;&amp; sudo mkdi
 
 <p>This is an official operator-sdk installation guide. more information please refer to <a href="https://github.com/operator-framework/operator-sdk/blob/master/doc/user/install-operator-sdk.md">installation guide</a>.</p>
 
-<h2 id="example">example</h2>
+<h2 id="example">Example</h2>
 
 <ul>
 <li><p>Installation operator-sdk CLI.</p>
@@ -291,48 +291,39 @@ $ chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu &amp;&amp; sudo mkdi
 <li><p>Using operator-sdk to generate a CRD.</p>
 
 <ol>
-<li>Generate a common framwork</li>
-</ol>
+<li><p>Generate a common framwork</p>
 
-<pre><code>operator-sdk new repo_name --repo=repo_name --vendor=true
-</code></pre>
+<pre><code class="language-shell">operator-sdk new repo_name --repo=repo_name --vendor=true
+</code></pre></li>
 
-<ol>
-<li>New a API</li>
-</ol>
+<li><p>New a API</p>
 
 <ul>
-<li>Generate a API</li>
-</ul>
+<li><p>Generate a API</p>
 
-<pre><code>operator-sdk add api --api-version=xxxx/v1alpha1 --kind=$kind
-</code></pre>
+<pre><code class="language-shell">operator-sdk add api --api-version=xxxx/v1alpha1 --kind=$kind
+</code></pre></li>
 
-<ul>
-<li>update the API contents then using &ldquo;operator-sdk generate k8s&rdquo; and &ldquo;operator-sdk generate crds&rdquo; commands to update your code and deploy.</li>
-</ul>
+<li><p>update the API contents then using &ldquo;operator-sdk generate k8s&rdquo; and &ldquo;operator-sdk generate crds&rdquo; commands to update your code and deploy.</p></li>
+</ul></li>
 
-<ol>
-<li>New a controller</li>
-</ol>
+<li><p>New a controller</p>
 
 <pre><code>operator-sdk add controller --api-version=xxxx/v1alpha1 --kind=$kind
 </code></pre></li>
+</ol></li>
 
 <li><p>Generate a clientset</p>
 
 <ol>
-<li>Get code-generator</li>
-</ol>
+<li><p>Get code-generator</p>
 
-<pre><code>go get k8s.io/code-generator
-</code></pre>
+<pre><code> go get k8s.io/code-generator
+</code></pre></li>
 
-<ol>
-<li>Add following annotations in your xxx_types.go file</li>
-</ol>
+<li><p>Add following annotations in your xxx_types.go file</p>
 
-<pre><code>    // +genclient
+<pre><code class="language-golang"> // +genclient
     // +genclient:noStatus
     // +genclient:onlyVerbs=create,delete,update,get
     // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -345,17 +336,14 @@ $ chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu &amp;&amp; sudo mkdi
         Spec XxxxSpec `json:&quot;spec,omitempty&quot;`
         Status XxxxStatus `json:&quot;status,omitempty&quot;`
     }
-</code></pre>
+</code></pre></li>
 
-<ol>
-<li>Generate a clientset</li>
-</ol>
+<li><p>Generate a clientset</p>
 
-<pre><code>$GOPATH/src/k8s.io/code-generator/generate-groups.sh client repo/pkg/client repo/pkg/apis xxxx:v1alpha1
-</code></pre>
+<pre><code> $GOPATH/src/k8s.io/code-generator/generate-groups.sh client repo/pkg/client repo/pkg/apis xxxx:v1alpha1
+</code></pre></li>
 
-<ol>
-<li>deploy and test it.</li>
+<li><p>deploy and test it.</p></li>
 </ol></li>
 </ul>
 

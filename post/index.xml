@@ -133,9 +133,7 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       <pubDate>Sun, 08 Dec 2019 10:44:12 +0800</pubDate>
       
       <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
-      <description>&lt;p&gt;老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 
-
-但是 C++17 引入了 Structured Bindlings 这个特性。他是通过 &lt;strong&gt;&lt;em&gt;std::tuple, std::pair, std::array, and aggregate structures&lt;/em&gt;&lt;/strong&gt; 来实现多个返回值。&lt;/p&gt;</description>
+      <description>老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 但</description>
     </item>
     
     <item>

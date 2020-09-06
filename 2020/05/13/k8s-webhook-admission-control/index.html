@@ -400,135 +400,131 @@ echo &quot;dokcerhome/sandbox/webhook:$TAG&quot;
 
 <h2 id="添加相应的-k8s-资源">添加相应的 k8s 资源</h2>
 
-<ul>
-<li>添加 validatingwebhookconfiguration</li>
-</ul>
+<ol>
+<li><p>添加 validatingwebhookconfiguration</p>
 
-<pre><code class="language-yaml">apiVersion: admissionregistration.k8s.io/v1beta1
-kind: ValidatingWebhookConfiguration
-metadata:
-  name: dynamic-admission-webhook-example
-webhooks:
-  - name: dynamic-admission-webhook-example.{{ .Release.Namespace }}.svc
-    clientConfig:
-      service:
-        namespace: {{ .Release.Namespace | quote }}
-        name: dynamic-admission-webhook-example
-        path: &quot;/validate&quot;
-        port: 10000
-      caBundle: &quot;&quot;
+<pre><code class="language-yaml">  apiVersion: admissionregistration.k8s.io/v1beta1
+  kind: ValidatingWebhookConfiguration
+  metadata:
+    name: dynamic-admission-webhook-example
+  webhooks:
+    - name: dynamic-admission-webhook-example.{{ .Release.Namespace }}.svc
+      clientConfig:
+        service:
+          namespace: {{ .Release.Namespace | quote }}
+          name: dynamic-admission-webhook-example
+          path: &quot;/validate&quot;
+          port: 10000
+        caBundle: &quot;&quot;
+      rules:
+      - apiGroups:
+        - apps
+        apiVersions:
+        - v1
+        operations:
+        - UPDATE
+        resources:
+        - deployments
+        - deployments/scale
+        - replicasets/scale
+      failurePolicy: Ignore
+</code></pre></li>
+
+<li><p>添加 RBAC 使得程序可以有权限修改 k8s 资源</p>
+
+<pre><code class="language-yaml">    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: dynamic-admission-webhook-example
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: dynamic-admission-webhook-example
     rules:
     - apiGroups:
-      - apps
-      apiVersions:
-      - v1
-      operations:
-      - UPDATE
+      - admissionregistration.k8s.io
+      resources:
+      - validatingwebhookconfigurations
+      verbs: 
+      - '*'
+    - apiGroups:
+      - &quot;&quot;
+      resources:
+      - pods
+      - configmaps
+      verbs:
+      - '*'
+    - apiGroups:
+      - &quot;apps&quot;
+      - &quot;extensions&quot;
       resources:
       - deployments
-      - deployments/scale
-      - replicasets/scale
-    failurePolicy: Ignore
-</code></pre>
+      verbs:
+      - '*'
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name:  dynamic-admission-webhook-example
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name:  dynamic-admission-webhook-example
+    subjects:
+    - kind: ServiceAccount
+      name: dynamic-admission-webhook-example
+      namespace: {{ .Release.Namespace }}
+</code></pre></li>
 
-<ul>
-<li>添加 RBAC 使得程序可以有权限修改 k8s 资源</li>
-</ul>
-
-<pre><code class="language-yaml">apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: dynamic-admission-webhook-example
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: dynamic-admission-webhook-example
-rules:
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - validatingwebhookconfigurations
-  verbs: 
-  - '*'
-- apiGroups:
-  - &quot;&quot;
-  resources:
-  - pods
-  - configmaps
-  verbs:
-  - '*'
-- apiGroups:
-  - &quot;apps&quot;
-  - &quot;extensions&quot;
-  resources:
-  - deployments
-  verbs:
-  - '*'
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name:  dynamic-admission-webhook-example
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name:  dynamic-admission-webhook-example
-subjects:
-- kind: ServiceAccount
-  name: dynamic-admission-webhook-example
-  namespace: {{ .Release.Namespace }}
-</code></pre>
-
-<ul>
-<li>最后就是 deployment 和 service 使得程序可以部署在 k8s 中</li>
-</ul>
+<li><p>最后就是 deployment 和 service 使得程序可以部署在 k8s 中</p>
 
 <p>NOTE: 需要将上一步骤生成的 docker 镜像更新下面 deployment 中的 containers.image 中</p>
 
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: dynamic-admission-webhook-example
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: dynamic-admission-webhook-example
-  template:
-    metadata:
-      labels:
-        app: dynamic-admission-webhook-example
-    spec:
-      serviceAccountName: dynamic-admission-webhook-example
-      containers:
-      - name: dynamic-admission-webhook-example
-        image: dokcerhome/sandbox/webhook:tag
-        imagePullPolicy: Always
-        args:
-        - -validatingwebhookname
-        - dynamic-admission-webhook-example
-        - -webhookserverport
-        - &quot;10000&quot;
-        - -servicename
-        - dynamic-admission-webhook-example
-        - -namespace
-        - {{ .Release.Namespace | quote }}
-      restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: dynamic-admission-webhook-example
-spec:
-  type: ClusterIP
-  ports:
-  - name: https-rest
-    port: 10000
-    targetPort: 10000
-  selector:
-    app: dynamic-admission-webhook-example
-</code></pre>
+<pre><code class="language-yaml">   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: dynamic-admission-webhook-example
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app.kubernetes.io/name: dynamic-admission-webhook-example
+     template:
+       metadata:
+         labels:
+           app: dynamic-admission-webhook-example
+       spec:
+         serviceAccountName: dynamic-admission-webhook-example
+         containers:
+         - name: dynamic-admission-webhook-example
+           image: dokcerhome/sandbox/webhook:tag
+           imagePullPolicy: Always
+           args:
+           - -validatingwebhookname
+           - dynamic-admission-webhook-example
+           - -webhookserverport
+           - &quot;10000&quot;
+           - -servicename
+           - dynamic-admission-webhook-example
+           - -namespace
+           - {{ .Release.Namespace | quote }}
+         restartPolicy: Always
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: dynamic-admission-webhook-example
+   spec:
+     type: ClusterIP
+     ports:
+     - name: https-rest
+       port: 10000
+       targetPort: 10000
+     selector:
+       app: dynamic-admission-webhook-example
+</code></pre></li>
+</ol>
 
 <h2 id="测试">测试</h2>
 
