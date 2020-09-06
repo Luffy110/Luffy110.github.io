@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="controller-runtime 实现准入 webhook" />
-    <meta property="og:title" content="controller-runtime 实现准入 webhook" />
-    <meta property="twitter:title" content="controller-runtime 实现准入 webhook" />
+    <meta name="title" content="将博客从 Hexo 迁移到 Hugo" />
+    <meta property="og:title" content="将博客从 Hexo 迁移到 Hugo" />
+    <meta property="twitter:title" content="将博客从 Hexo 迁移到 Hugo" />
     
 
     
-    <meta name="description" content="与你一起发现更大的世界。">
-    <meta property="og:description" content="与你一起发现更大的世界。" />
-    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    <meta name="description" content="简单介绍如何使用Hugo">
+    <meta property="og:description" content="简单介绍如何使用Hugo" />
+    <meta property="twitter:description" content="简单介绍如何使用Hugo" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>controller-runtime 实现准入 webhook-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>将博客从 Hexo 迁移到 Hugo-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
-    <link rel="canonical" href="/2020/05/17/admission-controller-webhook/">
+    <link rel="canonical" href="/2020/09/06/migratetohugo/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -165,12 +165,12 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/kubernetes" title="Kubernetes">
-                            Kubernetes
+                        <a class="tag" href="/tags/hugo" title="Hugo">
+                            Hugo
                         </a>
                         
                     </div>
-                    <h1>controller-runtime 实现准入 webhook</h1>
+                    <h1>将博客从 Hexo 迁移到 Hugo</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -178,7 +178,7 @@
                             Luffyao
                          
                         on 
-                        Sunday, May 17, 2020
+                        Sunday, September 6, 2020
                         
                         
                         
@@ -213,107 +213,159 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#编写-webhook-server">编写 webhook server</a></li>
-<li><a href="#编译代码并生成-docker-image">编译代码并生成 docker image</a></li>
-<li><a href="#添加相应的-k8s-资源">添加相应的 k8s 资源</a></li>
-<li><a href="#测试">测试</a></li>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#安装-hugo">安装 Hugo</a></li>
+<li><a href="#hugo-使用">Hugo 使用</a>
+<ul>
+<li><a href="#生成站点">生成站点</a></li>
+<li><a href="#创建文章">创建文章</a></li>
+<li><a href="#导入-hexo-的文章">导入 Hexo 的文章</a></li>
+<li><a href="#安装主题">安装主题</a></li>
+<li><a href="#运行-hugo">运行 Hugo</a></li>
+<li><a href="#部署">部署</a></li>
+</ul></li>
+<li><a href="#高亮代码">高亮代码</a></li>
+<li><a href="#添加-cname">添加 CNAME</a></li>
 <li><a href="#参考">参考</a></li>
+</ul></li>
 </ul>
 </nav>
                 
                 
 
-<p><strong>上一篇 <a href="https://luffyao.com/2020/05/k8s-webhook-admission-control/">client-go 实现准入 webhook</a> 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server.</strong></p>
+<h2 id="前言">前言</h2>
 
-<h1 id="编写-webhook-server">编写 webhook server</h1>
+<p>之前博客是使用 Hexo，但是最近接触了 Hugo， 然后对比了下，感觉 Hugo 性能好很多，然后就学习了下 Hugo，将自己的博客迁移到了 Hugo 上了。这篇主要总结下这个过程中的步骤。</p>
 
-<p>这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现起来也是比 client-go 版本更加简单明了。下面贴出主要处理逻辑，完整代码可参考 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/webhookserver/validatingwebhook.go">validating handler</a>.</p>
+<h2 id="安装-hugo">安装 Hugo</h2>
 
-<pre><code class="language-golang">// ValidatingHandler validates deployment,scale
-type ValidatingHandler struct {
-	Client      client.Client
-	decoder     *admission.Decoder
-	serviceName string
-}
+<p>到 <a href="https://github.com/gohugoio/hugo/releases">Hugo 官网下载</a> 下载符合系统的最新版本，这里我们下载 hugo_xxx_Linux-64bit.deb</p>
 
-func NewValidatingHandler(c client.Client, servicename string) *ValidatingHandler {
-	return &amp;ValidatingHandler{
-		Client:      c,
-		serviceName: servicename,
-	}
-}
-
-func (vh *ValidatingHandler) Handle(ctx context.Context, req admission.Request) admission.Response {
-	switch req.Kind.Kind {
-	case deploymentKind:
-		isAllow := false
-		if isAllow {
-			return admission.Allowed(&quot;&quot;)
-		}
-		return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
-	case scaleKind:
-		isAllow := false
-		if isAllow {
-			return admission.Allowed(&quot;&quot;)
-		}
-		return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
-	}
-
-	return admission.Allowed(&quot;&quot;)
-}
-
-// InjectDecoder injects the decoder.
-func (vh *ValidatingHandler) InjectDecoder(d *admission.Decoder) error {
-	vh.decoder = d
-	return nil
-}
-
+<pre><code class="language-shell">sudo dpkg -i hugo_xxx_Linux-64bit.deb  
+sudo apt install -f
 </code></pre>
 
-<p>然后 你就可以直接在 main 函数中像下面这个调用即可。完整代码请参考 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/cmd/example/example.go">main.go</a>.</p>
+<h2 id="hugo-使用">Hugo 使用</h2>
 
-<pre><code class="language-golang">	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
-		Port:    *webhookServerPort,
-		CertDir: *certPath,
-	})
-	if err != nil {
-		panic(err.Error())
-	}
+<h3 id="生成站点">生成站点</h3>
 
-	hookServer := mgr.GetWebhookServer()
-	hookServer.Register(&quot;/validate&quot;, &amp;webhook.Admission{
-		Handler: webhookserver.NewValidatingHandler(mgr.GetClient(), *serviceName),
-	})
+<p>使用下面命令生成站点：</p>
 
-	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
-		panic(err.Error())
-	}
-}
-
+<pre><code>hugo new site /path/to/site
 </code></pre>
 
-<h1 id="编译代码并生成-docker-image">编译代码并生成 docker image</h1>
+<h3 id="创建文章">创建文章</h3>
 
-<p>可以参考我提供的简单 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/build.sh">build.sh</a> 脚本编译代码和使用 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/buildimage.sh">buildimage.sh</a> 脚本去构建 docker 镜像。</p>
+<p>使用下面命令创建一编文章：</p>
 
-<p><strong>NOTE</strong>: buildimage.sh 脚本中，我做了些处理，首先需要传入 docker_user（如果你没有，你也可以随意指定一个即可）和构建的 image 的 tag。然后我注释掉了 docker push 这个命令，防止有些读者还没有 docker hub 或其他仓库的账号。</p>
+<pre><code>hugo new post/first.md
+</code></pre>
 
-<h1 id="添加相应的-k8s-资源">添加相应的 k8s 资源</h1>
+<h3 id="导入-hexo-的文章">导入 Hexo 的文章</h3>
 
-<p>安装相应的 k8s 资源即可，具体请参考 <a href="https://github.com/Luffy110/k8s-studies/tree/master/playground/controller-runtime/admission-webhook/helm">resources</a>.</p>
+<p>这里我是直接将 Hexo 里面的博客文章直接复制到了 Hugo 下面，然后做了下格式的修改。比如什么时间格式什么的。基本上不用修改什么，直接迁移就好了。</p>
 
-<p><strong>NOTE</strong>: 这里我为了方便管理这些资源，我使用了 helm 去管理了，如果你有 helm 相关的环境，你可直接使用** helm install <strong>命令安装资源，如果你没有或者不熟悉，你可以使用</strong> kubectl apply **命令一个个的部署，但是你需要修改资源中的 Release.Namespace 到你安装的那个 namespace 下，例如如果你安装时没有指定 namespace, 则默认是 default。</p>
+<h3 id="安装主题">安装主题</h3>
 
-<h1 id="测试">测试</h1>
+<p>这里我是安装的 hugo-theme-cleanwhite 主题：可以参考下面命令安装：</p>
 
-<p>例子中 default 的实现是拒绝任何对 deployment 和 scale 的修改。所以可以使用 kubectl edit 命令修改 deployment，或者使用 kubectl scale 命令修改 replicas。如果命令修改失败并提示&rdquo;The %s service doesn&rsquo;t allow update&rdquo;，则说明自定义的 validating webhook 是可以工作的。然后可以加上自己的处理逻辑即可。</p>
+<pre><code class="language-shell">mkdir test
+cd test
+mkdir themes
+cd themes
+git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git
+cp -r hugo-theme-cleanwhite/exampleSite/** ../
+cd ..
+hugo serve
+</code></pre>
 
-<h1 id="参考">参考</h1>
+<p>然后进行相关的修改</p>
+
+<p>详细的使用方式可以参考 <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite#quick-start">quick-start</a>。</p>
+
+<h3 id="运行-hugo">运行 Hugo</h3>
+
+<p>当你编写好一篇文章后，可以通过执行 <code>hugo server</code> 在本地浏览器输入 <code>http://localhost:1313</code> 预览。</p>
+
+<h3 id="部署">部署</h3>
+
+<p>假设你需要部署在 <code>GitHub Pages</code> 上，首先在 GitHub 上创建一个 Repository，命名为：<code>luffyao.github.io</code> luffyao 替换为你的 github 用户名）。
+然后在 <code>config.toml</code> 文件中修改对应的 URL 到你自己的即可。</p>
+
+<p>然后在执行 <code>hugo</code> 命令生成相应的静态页面。如果一切顺利，所有静态页面都会生成到 <code>public</code> 目录，将 pubilc 目录里所有文件 push 到刚创建的 Repository 的 master 分支。</p>
+
+<p>可以参考下面命令进行提交：（这里需要注意一点的是要在 public 目录下进行<code>git init</code>)</p>
+
+<pre><code class="language-shell">hugo
+cd public
+git init
+git remote add origin https://github.com/luffyao/luffyao.github.io.git
+git add -A
+git commit -m &quot;first commit&quot;
+git push -u origin master
+</code></pre>
+
+<p>最后就可以在浏览器里访问：<code>http://luffyao.github.io/</code></p>
+
+<h2 id="高亮代码">高亮代码</h2>
+
+<p>在 <code>themes/cleanwhite/layouts/_default/baseof.html</code> 文件中添加下面这部分代码</p>
+
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot;
+      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+</code></pre>
+
+<p>这里可供参考：</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;{{ .Site.LanguageCode }}&quot;&gt;
+{{ partial &quot;head.html&quot; . }}
+{{ partial &quot;nav.html&quot; . }}
+&lt;!-- Page Header --&gt;
+{{ block &quot;header&quot; .}}
+&lt;header class=&quot;intro-header&quot; style=&quot;background-image: url('{{ .Site.Params.header_image | relURL }}')&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 &quot;&gt;
+                &lt;div class=&quot;site-heading&quot;&gt;
+                    &lt;h1&gt;{{ .Site.Title}} &lt;/h1&gt;
+                    &lt;!--&lt;hr class=&quot;small&quot;&gt;--&gt;
+		    &lt;span class=&quot;subheading&quot;&gt;{{ .Site.Params.slogan }}&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/header&gt;
+{{ end }}
+
+&lt;link rel=&quot;stylesheet&quot;
+      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+
+{{ block &quot;main&quot; . }}
+{{ end }}
+
+{{ partial &quot;footer.html&quot; . }}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="添加-cname">添加 CNAME</h2>
+
+<p>如果你购买过自己的域名，则这里可以在 <code>public</code> 目录下添加一个 CNAME 文件，并将自己的域名添加进去即可。这样你就可以通过自己的域名访问到博客了。</p>
+
+<h2 id="参考">参考</h2>
 
 <ul>
-<li><p><a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/">Dynamic Admission Control</a></p></li>
-
-<li><p><a href="https://github.com/kubernetes-sigs/controller-runtime">Controller runtime</a></p></li>
+<li><a href="https://www.gohugo.org/">hugo</a></li>
+<li><a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">hugo-theme-cleanwhite</a></li>
+<li><a href="https://www.gohugo.org/doc/overview/installing/">hugo installation</a></li>
+<li><a href="https://wefox.me/docs/create_blog_on_github_by_hugo/">ubuntu 安装 hugo</a></li>
 </ul>
 
 
@@ -323,15 +375,10 @@ func (vh *ValidatingHandler) InjectDecoder(d *admission.Decoder) error {
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2020/05/13/k8s-webhook-admission-control/" data-toggle="tooltip" data-placement="top" title="client-go 实现准入 webhook">&larr;
+                        <a href="/2020/08/07/clientgo/" data-toggle="tooltip" data-placement="top" title="client-go 学习总结">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2020/07/25/vminstallk8s/" data-toggle="tooltip" data-placement="top" title="本地 ubuntu18.04 VM 安装 k8s">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 
