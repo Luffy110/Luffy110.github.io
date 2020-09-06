@@ -68,6 +68,9 @@
     
     
 
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
 </head>
 
 
@@ -153,11 +156,13 @@
 
 
 
+
 <style type="text/css">
     header.intro-header {
         background-image: url('/img/home-bg.jpg')
     }
 </style>
+
 <header class="intro-header">
     <div class="container">
         <div class="row">
@@ -181,6 +186,9 @@
                         Sunday, September 6, 2020
                         
                         
+                        
+                        
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1200 字|阅读大约 3 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -228,6 +236,7 @@
 </ul></li>
 <li><a href="#高亮代码">高亮代码</a></li>
 <li><a href="#添加-cname">添加 CNAME</a></li>
+<li><a href="#添加字数统计和阅读时间">添加字数统计和阅读时间</a></li>
 <li><a href="#参考">参考</a></li>
 </ul></li>
 </ul>
@@ -359,6 +368,55 @@ git push -u origin master
 
 <p>如果你购买过自己的域名，则这里可以在 <code>public</code> 目录下添加一个 CNAME 文件，并将自己的域名添加进去即可。这样你就可以通过自己的域名访问到博客了。</p>
 
+<h2 id="添加字数统计和阅读时间">添加字数统计和阅读时间</h2>
+
+<ol>
+<li><p>在 <code>themes/layouts/partials/head.html</code> 文件中引入不蒜子 js 文件</p>
+
+<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
+&lt;script async src=&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;
+{{ end }}
+</code></pre></li>
+
+<li><p>在 <code>themes/layouts/_default/single.html</code> 中添加以下代码</p>
+
+<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
+&lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
+{{ end }}
+</code></pre>
+
+<p>这里我是添加的 header 中的。具体可参考下面代码：</p>
+
+<pre><code class="language-html">&lt;span class=&quot;meta&quot;&gt;
+    Posted by 
+    {{ if .Params.author }}
+        {{ .Params.author }}
+    {{ else }}
+            {{ .Site.Title }}
+    {{ end }} 
+    on 
+    {{ .Date.Format &quot;Monday, January 2, 2006&quot; }}
+    {{ if .Site.Params.page_view_conter }}
+        {{ partial &quot;page_view_counter.html&quot; . }}
+    {{ end }}
+    &lt;!-- Don't show &quot;Last Modified on&quot; if update happened on the same day. --&gt;
+    {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat &quot;2006-01-02&quot; .Lastmod) (dateFormat &quot;2006-01-02&quot; .Date)))) }}
+    &lt;br&gt;Last Modified on {{ dateFormat &quot;Monday, January 2, 2006&quot; .Params.LastMod }}
+    {{ end }}
+    {{ if .Site.Params.busuanzi }}
+    &lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
+    {{ end }}
+&lt;/span&gt;
+</code></pre></li>
+
+<li><p>在 <code>config.toml</code> 文件中添加 <code>busuanzi=true</code></p>
+
+<pre><code>[params]
+  #字数统计
+  busuanzi = true
+</code></pre></li>
+</ol>
+
 <h2 id="参考">参考</h2>
 
 <ul>
@@ -366,6 +424,8 @@ git push -u origin master
 <li><a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">hugo-theme-cleanwhite</a></li>
 <li><a href="https://www.gohugo.org/doc/overview/installing/">hugo installation</a></li>
 <li><a href="https://wefox.me/docs/create_blog_on_github_by_hugo/">ubuntu 安装 hugo</a></li>
+<li><a href="http://jonathanwayy.xyz/2020/blog2/">Hugo LeaveIt添加网站流量统计</a></li>
+<li><a href="https://rootsongjc.gitbooks.io/hugo-handbook/content/steps/seo.html">hugo-handbook</a></li>
 </ul>
 
 
