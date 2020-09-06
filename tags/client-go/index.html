@@ -34,9 +34,9 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>TECH-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>Client-go-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
-    <link rel="canonical" href="/categories/tech/">
+    <link rel="canonical" href="/tags/client-go/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -191,82 +191,19 @@
             
 
 <div class="post-preview">
-    <a href="https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/">
+    <a href="https://luffyao.com/2020/09/clientgoworkqueue/">
         <h2 class="post-title">
-            如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug
+            client-go 之 WorkQueue 篇
         </h2>
 	
         <div class="post-content-preview">
 	
-            前言 为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是 C++写的代码，crash tracing 并没有 golang 好，所以代码 crash 在 pod 中的 container 里面，
+            前言 之前学习 client-go 过程中总结了一篇文章 client-go 学习总结。并且有幸能够在云原生社区官方博客发表。上篇文章描述了整个 client-go 的整体框架，并没有对各部分做详细介绍
        
         </div>
     </a>
     <p class="post-meta">
-    Posted by Luffyao Monday, December 2, 2019
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://luffyao.com/2019/12/profiling-c-with-perf-in-the-linux-env/">
-        <h2 class="post-title">
-            用 Perf 给 C&#43;&#43;代码做 Profiling
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            安装 perf uname -r # check your system tools version for the third command sudo apt-get install linux-tools-common sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic 特别配置 sudo sysctl kernel.perf_event_paranoid=-1 sudo sysctl kernel.kptr_restrict=0 记录 perf 示例 选项 1: 启动应用程序后记录 perf ./application_name perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk '{print
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Sunday, December 1, 2019
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://luffyao.com/2019/12/how-to-install-docker-ce-in-the-ubuntu-18-04/">
-        <h2 class="post-title">
-            Ubuntu 18.04 上安装 Docker CE
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            安装 官方网站上选择一个合适的安装方法。请参考 官方文档。 注意 Maybe you will appear docker-ce-cli not found issue,when using following command which written by docker formal docs to install docker ce. you can refernce my solution to solve it. 使用 Docker 官方文档编写的以下
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Sunday, December 1, 2019
-    
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="https://luffyao.com/2019/12/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/">
-        <h2 class="post-title">
-            github 上将源 repo 提交更新到 fork 的 repo
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            前言 在 github 上 一般我们都是将别人的 repo fork 到自己的 github repo。 然后阅读，修改 甚至是 contribution。所以同步源 repo 的 commit 尤为重要。因为你要始终保
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Sunday, December 1, 2019
+    Posted by Luffyao Sunday, September 6, 2020
     
     
     </p>
@@ -277,15 +214,6 @@
 
             
 
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/categories/tech/page/3/">&larr; Newer Posts</a>
-    </li>
-    
-    
-</ul>
 
 
        	</div>
@@ -391,6 +319,12 @@
                 
             
                 
+                    <a href="/tags/client-go" title="client-go">
+                        client-go
+                    </a>
+                
+            
+                
                     <a href="/tags/git" title="git">
                         git
                     </a>
@@ -435,7 +369,7 @@
            <ul class="list-inline"> 
                
                <li>
-                   <a href='/categories/tech/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                   <a href='/tags/client-go/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
                        <span class="fa-stack fa-lg">
                            <i class="fa fa-circle fa-stack-2x"></i>
                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -494,7 +428,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/categories/tech/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                       <a href='/tags/client-go/index.xml' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>

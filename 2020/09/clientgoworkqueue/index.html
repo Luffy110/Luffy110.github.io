@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
+    
+
+    
+    <meta name="title" content="client-go 之 WorkQueue 篇" />
+    <meta property="og:title" content="client-go 之 WorkQueue 篇" />
+    <meta property="twitter:title" content="client-go 之 WorkQueue 篇" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>client-go 之 WorkQueue 篇-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2020/09/clientgoworkqueue/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
+    }
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                    </div>
+                    <h1>client-go 之 WorkQueue 篇</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Sunday, September 6, 2020
+                        
+                        
+                        
+                        
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 2700 字|阅读大约 6 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#workqueue-概述">WorkQueue 概述</a></li>
+<li><a href="#底层的-fifo-队列">底层的 FIFO 队列</a>
+<ul>
+<li><a href="#add-方法实现逻辑">Add 方法实现逻辑</a></li>
+<li><a href="#get-方法实现逻辑">Get 方法实现逻辑</a></li>
+<li><a href="#done-方法实现逻辑">Done 方法实现逻辑</a></li>
+</ul></li>
+<li><a href="#delaying-队列">Delaying 队列</a></li>
+<li><a href="#rate-limiting-队列">Rate Limiting 队列</a></li>
+<li><a href="#ratelimiter-介绍">RateLimiter 介绍</a></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#参考">参考</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h2 id="前言">前言</h2>
+
+<p>之前学习 client-go 过程中总结了一篇文章 <a href="https://luffyao.com/2020/08/clientgo/">client-go 学习总结</a>。并且有幸能够在云原生社区官方博客发表。上篇文章描述了整个 client-go 的整体框架，并没有对各部分做详细介绍，随着这期学习活动接近尾声，个人对 client-go 的学习也是有了更深的理解。而这里我将对 client-go 中的 WorkQueue 部分做一个详细的分析总结。</p>
+
+<h2 id="workqueue-概述">WorkQueue 概述</h2>
+
+<p>上篇 client-go 中简单的描述过，client-go 中提供了三种队列的接口</p>
+
+<ul>
+<li><p><code>Interface</code>: FIFO 队列接口，并支持去重处理。</p></li>
+
+<li><p><code>DelayingInterface</code>: 延迟队列接口，基于 <code>Interface</code> 接口封装。</p></li>
+
+<li><p><code>RateLimitingInterface</code>: 速率限制接口，基于 <code>DelayingInterface</code> 接口封装。</p></li>
+</ul>
+
+<p>三者直接的类图如下：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376340/kubernetes/client-go/workqueue_zc2urt.png" alt="&quot;workqueue&quot;" /></p>
+
+<h2 id="底层的-fifo-队列">底层的 FIFO 队列</h2>
+
+<p>首先是底层的 FIFO 队列的实现。</p>
+
+<p>下面给出具体的定义</p>
+
+<pre><code class="language-go">type Interface interface {
+    Add(item interface{})
+    Len() int
+    Get() (item interface{}, shutdown bool)
+    Done(item interface{})
+    ShutDown()
+    ShuttingDown() bool
+}
+
+// Type is a work queue (see the package comment).
+type Type struct {
+    // queue defines the order in which we will work on items. Every
+    // element of queue should be in the dirty set and not in the
+    // processing set.
+    queue []t
+
+    // dirty defines all of the items that need to be processed.
+    dirty set
+
+    // Things that are currently being processed are in the processing set.
+    // These things may be simultaneously in the dirty set. When we finish
+    // processing something and remove it from this set, we'll check if
+    // it's in the dirty set, and if so, add it to the queue.
+    processing set
+
+    cond *sync.Cond
+
+    shuttingDown bool
+
+    metrics queueMetrics
+
+    unfinishedWorkUpdatePeriod time.Duration
+    clock                      clock.Clock
+}
+
+type empty struct{}
+type t interface{}
+type set map[t]empty
+</code></pre>
+
+<p>这里定义了一个 Interface 接口，提供了几种方法。然后 <code>Type</code> 结构实现了 Interface 接口。所以这里的 <code>Type</code> 结构是一个底层的 FIFO 队列的实现。</p>
+
+<p>从 <code>Type</code> 结构体中我们可以看到定义了三个集合，<code>queue</code> 是一个值为 interface 类型的 slice，<code>ditry</code> 是一个 key 为 interface 类型的 map，<code>processing</code> 一个是 key 为 interface 类型的 map。 而这个 FIFO 队列就是通过这三个属性实现了数据处理逻辑。下面我们将分析不同方法对应的这三个属性之间数据转换来理解 FIFO 队列的实现。</p>
+
+<h3 id="add-方法实现逻辑">Add 方法实现逻辑</h3>
+
+<p>这里我们先分析 Add 方法的实现逻辑。</p>
+
+<pre><code class="language-go">// Add marks item as needing processing.
+func (q *Type) Add(item interface{}) {
+    q.cond.L.Lock()
+    defer q.cond.L.Unlock()
+    if q.shuttingDown {
+        return
+    }
+    if q.dirty.has(item) {
+        return
+    }
+
+    q.metrics.add(item)
+
+    q.dirty.insert(item)
+    if q.processing.has(item) {
+        return
+    }
+
+    q.queue = append(q.queue, item)
+    q.cond.Signal()
+}
+</code></pre>
+
+<p>Add 方法基本分为一下三步：</p>
+
+<ul>
+<li><p>判断 dirty 中是否存在 item，如果存在则返回，如果不存在则执行下一步。</p></li>
+
+<li><p>将 item 插入 dirty 中，再判断 item 是否在 processing 中，如果存在则返回，否则执行下一步。</p></li>
+
+<li><p>将 item 追加到 queue 中。</p></li>
+</ul>
+
+<p>下面给出一个示例图可供参考：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599391131/kubernetes/client-go/basicqueueadd_vo4xld.png" alt="&quot;BasicQueueAdd&quot;" /></p>
+
+<h3 id="get-方法实现逻辑">Get 方法实现逻辑</h3>
+
+<p>这里我们再来看看 Get 方法。</p>
+
+<pre><code class="language-go">// Get blocks until it can return an item to be processed. If shutdown = true,
+// the caller should end their goroutine. You must call Done with item when you
+// have finished processing it.
+func (q *Type) Get() (item interface{}, shutdown bool) {
+    q.cond.L.Lock()
+    defer q.cond.L.Unlock()
+    for len(q.queue) == 0 &amp;&amp; !q.shuttingDown {
+        q.cond.Wait()
+    }
+    if len(q.queue) == 0 {
+        // We must be shutting down.
+        return nil, true
+    }
+
+    item, q.queue = q.queue[0], q.queue[1:]
+
+    q.metrics.get(item)
+
+    q.processing.insert(item)
+    q.dirty.delete(item)
+
+    return item, false
+}
+</code></pre>
+
+<p>这里可以看到</p>
+
+<ul>
+<li><p>如果 queue 中没有 item，则会一直等待在这里，</p></li>
+
+<li><p>而如果有事件过来，但是 queue 还是空，则会返回，并会设置 shutting down 标志，</p></li>
+
+<li><p>而如果 queue 中有元素，则取出 queue 中的第一个元素并从 queue 中删除，然后再插入到 processing 中，最后将该元素从 dirty 中删除。</p></li>
+</ul>
+
+<p>下面给出一个示例图可供参考：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599391131/kubernetes/client-go/basicqueueget_sklglv.png" alt="&quot;BasicQueueGet&quot;" /></p>
+
+<h3 id="done-方法实现逻辑">Done 方法实现逻辑</h3>
+
+<pre><code class="language-go">// Done marks item as done processing, and if it has been marked as dirty again
+// while it was being processed, it will be re-added to the queue for
+// re-processing.
+func (q *Type) Done(item interface{}) {
+    q.cond.L.Lock()
+    defer q.cond.L.Unlock()
+
+    q.metrics.done(item)
+
+    q.processing.delete(item)
+    if q.dirty.has(item) {
+        q.queue = append(q.queue, item)
+        q.cond.Signal()
+    }
+}
+</code></pre>
+
+<p>这里 Done 方法比较简单。</p>
+
+<ul>
+<li><p>将 item 从 processing 中删除</p></li>
+
+<li><p>判断 item 是否存在 dirty 中，如果存在，则叫 item 追加到 queue 中。</p></li>
+</ul>
+
+<p>而这里为什么会判断 dirty 中含有该 item，是因为在 Get 方法和 Done 方法之间不是原子操作，所以 item 有可能在这之间被 Add 进 dirty 中。</p>
+
+<p>下面给出一个示例图可供参考：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599391131/kubernetes/client-go/basicqueuedone_pcgyve.png" alt="&quot;BasicQueueDone&quot;" /></p>
+
+<h2 id="delaying-队列">Delaying 队列</h2>
+
+<p><code>DelayingInterface</code> 是一个 Interface 并且添加了 <code>AddAfter</code> 方法。并且我们可以看到在创建 <code>DelayingQueue</code> 的时候，是创建了一个底层的 FIFO 的。并异步调用了个 ret.waitingLoop()。</p>
+
+<pre><code class="language-go">// DelayingInterface is an Interface that can Add an item at a later time. This makes it easier to
+// requeue items after failures without ending up in a hot-loop.
+type DelayingInterface interface {
+    Interface
+    // AddAfter adds an item to the workqueue after the indicated duration has passed
+    AddAfter(item interface{}, duration time.Duration)
+}
+
+// NewDelayingQueueWithCustomClock constructs a new named workqueue
+// with ability to inject real or fake clock for testing purposes
+func NewDelayingQueueWithCustomClock(clock clock.Clock, name string) DelayingInterface {
+    ret := &amp;delayingType{
+        Interface:       NewNamed(name),
+        clock:           clock,
+        heartbeat:       clock.NewTicker(maxWait),
+        stopCh:          make(chan struct{}),
+        waitingForAddCh: make(chan *waitFor, 1000),
+        metrics:         newRetryMetrics(name),
+    }
+
+    go ret.waitingLoop()
+
+    return ret
+}
+
+</code></pre>
+
+<p>我们先来看看 <code>waitingLoop()</code> 函数的实现。</p>
+
+<pre><code class="language-go">// waitingLoop runs until the workqueue is shutdown and keeps a check on the list of items to be added.
+func (q *delayingType) waitingLoop() {
+    defer utilruntime.HandleCrash()
+
+    // Make a placeholder channel to use when there are no items in our list
+    never := make(&lt;-chan time.Time)
+
+    // Make a timer that expires when the item at the head of the waiting queue is ready
+    var nextReadyAtTimer clock.Timer
+
+    waitingForQueue := &amp;waitForPriorityQueue{}
+    heap.Init(waitingForQueue)
+
+    waitingEntryByData := map[t]*waitFor{}
+
+    for {
+        if q.Interface.ShuttingDown() {
+            return
+        }
+
+        now := q.clock.Now()
+
+        // Add ready entries
+        for waitingForQueue.Len() &gt; 0 {
+            entry := waitingForQueue.Peek().(*waitFor)
+            if entry.readyAt.After(now) {
+                break
+            }
+
+            entry = heap.Pop(waitingForQueue).(*waitFor)
+            q.Add(entry.data)
+            delete(waitingEntryByData, entry.data)
+        }
+
+        // Set up a wait for the first item's readyAt (if one exists)
+        nextReadyAt := never
+        if waitingForQueue.Len() &gt; 0 {
+            if nextReadyAtTimer != nil {
+                nextReadyAtTimer.Stop()
+            }
+            entry := waitingForQueue.Peek().(*waitFor)
+            nextReadyAtTimer = q.clock.NewTimer(entry.readyAt.Sub(now))
+            nextReadyAt = nextReadyAtTimer.C()
+        }
+
+        select {
+        case &lt;-q.stopCh:
+            return
+
+        case &lt;-q.heartbeat.C():
+            // continue the loop, which will add ready items
+
+        case &lt;-nextReadyAt:
+            // continue the loop, which will add ready items
+
+        case waitEntry := &lt;-q.waitingForAddCh:
+            if waitEntry.readyAt.After(q.clock.Now()) {
+                insert(waitingForQueue, waitingEntryByData, waitEntry)
+            } else {
+                q.Add(waitEntry.data)
+            }
+
+            drained := false
+            for !drained {
+                select {
+                case waitEntry := &lt;-q.waitingForAddCh:
+                    if waitEntry.readyAt.After(q.clock.Now()) {
+                        insert(waitingForQueue, waitingEntryByData, waitEntry)
+                    } else {
+                        q.Add(waitEntry.data)
+                    }
+                default:
+                    drained = true
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>这个函数则是 Delaying 的主要实现逻辑。从代码中可以看到它通过接受一些 channel 信号，然后进行处理。例如如果 duration 时间到了，则将元素添加到底层的 FIFO queue 中，如果没到则添加到 <code>waitingForQueue</code> 中后续判断处理。等到 duration 时间到了，然后将该元素添加到 FIFO Queue 中。</p>
+
+<p>我们再来看看 AddAfter 函数的实现。</p>
+
+<pre><code class="language-go">// AddAfter adds the given item to the work queue after the given delay
+func (q *delayingType) AddAfter(item interface{}, duration time.Duration) {
+    // don't add if we're already shutting down
+    if q.ShuttingDown() {
+        return
+    }
+
+    q.metrics.retry()
+
+    // immediately add things with no delay
+    if duration &lt;= 0 {
+        q.Add(item)
+        return
+    }
+
+    select {
+    case &lt;-q.stopCh:
+        // unblock if ShutDown() is called
+    case q.waitingForAddCh &lt;- &amp;waitFor{data: item, readyAt: q.clock.Now().Add(duration)}:
+    }
+}
+</code></pre>
+
+<p>这个函数则是添加 item 到 work queue 的函数。这里会对传入的 duration 进行判断，如果<code>duration &lt;= 0</code>，则直接添加到 queue 中，否则将 item 和 duration 一起封装到 waitFor 结构中，并传入 <code>waitingForAddCh</code> 管道中。以触发上面的 waitingLoop 进行处理。</p>
+
+<p>具体的实现逻辑可参考下图：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599377943/kubernetes/client-go/delayingqueue_m94efl.png" alt="&quot;DelayingQueue&quot;" /></p>
+
+<h2 id="rate-limiting-队列">Rate Limiting 队列</h2>
+
+<p><code>RateLimitingInterface</code> 则是在 <code>DelayingInterface</code> 上再封装了一层。提供了更多的接口。而这些接口都是对于 rate limiter 进行出入，算出 duration 值，并通过调用 <code>DelayingInterface</code> 的 <code>AddAfter</code> 方法将 item 添加到 Queue 中。</p>
+
+<pre><code class="language-go">// RateLimitingInterface is an interface that rate limits items being added to the queue.
+type RateLimitingInterface interface {
+    DelayingInterface
+
+    // AddRateLimited adds an item to the workqueue after the rate limiter says it's ok
+    AddRateLimited(item interface{})
+
+    // Forget indicates that an item is finished being retried.  Doesn't matter whether it's for perm failing
+    // or for success, we'll stop the rate limiter from tracking it.  This only clears the `rateLimiter`, you
+    // still have to call `Done` on the queue.
+    Forget(item interface{})
+
+    // NumRequeues returns back how many times the item was requeued
+    NumRequeues(item interface{}) int
+}
+
+func NewNamedRateLimitingQueue(rateLimiter RateLimiter, name string) RateLimitingInterface {
+    return &amp;rateLimitingType{
+        DelayingInterface: NewNamedDelayingQueue(name),
+        rateLimiter:       rateLimiter,
+    }
+}
+
+// rateLimitingType wraps an Interface and provides rateLimited re-enquing
+type rateLimitingType struct {
+    DelayingInterface
+
+    rateLimiter RateLimiter
+}
+
+// AddRateLimited AddAfter's the item based on the time when the rate limiter says it's ok
+func (q *rateLimitingType) AddRateLimited(item interface{}) {
+    q.DelayingInterface.AddAfter(item, q.rateLimiter.When(item))
+}
+
+func (q *rateLimitingType) NumRequeues(item interface{}) int {
+    return q.rateLimiter.NumRequeues(item)
+}
+
+func (q *rateLimitingType) Forget(item interface{}) {
+    q.rateLimiter.Forget(item)
+}
+
+</code></pre>
+
+<p>从上面代码可以看出我们在调用 <code>NewNamedRateLimitingQueue</code> 函数创建 <code>RateLimitingQueue</code> 的时候，传入了 RateLimiter 的对象，而 <code>rateLimitingType</code> 的 <code>AddRateLimited</code> 方法中则是调用 <code>DelayingInterface</code> 的 <code>AddAfter</code> 方法，并通过 rateLimiter 计算出来的 duration 传入。而其他两个方法则直接调用 rateLimiter 的方法进行处理。</p>
+
+<p>从而我们可以分析出，RateLimitingQueue 主要是通过 RateLimiter 接口的具体实现者的逻辑进行处理的。</p>
+
+<p>具体的实现逻辑可参考下图：</p>
+
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599377947/kubernetes/client-go/ratelimitingqueue_twtcgk.png" alt="&quot;RateLimitingQueue&quot;" /></p>
+
+<h2 id="ratelimiter-介绍">RateLimiter 介绍</h2>
+
+<p>从上面 <code>RateLimitingQueue</code> 中我们有说过它的具体实现逻辑是 <code>RateLimiter</code> 的实现者进行的。下面我们来分析下 <code>RateLimiter</code>。</p>
+
+<pre><code class="language-go">type RateLimiter interface {
+    // When gets an item and gets to decide how long that item should wait
+    When(item interface{}) time.Duration
+    // Forget indicates that an item is finished being retried.  Doesn't matter whether its for perm failing
+    // or for success, we'll stop tracking it
+    Forget(item interface{})
+    // NumRequeues returns back how many failures the item has had
+    NumRequeues(item interface{}) int
+}
+</code></pre>
+
+<p>WorkQueue 中提供的默认支持的 RateLimiter:</p>
+
+<ul>
+<li>BucketRateLimiter</li>
+<li>ItemBucketRateLimiter</li>
+<li>ItemExponentialFailureRateLimiter</li>
+<li>ItemFastSlowRateLimiter</li>
+<li>MaxOfRateLimiter</li>
+</ul>
+
+<p>对于这些默认提供的 <code>RateLimiter</code>，此处我们就不分析了。它们之间主要不同也就是根据不同的算法算出 duration 的时间，来决定 Item 是什么能够加入队列中，从而实现了速率限制功能。</p>
+
+<p><strong>NOTE: 由于 RateLimiter 是一个接口类型，所以如果默认支持的 RateLimiter 不能够满足你的需求，你可以通过实现 RateLimiter 的接口来自定义一个速率限制器。</strong></p>
+
+<h2 id="总结">总结</h2>
+
+<p>WorkQueue 在 informer 机制中主要是在 Controller 部分的组件，因此当你在阅读 controller-manager 源码的时候将会频繁看到它的使用。因为 WorkQueue 中提供的延时队列和速率限制队列在实际使用中会经常用到。例如速率队列来说，它能够很好的控制调用者的处理速度，防止调用者出现很大的波动，更能够使得调用者不会因为负载太高而处理不过来导致失败。</p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+<li><a href="https://github.com/kubernetes/kubernetes">kubernetes</a></li>
+<li><a href="https://github.com/kubernetes/client-go">client-go</a></li>
+</ul>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/09/migratetohugo/" data-toggle="tooltip" data-placement="top" title="将博客从 Hexo 迁移到 Hugo">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/coredump" title="Coredump">
+                            Coredump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gerrit" title="Gerrit">
+                            Gerrit
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hpack" title="HPACK">
+                            HPACK
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/iptables" title="Iptables">
+                            Iptables
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/istio" title="Istio">
+                            Istio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/netfilter" title="Netfilter">
+                            Netfilter
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/operator-sdk" title="Operator-sdk">
+                            Operator-sdk
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/perf" title="Perf">
+                            Perf
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/profling" title="Profling">
+                            Profling
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tcpdump" title="Tcpdump">
+                            Tcpdump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/git" title="git">
+                            git
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/github" title="github">
+                            github
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mtls" title="mTLS">
+                            mTLS
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9A%8F%E7%AC%94" title="随笔">
+                            随笔
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

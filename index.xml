@@ -6,10 +6,19 @@
     <description>Recent content on Luffyao&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 06 Sep 2020 11:39:14 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 06 Sep 2020 17:24:55 +0800</lastBuildDate>
     
 	<atom:link href="https://luffyao.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>client-go 之 WorkQueue 篇</title>
+      <link>https://luffyao.com/2020/09/clientgoworkqueue/</link>
+      <pubDate>Sun, 06 Sep 2020 17:24:55 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2020/09/clientgoworkqueue/</guid>
+      <description>前言 之前学习 client-go 过程中总结了一篇文章 client-go 学习总结。并且有幸能够在云原生社区官方博客发表。上篇文章描述了整个 client-go 的整体框架，并没有对各部分做详细介绍</description>
+    </item>
     
     <item>
       <title>将博客从 Hexo 迁移到 Hugo</title>

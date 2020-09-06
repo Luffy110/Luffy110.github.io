@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://luffyao.com/2020/09/clientgoworkqueue/</loc>
+    <lastmod>2020-09-06T17:24:55+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://luffyao.com/2020/09/migratetohugo/</loc>
     <lastmod>2020-09-06T11:39:14+08:00</lastmod>
   </url>
@@ -173,13 +178,13 @@
   
   <url>
     <loc>https://luffyao.com/tags/kubernetes/</loc>
-    <lastmod>2020-08-07T21:28:37+08:00</lastmod>
+    <lastmod>2020-09-06T17:24:55+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://luffyao.com/</loc>
-    <lastmod>2020-09-06T11:39:14+08:00</lastmod>
+    <lastmod>2020-09-06T17:24:55+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -209,7 +214,7 @@
   
   <url>
     <loc>https://luffyao.com/post/</loc>
-    <lastmod>2020-09-06T11:39:14+08:00</lastmod>
+    <lastmod>2020-09-06T17:24:55+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -226,7 +231,7 @@
   
   <url>
     <loc>https://luffyao.com/categories/tech/</loc>
-    <lastmod>2020-09-06T11:39:14+08:00</lastmod>
+    <lastmod>2020-09-06T17:24:55+08:00</lastmod>
     <priority>0</priority>
   </url>
   
