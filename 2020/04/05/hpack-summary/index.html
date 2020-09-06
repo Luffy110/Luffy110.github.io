@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://luffyao.com/img/home-bg.jpg">
-    <meta property="twitter:image" content="https://luffyao.com/img/home-bg.jpg" />
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
     
 
     
@@ -159,7 +159,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/home-bg.jpg')
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
     }
 </style>
 
@@ -272,7 +272,7 @@
 
 <h1 id="动态表-dynamic-table">动态表 (Dynamic Table)</h1>
 
-<p>动态表是一个将索引值和存储头部字段相关联的表。动态表是动态的且特定于编码和解码上下文。官方定义可参考 <a href="https://tools.ietf.org/html/rfc7541#section-2.3.2">Dynamic table</a>. 根据 <a href="https://tools.ietf.org/html/rfc7541#section-2.2">Encoding and Decoding Contexts</a>, 在 HTTP 里，编码和解码的动态表被端点完全独立维护的表，请求表和响应表是分开的。所以这意味着对于每端点将维护了两张动态表。下面将详细的描述下每个端点是如何分别维护这两张动态表的。<img src="/img/blog/images/hpack/dynamictable.png" alt="" /></p>
+<p>动态表是一个将索引值和存储头部字段相关联的表。动态表是动态的且特定于编码和解码上下文。官方定义可参考 <a href="https://tools.ietf.org/html/rfc7541#section-2.3.2">Dynamic table</a>. 根据 <a href="https://tools.ietf.org/html/rfc7541#section-2.2">Encoding and Decoding Contexts</a>, 在 HTTP 里，编码和解码的动态表被端点完全独立维护的表，请求表和响应表是分开的。所以这意味着对于每端点将维护了两张动态表。下面将详细的描述下每个端点是如何分别维护这两张动态表的。<img src="https://res.cloudinary.com/luffyao/image/upload/v1599376720/Network/dynamictable_gvdlec.png" alt="dynamic table" /></p>
 
 <p>如图步骤 1：解码端发送 SETTING 帧且设置 SETTINGS_HEADER_TABLE_SIZE 参数去修改对端编码动态表的最大大小限制。具体可参考 <a href="https://tools.ietf.org/html/rfc7541#section-4.2">Maximum Table Size</a></p>
 

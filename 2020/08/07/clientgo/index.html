@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="https://luffyao.com/img/home-bg.jpg">
-    <meta property="twitter:image" content="https://luffyao.com/img/home-bg.jpg" />
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
     
 
     
@@ -159,7 +159,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/home-bg.jpg')
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
     }
 </style>
 
@@ -308,7 +308,7 @@
 
 <p>这是一个官方图形表示，展示了client-go 库中的各种组件如何工作，以及它们与将要编写的自定义控制器代码的交互点。</p>
 
-<p><img src="/img/blog/images/clientgo/informer.png" alt="&quot;custom controller&quot;" /></p>
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376339/kubernetes/client-go/informer_creuum.jpg" alt="&quot;custom controller&quot;" /></p>
 
 <p>下面对图中每个组件进行简单介绍：</p>
 
@@ -340,7 +340,7 @@
 
 <h3 id="informer-源码类图">Informer 源码类图</h3>
 
-<p><img src="/img/blog/images/clientgo/clientgo.png" alt="&quot;Informer class diagram&quot;" /></p>
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376339/kubernetes/client-go/clientgo_i4vdl9.png" alt="&quot;Informer class diagram&quot;" /></p>
 
 <p>该类图主要描述了 Informer 中主要的接口和类之前的调用关系。大家可以参考这个类图去阅读源码。其中每个类或接口具体功能，请参考 <a href="https://item.jd.com/12665791.html">Kubernetes 源码剖析</a>第五章节 client-go。</p>
 
@@ -356,7 +356,7 @@
 
 <p>下面为具体的类图展示：</p>
 
-<p><img src="/img/blog/images/clientgo/indexer.png" alt="&quot;indexer&quot;" /></p>
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376339/kubernetes/client-go/indexer_qzlzfy.png" alt="&quot;indexer&quot;" /></p>
 
 <h3 id="threadsafemap-分析">threadSafeMap 分析</h3>
 
@@ -399,7 +399,7 @@ type Indices map[string]Index
 
 <p>这是一个 threadSafeMap 存储结构的示例图：</p>
 
-<p><img src="/img/blog/images/clientgo/threadSafeMapStorageStructure.png" alt="&quot;threadSafeMapStorageStructure&quot;" /></p>
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376339/kubernetes/client-go/threadSafeMapStorageStructure_o8godl.png" alt="&quot;threadSafeMapStorageStructure&quot;" /></p>
 
 <p>最后以添加一个新的对象到 threadSafeMap 为例，分析具体需要哪些操作。</p>
 
@@ -472,7 +472,7 @@ func (c *threadSafeMap) updateIndices(oldObj interface{}, newObj interface{}, ke
 
 <p>下面是相关类图：</p>
 
-<p><img src="/img/blog/images/clientgo/workqueue.png" alt="&quot;workqueue&quot;" /></p>
+<p><img src="https://res.cloudinary.com/luffyao/image/upload/v1599376340/kubernetes/client-go/workqueue_zc2urt.png" alt="&quot;workqueue&quot;" /></p>
 
 <h2 id="示例参考">示例参考</h2>
 
