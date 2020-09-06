@@ -13,10 +13,10 @@
     
     <item>
       <title>gerrit 自动添加 reviewers</title>
-      <link>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</link>
+      <link>https://luffyao.com/2019/12/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</link>
       <pubDate>Fri, 20 Dec 2019 22:02:36 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</guid>
+      <guid>https://luffyao.com/2019/12/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</guid>
       <description>前言 我想用过 gerrit 的同学都知道，这个真的是个神 code review 工具，可以 verify, view, 还可以 cherry-pick 等等功能。这里我不做过多解释。有需要的可以自行百度了解基本知识。 但是就是</description>
     </item>
     

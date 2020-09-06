@@ -13,83 +13,83 @@
     
     <item>
       <title>将博客从 Hexo 迁移到 Hugo</title>
-      <link>https://luffyao.com/2020/09/06/migratetohugo/</link>
+      <link>https://luffyao.com/2020/09/migratetohugo/</link>
       <pubDate>Sun, 06 Sep 2020 11:39:14 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/09/06/migratetohugo/</guid>
+      <guid>https://luffyao.com/2020/09/migratetohugo/</guid>
       <description>前言 之前博客是使用 Hexo，但是最近接触了 Hugo， 然后对比了下，感觉 Hugo 性能好很多，然后就学习了下 Hugo，将自己的博客迁移到了 Hugo 上了。这篇</description>
     </item>
     
     <item>
       <title>client-go 学习总结</title>
-      <link>https://luffyao.com/2020/08/07/clientgo/</link>
+      <link>https://luffyao.com/2020/08/clientgo/</link>
       <pubDate>Fri, 07 Aug 2020 21:28:37 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/08/07/clientgo/</guid>
+      <guid>https://luffyao.com/2020/08/clientgo/</guid>
       <description>前言 目前在云原生社区的 Kubernetes 源码研习社中和广大学友们共同学习郑东旭大佬的 kubernetes 源码剖析这本书。当前正在开展第一期学习活动，第五章节 client-go 的学习。之所以从</description>
     </item>
     
     <item>
       <title>本地 ubuntu18.04 VM 安装 k8s</title>
-      <link>https://luffyao.com/2020/07/25/vminstallk8s/</link>
+      <link>https://luffyao.com/2020/07/vminstallk8s/</link>
       <pubDate>Sat, 25 Jul 2020 15:36:42 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/07/25/vminstallk8s/</guid>
+      <guid>https://luffyao.com/2020/07/vminstallk8s/</guid>
       <description>安装步骤 安装虚拟机 安装至少需要安装两个 ubuntu 虚拟机，根据个人需求，和电脑配置，这里我是两个虚拟机，一个 master ，一个 node 。每个虚拟机 2 CPU，4G 内存。</description>
     </item>
     
     <item>
       <title>controller-runtime 实现准入 webhook</title>
-      <link>https://luffyao.com/2020/05/17/admission-controller-webhook/</link>
+      <link>https://luffyao.com/2020/05/admission-controller-webhook/</link>
       <pubDate>Sun, 17 May 2020 13:04:02 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/05/17/admission-controller-webhook/</guid>
+      <guid>https://luffyao.com/2020/05/admission-controller-webhook/</guid>
       <description>上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现</description>
     </item>
     
     <item>
       <title>client-go 实现准入 webhook</title>
-      <link>https://luffyao.com/2020/05/13/k8s-webhook-admission-control/</link>
+      <link>https://luffyao.com/2020/05/k8s-webhook-admission-control/</link>
       <pubDate>Wed, 13 May 2020 14:42:35 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/05/13/k8s-webhook-admission-control/</guid>
+      <guid>https://luffyao.com/2020/05/k8s-webhook-admission-control/</guid>
       <description>什么是准入 webhook 准入 webhooks 是一个接收 admission 请求并对其做些处理的 HTTP 回调。你可以定义两种准入 webhook,validating admission webhook and mutating admission webhook。mutating admission webhook 首先被调用，然后</description>
     </item>
     
     <item>
       <title>RFC7541 HPACK 总结</title>
-      <link>https://luffyao.com/2020/04/05/hpack-summary/</link>
+      <link>https://luffyao.com/2020/04/hpack-summary/</link>
       <pubDate>Sun, 05 Apr 2020 19:53:22 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/04/05/hpack-summary/</guid>
+      <guid>https://luffyao.com/2020/04/hpack-summary/</guid>
       <description>概括 HPACK 是一个新的可以消除 header 字段冗余，限制已知安全攻击的脆弱性和在受限的环境中有限的内存使用的压缩器。RFC7541 定义了两个表，分别是一张静</description>
     </item>
     
     <item>
       <title>使用 operator-sdk 生成一个CRD</title>
-      <link>https://luffyao.com/2020/04/02/using-operator-sdk-to-generate-k8s-crd/</link>
+      <link>https://luffyao.com/2020/04/using-operator-sdk-to-generate-k8s-crd/</link>
       <pubDate>Thu, 02 Apr 2020 09:11:11 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/04/02/using-operator-sdk-to-generate-k8s-crd/</guid>
+      <guid>https://luffyao.com/2020/04/using-operator-sdk-to-generate-k8s-crd/</guid>
       <description>What is CRD The CustomResourceDefinition API resource allows you to define custom resources. Defining a CRD object creates a new custom resource with a name and schema that you specify. The Kubernetes API serves and handles the storage of your custom resource. The name of a CRD object must be a valid DNS subdomain name. more detailed info please refer to CRD definition
 What is operator-sdk The SDK provides the tools to build, test and package Operators.</description>
     </item>
     
     <item>
       <title>如何在 pod 中做 golang 的 profiling</title>
-      <link>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</link>
+      <link>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</link>
       <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
+      <guid>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
       <description>前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的</description>
     </item>
     
     <item>
       <title>istio 配置 mtls</title>
-      <link>https://luffyao.com/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/</link>
+      <link>https://luffyao.com/2020/01/istio%E9%85%8D%E7%BD%AEmtls/</link>
       <pubDate>Fri, 10 Jan 2020 16:51:03 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/</guid>
+      <guid>https://luffyao.com/2020/01/istio%E9%85%8D%E7%BD%AEmtls/</guid>
       <description>ISTIO MTLS SUMMARY THIS IS BASED ON ISTIO OFFICIAL PACKAGE ISTIO-1.3.5(FOLLOWING ALL OF ISTIO DOCS MUST OVER THE WALL,YOU CAN REFERENCE THE LATEST VERDION DOCS), BECAUSE OUR ENV VERSION IS BASED ON THIS VERSION.
 Test Flow TODO
 Update MeshPolicy from PERMISSIVE to STRICT NOTE: More infor about this in our ENV, please look at following Question section Q2
@@ -99,28 +99,28 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
     
     <item>
       <title>深入理解 iptables 工作原理</title>
-      <link>https://luffyao.com/2019/12/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</link>
+      <link>https://luffyao.com/2019/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</link>
       <pubDate>Wed, 25 Dec 2019 09:10:41 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</guid>
+      <guid>https://luffyao.com/2019/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3iptables%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</guid>
       <description>前言 今天刚好放假，有空来整理下 iptables 的工作原理。对于 iptables/netfilter 的接触，还是之前研究 k8s service load balancing 时深入学习了下工作原理。 概念理解 下面摘录下官方的定义： netfilter is a set</description>
     </item>
     
     <item>
       <title>gerrit 自动添加 reviewers</title>
-      <link>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</link>
+      <link>https://luffyao.com/2019/12/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</link>
       <pubDate>Fri, 20 Dec 2019 22:02:36 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/20/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</guid>
+      <guid>https://luffyao.com/2019/12/gerrit%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0reviewers/</guid>
       <description>前言 我想用过 gerrit 的同学都知道，这个真的是个神 code review 工具，可以 verify, view, 还可以 cherry-pick 等等功能。这里我不做过多解释。有需要的可以自行百度了解基本知识。 但是就是</description>
     </item>
     
     <item>
       <title>C&#43;&#43; 17 尝鲜之 the overload pattern</title>
-      <link>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</link>
+      <link>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</link>
       <pubDate>Sun, 08 Dec 2019 10:49:58 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</guid>
+      <guid>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</guid>
       <description>&lt;p&gt;以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。&lt;/p&gt;
 
 &lt;p&gt;一般大家写出来的代码无非和我的差不多。
@@ -129,55 +129,55 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
     
     <item>
       <title>C&#43;&#43;17 尝鲜之 structured bindings</title>
-      <link>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</link>
+      <link>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</link>
       <pubDate>Sun, 08 Dec 2019 10:44:12 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/08/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
+      <guid>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
       <description>老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 但</description>
     </item>
     
     <item>
       <title>如何抓取 pod 中的 container 的 tcpdump</title>
-      <link>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
+      <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
       <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
+      <guid>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
       <description>前言 一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell t</description>
     </item>
     
     <item>
       <title>如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug</title>
-      <link>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</link>
+      <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</link>
       <pubDate>Mon, 02 Dec 2019 21:35:01 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</guid>
+      <guid>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</guid>
       <description>前言 为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是 C++写的代码，crash tracing 并没有 golang 好，所以代码 crash 在 pod 中的 container 里面，</description>
     </item>
     
     <item>
       <title>用 Perf 给 C&#43;&#43;代码做 Profiling</title>
-      <link>https://luffyao.com/2019/12/01/profiling-c-with-perf-in-the-linux-env/</link>
+      <link>https://luffyao.com/2019/12/profiling-c-with-perf-in-the-linux-env/</link>
       <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/01/profiling-c-with-perf-in-the-linux-env/</guid>
+      <guid>https://luffyao.com/2019/12/profiling-c-with-perf-in-the-linux-env/</guid>
       <description>安装 perf uname -r # check your system tools version for the third command sudo apt-get install linux-tools-common sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic 特别配置 sudo sysctl kernel.perf_event_paranoid=-1 sudo sysctl kernel.kptr_restrict=0 记录 perf 示例 选项 1: 启动应用程序后记录 perf ./application_name perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk &#39;{print</description>
     </item>
     
     <item>
       <title>Ubuntu 18.04 上安装 Docker CE</title>
-      <link>https://luffyao.com/2019/12/01/how-to-install-docker-ce-in-the-ubuntu-18-04/</link>
+      <link>https://luffyao.com/2019/12/how-to-install-docker-ce-in-the-ubuntu-18-04/</link>
       <pubDate>Sun, 01 Dec 2019 19:39:15 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/01/how-to-install-docker-ce-in-the-ubuntu-18-04/</guid>
+      <guid>https://luffyao.com/2019/12/how-to-install-docker-ce-in-the-ubuntu-18-04/</guid>
       <description>安装 官方网站上选择一个合适的安装方法。请参考 官方文档。 注意 Maybe you will appear docker-ce-cli not found issue,when using following command which written by docker formal docs to install docker ce. you can refernce my solution to solve it. 使用 Docker 官方文档编写的以下</description>
     </item>
     
     <item>
       <title>github 上将源 repo 提交更新到 fork 的 repo</title>
-      <link>https://luffyao.com/2019/12/01/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/</link>
+      <link>https://luffyao.com/2019/12/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/</link>
       <pubDate>Sun, 01 Dec 2019 15:39:15 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/01/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/</guid>
+      <guid>https://luffyao.com/2019/12/github%E4%B8%8A%E5%B0%86%E6%BA%90repo%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%96%B0%E5%88%B0fork%E7%9A%84repo/</guid>
       <description>前言 在 github 上 一般我们都是将别人的 repo fork 到自己的 github repo。 然后阅读，修改 甚至是 contribution。所以同步源 repo 的 commit 尤为重要。因为你要始终保</description>
     </item>
     

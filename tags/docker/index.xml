@@ -13,37 +13,37 @@
     
     <item>
       <title>如何在 pod 中做 golang 的 profiling</title>
-      <link>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</link>
+      <link>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</link>
       <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/03/07/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
+      <guid>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
       <description>前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的</description>
     </item>
     
     <item>
       <title>如何抓取 pod 中的 container 的 tcpdump</title>
-      <link>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
+      <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
       <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
+      <guid>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
       <description>前言 一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell t</description>
     </item>
     
     <item>
       <title>如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug</title>
-      <link>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</link>
+      <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</link>
       <pubDate>Mon, 02 Dec 2019 21:35:01 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/02/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</guid>
+      <guid>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/</guid>
       <description>前言 为什么会记录这篇文章呢，是因为在工作中，遇到了这个问题，由于我们这个是 C++写的代码，crash tracing 并没有 golang 好，所以代码 crash 在 pod 中的 container 里面，</description>
     </item>
     
     <item>
       <title>Ubuntu 18.04 上安装 Docker CE</title>
-      <link>https://luffyao.com/2019/12/01/how-to-install-docker-ce-in-the-ubuntu-18-04/</link>
+      <link>https://luffyao.com/2019/12/how-to-install-docker-ce-in-the-ubuntu-18-04/</link>
       <pubDate>Sun, 01 Dec 2019 19:39:15 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/01/how-to-install-docker-ce-in-the-ubuntu-18-04/</guid>
+      <guid>https://luffyao.com/2019/12/how-to-install-docker-ce-in-the-ubuntu-18-04/</guid>
       <description>安装 官方网站上选择一个合适的安装方法。请参考 官方文档。 注意 Maybe you will appear docker-ce-cli not found issue,when using following command which written by docker formal docs to install docker ce. you can refernce my solution to solve it. 使用 Docker 官方文档编写的以下</description>
     </item>
     

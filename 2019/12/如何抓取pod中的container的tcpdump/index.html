@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
+    
+
+    
+    <meta name="title" content="如何抓取 pod 中的 container 的 tcpdump" />
+    <meta property="og:title" content="如何抓取 pod 中的 container 的 tcpdump" />
+    <meta property="twitter:title" content="如何抓取 pod 中的 container 的 tcpdump" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>如何抓取 pod 中的 container 的 tcpdump-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
+    }
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        <a class="tag" href="/tags/tcpdump" title="Tcpdump">
+                            Tcpdump
+                        </a>
+                        
+                    </div>
+                    <h1>如何抓取 pod 中的 container 的 tcpdump</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Saturday, December 7, 2019
+                        
+                        
+                        
+                        
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 700 字|阅读大约 2 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#构建一个带有-tcpdump-的镜像">构建一个带有 tcpdump 的镜像</a></li>
+<li><a href="#抓取-tcpdump">抓取 tcpdump</a></li>
+<li><a href="#将-tcpdump-文件拷出-container-到本地-用-wireshark-进行分析">将 tcpdump 文件拷出 container 到本地，用 wireshark 进行分析</a></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h2 id="前言">前言</h2>
+
+<p>一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell terminal，那我们就不能使用 exec 进入 container 了。所以此时我们就需要以下方法，通过自己编一个带有 shell 的 image，然后 docker exec 嵌入到 pod 中，再进行抓取 tcpdump。</p>
+
+<h2 id="构建一个带有-tcpdump-的镜像">构建一个带有 tcpdump 的镜像</h2>
+
+<ul>
+<li><p>先 pull 一个 base image alpine:3.9.2，然后 docker run 这个 image，在进入对应的 container，安装 tcpdump，再开另一个 terminal，提交生成一个新的 image。下面命令可供参考：</p>
+
+<pre><code class="language-shell"> docker run -it --name=alpine alpine:3.9.2
+ # install tcpdump
+ apk add tcpdump
+ # switch another terminal and exec this command
+ docker commit alpine aaa:tag
+</code></pre></li>
+</ul>
+
+<h2 id="抓取-tcpdump">抓取 tcpdump</h2>
+
+<ul>
+<li><p>将你的 image 运行，然后嵌到想要的 container 的 network 上，然后进入到你自己 image 运行的 container 里面抓取 tcpdump</p>
+
+<pre><code class="language-shell"># display all of the container and found containerId that you want.
+docker ps | grep your service
+    
+# if you want to copy tcpdump file out to container into local, you should reference step3. 
+docker run -it --rm --net=container:containerID aaa:tag
+    
+tcpdump -i lo -w lo.pcap
+
+#or if you want to grap all dump, you can use following command
+tcpdump -i any -w any.pcap
+</code></pre></li>
+</ul>
+
+<h2 id="将-tcpdump-文件拷出-container-到本地-用-wireshark-进行分析">将 tcpdump 文件拷出 container 到本地，用 wireshark 进行分析</h2>
+
+<ul>
+<li><p>我是通过挂载的方式，将本地创建的 volume 挂到 container 里面的某个目录，然后将 coredump 文件生成在 container 里面的那个目录，然后在本地就可以看到对于的文件了。将对应文件拷出，进去 wireshark 分析就好了。（其实我之前有提到过 docker cp 这个命令也可以 copy 文件，也许更为简单。具体怎么使用，可以参考官网指导 <a href="https://docs.docker.com/engine/reference/commandline/cp/">docker cp command guidance</a>.)</p>
+
+<pre><code class="language-shell"># create a volume name is data.
+docker volume create data 
+    
+# view detailed message .
+docker inspect data 
+    
+docker run -it --rm --net=container:containerID --mount source=data,destination=/dir aaa:tag
+</code></pre></li>
+</ul>
+
+<h2 id="总结">总结</h2>
+
+<p>其实在 pod 里面抓取 tcpdump 还是蛮重要的，因为当你一个 pod 里面有几个 container 的时候，内部的消息，其实在 pod 外面是抓取不到的。那只能想办法到 pod 里面去抓。但是一般都为了安全起见，产品的 image 并没有 bash 可以让你进到 container 里面。那我这个方法就有很大用处了。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E7%9A%84container-%E9%87%8C%E9%9D%A2%E7%94%9F%E6%88%90coredump-%E6%96%87%E4%BB%B6-%E5%B9%B6%E6%8B%B7%E8%B4%9D%E5%87%BA%E6%9D%A5%E4%BD%BF%E7%94%A8gdb-debug/" data-toggle="tooltip" data-placement="top" title="如何在 pod 中的 container 里面生成 coredump 文件并拷贝出来使用 GDB debug">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/" data-toggle="tooltip" data-placement="top" title="C&#43;&#43;17 尝鲜之 structured bindings">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/coredump" title="Coredump">
+                            Coredump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gerrit" title="Gerrit">
+                            Gerrit
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hpack" title="HPACK">
+                            HPACK
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/iptables" title="Iptables">
+                            Iptables
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/istio" title="Istio">
+                            Istio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/netfilter" title="Netfilter">
+                            Netfilter
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/operator-sdk" title="Operator-sdk">
+                            Operator-sdk
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/perf" title="Perf">
+                            Perf
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/profling" title="Profling">
+                            Profling
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tcpdump" title="Tcpdump">
+                            Tcpdump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/git" title="git">
+                            git
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/github" title="github">
+                            github
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mtls" title="mTLS">
+                            mTLS
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9A%8F%E7%AC%94" title="随笔">
+                            随笔
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

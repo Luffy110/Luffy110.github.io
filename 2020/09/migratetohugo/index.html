@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
+    
+
+    
+    <meta name="title" content="将博客从 Hexo 迁移到 Hugo" />
+    <meta property="og:title" content="将博客从 Hexo 迁移到 Hugo" />
+    <meta property="twitter:title" content="将博客从 Hexo 迁移到 Hugo" />
+    
+
+    
+    <meta name="description" content="简单介绍如何使用Hugo">
+    <meta property="og:description" content="简单介绍如何使用Hugo" />
+    <meta property="twitter:description" content="简单介绍如何使用Hugo" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>将博客从 Hexo 迁移到 Hugo-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2020/09/migratetohugo/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
+    }
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
+                    </div>
+                    <h1>将博客从 Hexo 迁移到 Hugo</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Sunday, September 6, 2020
+                        
+                        
+                        
+                        
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1300 字|阅读大约 3 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#安装-hugo">安装 Hugo</a></li>
+<li><a href="#hugo-使用">Hugo 使用</a>
+<ul>
+<li><a href="#生成站点">生成站点</a></li>
+<li><a href="#创建文章">创建文章</a></li>
+<li><a href="#导入-hexo-的文章">导入 Hexo 的文章</a></li>
+<li><a href="#安装主题">安装主题</a></li>
+<li><a href="#运行-hugo">运行 Hugo</a></li>
+<li><a href="#部署">部署</a></li>
+</ul></li>
+<li><a href="#高亮代码">高亮代码</a></li>
+<li><a href="#添加-cname">添加 CNAME</a></li>
+<li><a href="#添加字数统计和阅读时间">添加字数统计和阅读时间</a></li>
+<li><a href="#cdn-引用">CDN 引用</a></li>
+<li><a href="#参考">参考</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h2 id="前言">前言</h2>
+
+<p>之前博客是使用 Hexo，但是最近接触了 Hugo， 然后对比了下，感觉 Hugo 性能好很多，然后就学习了下 Hugo，将自己的博客迁移到了 Hugo 上了。这篇主要总结下这个过程中的步骤。</p>
+
+<h2 id="安装-hugo">安装 Hugo</h2>
+
+<p>到 <a href="https://github.com/gohugoio/hugo/releases">Hugo 官网下载</a> 下载符合系统的最新版本，这里我们下载 hugo_xxx_Linux-64bit.deb</p>
+
+<pre><code class="language-shell">sudo dpkg -i hugo_xxx_Linux-64bit.deb  
+sudo apt install -f
+</code></pre>
+
+<h2 id="hugo-使用">Hugo 使用</h2>
+
+<h3 id="生成站点">生成站点</h3>
+
+<p>使用下面命令生成站点：</p>
+
+<pre><code>hugo new site /path/to/site
+</code></pre>
+
+<h3 id="创建文章">创建文章</h3>
+
+<p>使用下面命令创建一编文章：</p>
+
+<pre><code>hugo new post/first.md
+</code></pre>
+
+<h3 id="导入-hexo-的文章">导入 Hexo 的文章</h3>
+
+<p>这里我是直接将 Hexo 里面的博客文章直接复制到了 Hugo 下面，然后做了下格式的修改。比如什么时间格式什么的。基本上不用修改什么，直接迁移就好了。</p>
+
+<h3 id="安装主题">安装主题</h3>
+
+<p>这里我是安装的 hugo-theme-cleanwhite 主题：可以参考下面命令安装：</p>
+
+<pre><code class="language-shell">mkdir test
+cd test
+mkdir themes
+cd themes
+git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git
+cp -r hugo-theme-cleanwhite/exampleSite/** ../
+cd ..
+hugo serve
+</code></pre>
+
+<p>然后进行相关的修改</p>
+
+<p>详细的使用方式可以参考 <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite#quick-start">quick-start</a>。</p>
+
+<h3 id="运行-hugo">运行 Hugo</h3>
+
+<p>当你编写好一篇文章后，可以通过执行 <code>hugo server</code> 在本地浏览器输入 <code>http://localhost:1313</code> 预览。</p>
+
+<h3 id="部署">部署</h3>
+
+<p>假设你需要部署在 <code>GitHub Pages</code> 上，首先在 GitHub 上创建一个 Repository，命名为：<code>luffyao.github.io</code> luffyao 替换为你的 github 用户名）。
+然后在 <code>config.toml</code> 文件中修改对应的 URL 到你自己的即可。</p>
+
+<p>然后在执行 <code>hugo</code> 命令生成相应的静态页面。如果一切顺利，所有静态页面都会生成到 <code>public</code> 目录，将 pubilc 目录里所有文件 push 到刚创建的 Repository 的 master 分支。</p>
+
+<p>可以参考下面命令进行提交：（这里需要注意一点的是要在 public 目录下进行<code>git init</code>)</p>
+
+<pre><code class="language-shell">hugo
+cd public
+git init
+git remote add origin https://github.com/luffyao/luffyao.github.io.git
+git add -A
+git commit -m &quot;first commit&quot;
+git push -u origin master
+</code></pre>
+
+<p>最后就可以在浏览器里访问：<code>http://luffyao.github.io/</code></p>
+
+<h2 id="高亮代码">高亮代码</h2>
+
+<p>在 <code>themes/cleanwhite/layouts/_default/baseof.html</code> 文件中添加下面这部分代码</p>
+
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot;
+      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+</code></pre>
+
+<p>这里可供参考：</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;{{ .Site.LanguageCode }}&quot;&gt;
+{{ partial &quot;head.html&quot; . }}
+{{ partial &quot;nav.html&quot; . }}
+&lt;!-- Page Header --&gt;
+{{ block &quot;header&quot; .}}
+&lt;header class=&quot;intro-header&quot; style=&quot;background-image: url('{{ .Site.Params.header_image | relURL }}')&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 &quot;&gt;
+                &lt;div class=&quot;site-heading&quot;&gt;
+                    &lt;h1&gt;{{ .Site.Title}} &lt;/h1&gt;
+                    &lt;!--&lt;hr class=&quot;small&quot;&gt;--&gt;
+		    &lt;span class=&quot;subheading&quot;&gt;{{ .Site.Params.slogan }}&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/header&gt;
+{{ end }}
+
+&lt;link rel=&quot;stylesheet&quot;
+      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+
+{{ block &quot;main&quot; . }}
+{{ end }}
+
+{{ partial &quot;footer.html&quot; . }}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="添加-cname">添加 CNAME</h2>
+
+<p>如果你购买过自己的域名，则这里可以在 <code>public</code> 目录下添加一个 CNAME 文件，并将自己的域名添加进去即可。这样你就可以通过自己的域名访问到博客了。</p>
+
+<h2 id="添加字数统计和阅读时间">添加字数统计和阅读时间</h2>
+
+<ol>
+<li><p>在 <code>themes/layouts/partials/head.html</code> 文件中引入不蒜子 js 文件</p>
+
+<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
+&lt;script async src=&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;
+{{ end }}
+</code></pre></li>
+
+<li><p>在 <code>themes/layouts/_default/single.html</code> 中添加以下代码</p>
+
+<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
+&lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
+{{ end }}
+</code></pre>
+
+<p>这里我是添加的 header 中的。具体可参考下面代码：</p>
+
+<pre><code class="language-html">&lt;span class=&quot;meta&quot;&gt;
+    Posted by 
+    {{ if .Params.author }}
+        {{ .Params.author }}
+    {{ else }}
+            {{ .Site.Title }}
+    {{ end }} 
+    on 
+    {{ .Date.Format &quot;Monday, January 2, 2006&quot; }}
+    {{ if .Site.Params.page_view_conter }}
+        {{ partial &quot;page_view_counter.html&quot; . }}
+    {{ end }}
+    &lt;!-- Don't show &quot;Last Modified on&quot; if update happened on the same day. --&gt;
+    {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat &quot;2006-01-02&quot; .Lastmod) (dateFormat &quot;2006-01-02&quot; .Date)))) }}
+    &lt;br&gt;Last Modified on {{ dateFormat &quot;Monday, January 2, 2006&quot; .Params.LastMod }}
+    {{ end }}
+    {{ if .Site.Params.busuanzi }}
+    &lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
+    {{ end }}
+&lt;/span&gt;
+</code></pre></li>
+
+<li><p>在 <code>config.toml</code> 文件中添加 <code>busuanzi=true</code></p>
+
+<pre><code>[params]
+  #字数统计
+  busuanzi = true
+</code></pre></li>
+</ol>
+
+<h2 id="cdn-引用">CDN 引用</h2>
+
+<p>使用 <a href="https://cloudinary.com/">Cloudinary</a> 存储图片，加快访问速度。</p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+<li><a href="https://www.gohugo.org/">hugo</a></li>
+<li><a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">hugo-theme-cleanwhite</a></li>
+<li><a href="https://www.gohugo.org/doc/overview/installing/">hugo installation</a></li>
+<li><a href="https://wefox.me/docs/create_blog_on_github_by_hugo/">ubuntu 安装 hugo</a></li>
+<li><a href="http://jonathanwayy.xyz/2020/blog2/">Hugo LeaveIt添加网站流量统计</a></li>
+<li><a href="https://rootsongjc.gitbooks.io/hugo-handbook/content/steps/seo.html">hugo-handbook</a></li>
+</ul>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/clientgo/" data-toggle="tooltip" data-placement="top" title="client-go 学习总结">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/coredump" title="Coredump">
+                            Coredump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gerrit" title="Gerrit">
+                            Gerrit
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hpack" title="HPACK">
+                            HPACK
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/iptables" title="Iptables">
+                            Iptables
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/istio" title="Istio">
+                            Istio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/netfilter" title="Netfilter">
+                            Netfilter
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/operator-sdk" title="Operator-sdk">
+                            Operator-sdk
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/perf" title="Perf">
+                            Perf
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/profling" title="Profling">
+                            Profling
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tcpdump" title="Tcpdump">
+                            Tcpdump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/git" title="git">
+                            git
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/github" title="github">
+                            github
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mtls" title="mTLS">
+                            mTLS
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9A%8F%E7%AC%94" title="随笔">
+                            随笔
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

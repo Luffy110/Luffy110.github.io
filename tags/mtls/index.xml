@@ -13,10 +13,10 @@
     
     <item>
       <title>istio 配置 mtls</title>
-      <link>https://luffyao.com/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/</link>
+      <link>https://luffyao.com/2020/01/istio%E9%85%8D%E7%BD%AEmtls/</link>
       <pubDate>Fri, 10 Jan 2020 16:51:03 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/01/10/istio%E9%85%8D%E7%BD%AEmtls/</guid>
+      <guid>https://luffyao.com/2020/01/istio%E9%85%8D%E7%BD%AEmtls/</guid>
       <description>ISTIO MTLS SUMMARY THIS IS BASED ON ISTIO OFFICIAL PACKAGE ISTIO-1.3.5(FOLLOWING ALL OF ISTIO DOCS MUST OVER THE WALL,YOU CAN REFERENCE THE LATEST VERDION DOCS), BECAUSE OUR ENV VERSION IS BASED ON THIS VERSION.
 Test Flow TODO
 Update MeshPolicy from PERMISSIVE to STRICT NOTE: More infor about this in our ENV, please look at following Question section Q2

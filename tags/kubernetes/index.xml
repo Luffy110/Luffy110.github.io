@@ -13,46 +13,46 @@
     
     <item>
       <title>client-go 学习总结</title>
-      <link>https://luffyao.com/2020/08/07/clientgo/</link>
+      <link>https://luffyao.com/2020/08/clientgo/</link>
       <pubDate>Fri, 07 Aug 2020 21:28:37 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/08/07/clientgo/</guid>
+      <guid>https://luffyao.com/2020/08/clientgo/</guid>
       <description>前言 目前在云原生社区的 Kubernetes 源码研习社中和广大学友们共同学习郑东旭大佬的 kubernetes 源码剖析这本书。当前正在开展第一期学习活动，第五章节 client-go 的学习。之所以从</description>
     </item>
     
     <item>
       <title>本地 ubuntu18.04 VM 安装 k8s</title>
-      <link>https://luffyao.com/2020/07/25/vminstallk8s/</link>
+      <link>https://luffyao.com/2020/07/vminstallk8s/</link>
       <pubDate>Sat, 25 Jul 2020 15:36:42 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/07/25/vminstallk8s/</guid>
+      <guid>https://luffyao.com/2020/07/vminstallk8s/</guid>
       <description>安装步骤 安装虚拟机 安装至少需要安装两个 ubuntu 虚拟机，根据个人需求，和电脑配置，这里我是两个虚拟机，一个 master ，一个 node 。每个虚拟机 2 CPU，4G 内存。</description>
     </item>
     
     <item>
       <title>controller-runtime 实现准入 webhook</title>
-      <link>https://luffyao.com/2020/05/17/admission-controller-webhook/</link>
+      <link>https://luffyao.com/2020/05/admission-controller-webhook/</link>
       <pubDate>Sun, 17 May 2020 13:04:02 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/05/17/admission-controller-webhook/</guid>
+      <guid>https://luffyao.com/2020/05/admission-controller-webhook/</guid>
       <description>上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现</description>
     </item>
     
     <item>
       <title>client-go 实现准入 webhook</title>
-      <link>https://luffyao.com/2020/05/13/k8s-webhook-admission-control/</link>
+      <link>https://luffyao.com/2020/05/k8s-webhook-admission-control/</link>
       <pubDate>Wed, 13 May 2020 14:42:35 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/05/13/k8s-webhook-admission-control/</guid>
+      <guid>https://luffyao.com/2020/05/k8s-webhook-admission-control/</guid>
       <description>什么是准入 webhook 准入 webhooks 是一个接收 admission 请求并对其做些处理的 HTTP 回调。你可以定义两种准入 webhook,validating admission webhook and mutating admission webhook。mutating admission webhook 首先被调用，然后</description>
     </item>
     
     <item>
       <title>使用 operator-sdk 生成一个CRD</title>
-      <link>https://luffyao.com/2020/04/02/using-operator-sdk-to-generate-k8s-crd/</link>
+      <link>https://luffyao.com/2020/04/using-operator-sdk-to-generate-k8s-crd/</link>
       <pubDate>Thu, 02 Apr 2020 09:11:11 +0800</pubDate>
       
-      <guid>https://luffyao.com/2020/04/02/using-operator-sdk-to-generate-k8s-crd/</guid>
+      <guid>https://luffyao.com/2020/04/using-operator-sdk-to-generate-k8s-crd/</guid>
       <description>What is CRD The CustomResourceDefinition API resource allows you to define custom resources. Defining a CRD object creates a new custom resource with a name and schema that you specify. The Kubernetes API serves and handles the storage of your custom resource. The name of a CRD object must be a valid DNS subdomain name. more detailed info please refer to CRD definition
 What is operator-sdk The SDK provides the tools to build, test and package Operators.</description>
     </item>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Luffyao&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg">
+    <meta property="twitter:image" content="https://luffyao.com/https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg" />
+    
+
+    
+    <meta name="title" content="C&#43;&#43; 17 尝鲜之 the overload pattern" />
+    <meta property="og:title" content="C&#43;&#43; 17 尝鲜之 the overload pattern" />
+    <meta property="twitter:title" content="C&#43;&#43; 17 尝鲜之 the overload pattern" />
+    
+
+    
+    <meta name="description" content="与你一起发现更大的世界。">
+    <meta property="og:description" content="与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>C&#43;&#43; 17 尝鲜之 the overload pattern-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+
+    <link rel="canonical" href="/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Luffyao&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">TECH</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A5%E5%B8%B8%E9%9A%8F%E7%AC%94">日常随笔</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('https://res.cloudinary.com/luffyao/image/upload/v1599378392/blog/blog-bg_zfdkp9.jpg')
+    }
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                    </div>
+                    <h1>C&#43;&#43; 17 尝鲜之 the overload pattern</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Luffyao
+                         
+                        on 
+                        Sunday, December 8, 2019
+                        
+                        
+                        
+                        
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 100 字|阅读大约 0 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                <p>以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。</p>
+
+<p>一般大家写出来的代码无非和我的差不多。
+</p>
+
+<pre><code class="language-C++">struct PrintVisitor
+{
+    void operator()(int&amp; i) const {
+        std::cout &lt;&lt; &quot;int: &quot; &lt;&lt; i;
+    }
+
+    void operator()(float&amp; f) const {
+        std::cout &lt;&lt; &quot;float: &quot; &lt;&lt; f;
+    }
+
+    void operator()(std::string&amp; s) const {
+    std::cout &lt;&lt; &quot;string: &quot; &lt;&lt; s;
+    }
+};
+</code></pre>
+
+<p>C++17 对于这种情况做了代码优化，引入了 Overload Pattern。之后我们就可以像下面这样写了。看起来很难懂 (<strong>是真的很难理解</strong>)， 但是代码比较简洁了。
+ </p>
+
+<pre><code class="language-C++">template&lt;class... Ts&gt; struct overload : Ts... { using Ts::operator()...; };
+template&lt;class... Ts&gt; overload(Ts...) -&gt; overload&lt;Ts...&gt;;
+
+std::variant&lt;int, float&gt; intFloat { 0.0f };
+std::visit(overload(
+        [](const int&amp; i) { ... },
+        [](const float&amp; f) { ... },
+    ),
+    intFloat;
+);
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>总之，C++新的标准，相对于老版本来说，高大上了不少，也更加现代化了，更加降低了使用者的入门基础了（简单的一个例子就是，以前让 C++程序员最头疼的指针，也是在 C++11 的时候引入了智能指针）。</p>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/" data-toggle="tooltip" data-placement="top" title="C&#43;&#43;17 尝鲜之 structured bindings">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/%E8%B0%88%E8%B0%88%E6%88%91%E5%AF%B9csdn%E7%9A%84%E4%B8%AA%E4%BA%BA%E6%84%9F%E5%8F%97/" data-toggle="tooltip" data-placement="top" title="谈谈我对 CSDN 的个人感受">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/c&#43;&#43;17" title="C&#43;&#43;17">
+                            C&#43;&#43;17
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/coredump" title="Coredump">
+                            Coredump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gerrit" title="Gerrit">
+                            Gerrit
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hpack" title="HPACK">
+                            HPACK
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/iptables" title="Iptables">
+                            Iptables
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/istio" title="Istio">
+                            Istio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="Kubernetes">
+                            Kubernetes
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/netfilter" title="Netfilter">
+                            Netfilter
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/operator-sdk" title="Operator-sdk">
+                            Operator-sdk
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/perf" title="Perf">
+                            Perf
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/profling" title="Profling">
+                            Profling
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tcpdump" title="Tcpdump">
+                            Tcpdump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/git" title="git">
+                            git
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/github" title="github">
+                            github
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/mtls" title="mTLS">
+                            mTLS
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E9%9A%8F%E7%AC%94" title="随笔">
+                            随笔
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Luffyao&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:luffyao001@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Luffy110">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

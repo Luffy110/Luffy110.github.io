@@ -13,10 +13,10 @@
     
     <item>
       <title>如何抓取 pod 中的 container 的 tcpdump</title>
-      <link>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
+      <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
       <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
       
-      <guid>https://luffyao.com/2019/12/07/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
+      <guid>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</guid>
       <description>前言 一般情况下，想要抓取 pod 中的某个 container 的 tcpdump，直接 kubectl exec 进入那个 container，然后就可以抓取了。但是如果当你的 image 没有安装 bash 等 shell t</description>
     </item>
     
