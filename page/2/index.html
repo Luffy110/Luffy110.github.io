@@ -192,6 +192,27 @@
             
 
 <div class="post-preview">
+    <a href="https://luffyao.com/2020/05/admission-controller-webhook/">
+        <h2 class="post-title">
+            controller-runtime 实现准入 webhook
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现
+       
+        </div>
+    </a>
+    <p class="post-meta">
+    Posted by Luffyao Sunday, May 17, 2020
+    
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="https://luffyao.com/2020/05/k8s-webhook-admission-control/">
         <h2 class="post-title">
             client-go 实现准入 webhook
@@ -276,31 +297,6 @@ What is operator-sdk The SDK provides the tools to build, test and package Opera
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="https://luffyao.com/2020/01/istio%E9%85%8D%E7%BD%AEmtls/">
-        <h2 class="post-title">
-            istio 配置 mtls
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            ISTIO MTLS SUMMARY THIS IS BASED ON ISTIO OFFICIAL PACKAGE ISTIO-1.3.5(FOLLOWING ALL OF ISTIO DOCS MUST OVER THE WALL,YOU CAN REFERENCE THE LATEST VERDION DOCS), BECAUSE OUR ENV VERSION IS BASED ON THIS VERSION.
-Test Flow TODO
-Update MeshPolicy from PERMISSIVE to STRICT NOTE: More infor about this in our ENV, please look at following Question section Q2
-Reference link MutlalTls-Mode
-kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    Posted by Luffyao Friday, January 10, 2020
-    
-    
-    </p>
-
-</div>
-<hr>
-
 
             
 
@@ -346,6 +342,12 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
                 
                     <a href="/tags/coredump" title="Coredump">
                         Coredump
+                    </a>
+                
+            
+                
+                    <a href="/tags/design-pattern" title="Design Pattern">
+                        Design Pattern
                     </a>
                 
             
