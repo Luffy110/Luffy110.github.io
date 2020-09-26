@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Luffyao&#39;s Blog</title>
+    <link>https://luffyao.com/tags/golang/</link>
+    <description>Recent content in Golang on Luffyao&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 26 Sep 2020 09:38:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://luffyao.com/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>write on closed buffer 错误分析</title>
+      <link>https://luffyao.com/2020/09/http2_write_on_closed_buffer_error/</link>
+      <pubDate>Sat, 26 Sep 2020 09:38:23 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2020/09/http2_write_on_closed_buffer_error/</guid>
+      <description>问题描述 这几天系统测试的同事给我们报了个奇怪的问题，就是在压力测试下，一个服务的 client 端在处理消息的时候会出现 write on closed buffer 的错误。虽然这个问题较为奇</description>
+    </item>
+    
+  </channel>
+</rss>

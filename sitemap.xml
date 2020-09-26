@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://luffyao.com/2020/09/http2_write_on_closed_buffer_error/</loc>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://luffyao.com/2020/09/designpattern/</loc>
     <lastmod>2020-09-10T14:12:23+08:00</lastmod>
   </url>
@@ -164,6 +169,12 @@
   </url>
   
   <url>
+    <loc>https://luffyao.com/tags/golang/</loc>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://luffyao.com/tags/hpack/</loc>
     <lastmod>2020-04-05T19:53:22+08:00</lastmod>
     <priority>0</priority>
@@ -195,13 +206,19 @@
   
   <url>
     <loc>https://luffyao.com/</loc>
-    <lastmod>2020-09-10T14:12:23+08:00</lastmod>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://luffyao.com/tags/mtls/</loc>
     <lastmod>2020-01-10T16:51:03+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://luffyao.com/tags/net/</loc>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -225,7 +242,7 @@
   
   <url>
     <loc>https://luffyao.com/post/</loc>
-    <lastmod>2020-09-10T14:12:23+08:00</lastmod>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -242,7 +259,7 @@
   
   <url>
     <loc>https://luffyao.com/categories/tech/</loc>
-    <lastmod>2020-09-10T14:12:23+08:00</lastmod>
+    <lastmod>2020-09-26T09:38:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
