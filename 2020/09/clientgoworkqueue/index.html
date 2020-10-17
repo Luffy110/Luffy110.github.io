@@ -21,9 +21,9 @@
     
 
     
-    <meta name="description" content="与你一起发现更大的世界。">
-    <meta property="og:description" content="与你一起发现更大的世界。" />
-    <meta property="twitter:description" content="与你一起发现更大的世界。" />
+    <meta name="description" content="client-go 中不同 WorkQueue 的源码分析及默认支持的 Rate Limiter 的介绍">
+    <meta property="og:description" content="client-go 中不同 WorkQueue 的源码分析及默认支持的 Rate Limiter 的介绍" />
+    <meta property="twitter:description" content="client-go 中不同 WorkQueue 的源码分析及默认支持的 Rate Limiter 的介绍" />
     
 
     
@@ -174,6 +174,10 @@
                             Kubernetes
                         </a>
                         
+                        <a class="tag" href="/tags/client-go" title="client-go">
+                            client-go
+                        </a>
+                        
                     </div>
                     <h1>client-go 之 WorkQueue 篇</h1>
                     <h2 class="subheading"></h2>
@@ -188,7 +192,7 @@
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 2700 字|阅读大约 6 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 2900 字|阅读大约 6 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -223,6 +227,7 @@
 <ul>
 <li>
 <ul>
+<li><a href="#client-go-源码学习系列">client-go 源码学习系列：</a></li>
 <li><a href="#前言">前言</a></li>
 <li><a href="#workqueue-概述">WorkQueue 概述</a></li>
 <li><a href="#底层的-fifo-队列">底层的 FIFO 队列</a>
@@ -242,9 +247,17 @@
                 
                 
 
+<h2 id="client-go-源码学习系列">client-go 源码学习系列：</h2>
+
+<ul>
+<li><a href="https://luffyao.com/2020/08/clientgooverall/">client-go 之概述篇</a></li>
+<li><a href="https://luffyao.com/2020/10/clientgoinformer/">client-go 之 Informer 篇</a></li>
+<li>client-go 之 WorkQueue 篇</li>
+</ul>
+
 <h2 id="前言">前言</h2>
 
-<p>之前学习 client-go 过程中总结了一篇文章 <a href="https://luffyao.com/2020/08/clientgo/">client-go 学习总结</a>。并且有幸能够在云原生社区官方博客发表。上篇文章描述了整个 client-go 的整体框架，并没有对各部分做详细介绍，随着这期学习活动接近尾声，个人对 client-go 的学习也是有了更深的理解。而这里我将对 client-go 中的 WorkQueue 部分做一个详细的分析总结。</p>
+<p>在第一篇的概述中，我给大家展示过一张来自官方的 Informer 的处理流程图，在第二篇中，主要和大家介绍并分析了 client-go 中的 Informer 机制及具体实现，即处理流程图中 client-go 的部分，而本篇中主要讲述的是在 Custom Controller 中的 WorkQueue 部分。其实对于这部分，并不是必不可少的，因为使用者完全可以不使用 WorkQueue，而是收到分发的事件，直接进行逻辑的处理，但是这种做法，个人觉得不是很提倡这样使用，因为直接处理的话，会是的整个的 Informer 的事件处理能力下降，从而导致事件的积累，从而导致不可预知的问题。对于使用 WorkQueue 的用户，client-go 中提供了延时队列及速率限制队列对使用者进行保护。而这篇文章则是和大家分析下 client-go 中 WorkQueue 的不同实现。从而在使用的时候，可以选择合适自己的队列实现方式。</p>
 
 <h2 id="workqueue-概述">WorkQueue 概述</h2>
 
@@ -798,6 +811,12 @@ func (q *rateLimitingType) Forget(item interface{}) {
                         
                         <a href="/tags/tcpdump" title="Tcpdump">
                             Tcpdump
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/client-go" title="client-go">
+                            client-go
                         </a>
                         
                         

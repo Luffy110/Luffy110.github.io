@@ -6,10 +6,19 @@
     <description>Recent content in Client-go on Luffyao&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 06 Sep 2020 17:24:55 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 17 Oct 2020 17:05:35 +0800</lastBuildDate>
     
 	<atom:link href="https://luffyao.com/tags/client-go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>client-go 之 Informer 篇</title>
+      <link>https://luffyao.com/2020/10/clientgoinformer/</link>
+      <pubDate>Sat, 17 Oct 2020 17:05:35 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2020/10/clientgoinformer/</guid>
+      <description>client-go 源码学习系列： client-go 之概述篇 client-go 之 Informer 篇 client-go 之 WorkQueue 篇 前言 在上篇文章中主要讲解了 client-go 中主要源码目录结构，client-go 提供的各种客户端接口，并且简单介</description>
+    </item>
     
     <item>
       <title>client-go 之 WorkQueue 篇</title>
@@ -17,7 +26,16 @@
       <pubDate>Sun, 06 Sep 2020 17:24:55 +0800</pubDate>
       
       <guid>https://luffyao.com/2020/09/clientgoworkqueue/</guid>
-      <description>前言 之前学习 client-go 过程中总结了一篇文章 client-go 学习总结。并且有幸能够在云原生社区官方博客发表。上篇文章描述了整个 client-go 的整体框架，并没有对各部分做详细介绍</description>
+      <description>client-go 源码学习系列： client-go 之概述篇 client-go 之 Informer 篇 client-go 之 WorkQueue 篇 前言 在第一篇的概述中，我给大家展示过一张来自官方的 Informer 的处理流程图，在第二篇中，主要和大家介绍并分析</description>
+    </item>
+    
+    <item>
+      <title>client-go 之概述篇</title>
+      <link>https://luffyao.com/2020/08/clientgooverall/</link>
+      <pubDate>Fri, 07 Aug 2020 21:28:37 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2020/08/clientgooverall/</guid>
+      <description>client-go 源码学习系列： client-go 之概述篇 client-go 之 Informer 篇 client-go 之 WorkQueue 篇 前言 目前在云原生社区的 Kubernetes 源码研习社中和广大学友们共同学习郑东旭大佬的 kubernetes 源码剖析 这本书。当前正在开展</description>
     </item>
     
   </channel>
