@@ -241,8 +241,8 @@
 	
         <div class="post-content-preview">
 	
-            上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现
-       
+            如何使用 controller-runtime 实现一个简单的准入 webhook。
+        
         </div>
     </a>
     <p class="post-meta">
@@ -262,8 +262,8 @@
 	
         <div class="post-content-preview">
 	
-            什么是准入 webhook 准入 webhooks 是一个接收 admission 请求并对其做些处理的 HTTP 回调。你可以定义两种准入 webhook,validating admission webhook and mutating admission webhook。mutating admission webhook 首先被调用，然后
-       
+            client-go 实现一个简单的准入 webhook。
+        
         </div>
     </a>
     <p class="post-meta">
@@ -594,7 +594,7 @@
             
                 </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Luffyao&#39;s Blog 2020
+                    Copyright &copy; Luffyao&#39;s Blog 2021
                     <br>
                     <a href="https://github.com/Luffy110/Luffy110.github.io">luffyao blog theme</a> 移植自 <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo</a>
                 </p>
