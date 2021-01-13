@@ -17,11 +17,11 @@
       <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
       
       <guid>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
-      <description>前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的</description>
+      <description>前言 相比于 C++ 在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的系统</description>
     </item>
     
     <item>
-      <title>如何抓取 pod 中的 container 的 tcpdump</title>
+      <title>如何抓取 pod 中的 container 的 Tcpdump</title>
       <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
       <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
       

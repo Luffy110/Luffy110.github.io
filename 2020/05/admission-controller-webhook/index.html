@@ -221,102 +221,108 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
 <li><a href="#编写-webhook-server">编写 webhook server</a></li>
-<li><a href="#编译代码并生成-docker-image">编译代码并生成 docker image</a></li>
+<li><a href="#编译代码并重新生成-docker-image">编译代码并重新生成 docker image</a></li>
 <li><a href="#添加相应的-k8s-资源">添加相应的 k8s 资源</a></li>
 <li><a href="#测试">测试</a></li>
 <li><a href="#参考">参考</a></li>
+</ul></li>
 </ul>
 </nav>
                 
                 
 
+<h2 id="前言">前言</h2>
+
 <p><strong>上一篇 <a href="https://luffyao.com/2020/05/k8s-webhook-admission-control/">client-go 实现准入 webhook</a> 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server.</strong></p>
 
-<h1 id="编写-webhook-server">编写 webhook server</h1>
+<h2 id="编写-webhook-server">编写 webhook server</h2>
 
 <p>这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现起来也是比 client-go 版本更加简单明了。下面贴出主要处理逻辑，完整代码可参考 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/webhookserver/validatingwebhook.go">validating handler</a>.</p>
 
 <pre><code class="language-golang">// ValidatingHandler validates deployment,scale
 type ValidatingHandler struct {
-	Client      client.Client
-	decoder     *admission.Decoder
-	serviceName string
+    Client      client.Client
+    decoder     *admission.Decoder
+    serviceName string
 }
 
 func NewValidatingHandler(c client.Client, servicename string) *ValidatingHandler {
-	return &amp;ValidatingHandler{
-		Client:      c,
-		serviceName: servicename,
-	}
+    return &amp;ValidatingHandler{
+        Client:      c,
+        serviceName: servicename,
+    }
 }
 
 func (vh *ValidatingHandler) Handle(ctx context.Context, req admission.Request) admission.Response {
-	switch req.Kind.Kind {
-	case deploymentKind:
-		isAllow := false
-		if isAllow {
-			return admission.Allowed(&quot;&quot;)
-		}
-		return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
-	case scaleKind:
-		isAllow := false
-		if isAllow {
-			return admission.Allowed(&quot;&quot;)
-		}
-		return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
-	}
+    switch req.Kind.Kind {
+    case deploymentKind:
+        isAllow := false
+        if isAllow {
+            return admission.Allowed(&quot;&quot;)
+        }
+        return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
+    case scaleKind:
+        isAllow := false
+        if isAllow {
+            return admission.Allowed(&quot;&quot;)
+        }
+        return admission.Denied(fmt.Sprintf(&quot;The %s service doesn't allow update&quot;, req.Name))
+    }
 
-	return admission.Allowed(&quot;&quot;)
+    return admission.Allowed(&quot;&quot;)
 }
 
 // InjectDecoder injects the decoder.
 func (vh *ValidatingHandler) InjectDecoder(d *admission.Decoder) error {
-	vh.decoder = d
-	return nil
+    vh.decoder = d
+    return nil
 }
 
 </code></pre>
 
 <p>然后 你就可以直接在 main 函数中像下面这个调用即可。完整代码请参考 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/cmd/example/example.go">main.go</a>.</p>
 
-<pre><code class="language-golang">	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
-		Port:    *webhookServerPort,
-		CertDir: *certPath,
-	})
-	if err != nil {
-		panic(err.Error())
-	}
+<pre><code class="language-golang">    mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
+        Port:    *webhookServerPort,
+        CertDir: *certPath,
+    })
+    if err != nil {
+        panic(err.Error())
+    }
 
-	hookServer := mgr.GetWebhookServer()
-	hookServer.Register(&quot;/validate&quot;, &amp;webhook.Admission{
-		Handler: webhookserver.NewValidatingHandler(mgr.GetClient(), *serviceName),
-	})
+    hookServer := mgr.GetWebhookServer()
+    hookServer.Register(&quot;/validate&quot;, &amp;webhook.Admission{
+        Handler: webhookserver.NewValidatingHandler(mgr.GetClient(), *serviceName),
+    })
 
-	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
-		panic(err.Error())
-	}
+    if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
+        panic(err.Error())
+    }
 }
 
 </code></pre>
 
-<h1 id="编译代码并生成-docker-image">编译代码并生成 docker image</h1>
+<h2 id="编译代码并重新生成-docker-image">编译代码并重新生成 docker image</h2>
 
 <p>可以参考我提供的简单 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/build.sh">build.sh</a> 脚本编译代码和使用 <a href="https://github.com/Luffy110/k8s-studies/blob/master/playground/controller-runtime/admission-webhook/buildimage.sh">buildimage.sh</a> 脚本去构建 docker 镜像。</p>
 
 <p><strong>NOTE</strong>: buildimage.sh 脚本中，我做了些处理，首先需要传入 docker_user（如果你没有，你也可以随意指定一个即可）和构建的 image 的 tag。然后我注释掉了 docker push 这个命令，防止有些读者还没有 docker hub 或其他仓库的账号。</p>
 
-<h1 id="添加相应的-k8s-资源">添加相应的 k8s 资源</h1>
+<h2 id="添加相应的-k8s-资源">添加相应的 k8s 资源</h2>
 
 <p>安装相应的 k8s 资源即可，具体请参考 <a href="https://github.com/Luffy110/k8s-studies/tree/master/playground/controller-runtime/admission-webhook/helm">resources</a>.</p>
 
-<p><strong>NOTE</strong>: 这里我为了方便管理这些资源，我使用了 helm 去管理了，如果你有 helm 相关的环境，你可直接使用** helm install <strong>命令安装资源，如果你没有或者不熟悉，你可以使用</strong> kubectl apply **命令一个个的部署，但是你需要修改资源中的 Release.Namespace 到你安装的那个 namespace 下，例如如果你安装时没有指定 namespace, 则默认是 default。</p>
+<p><strong>NOTE</strong>: 这里我为了方便管理这些资源，我使用了 helm 去管理了，如果你有 helm 相关的环境，你可直接使用 <code>helm install</code> 命令安装资源，如果你没有或者不熟悉，你可以使用 <code>kubectl apply</code> 命令一个个的部署，但是你需要修改资源中的 Release.Namespace 到你安装的那个 namespace 下，例如如果你安装时没有指定 namespace, 则默认是 default。</p>
 
-<h1 id="测试">测试</h1>
+<h2 id="测试">测试</h2>
 
 <p>例子中 default 的实现是拒绝任何对 deployment 和 scale 的修改。所以可以使用 kubectl edit 命令修改 deployment，或者使用 kubectl scale 命令修改 replicas。如果命令修改失败并提示&rdquo;The %s service doesn&rsquo;t allow update&rdquo;，则说明自定义的 validating webhook 是可以工作的。然后可以加上自己的处理逻辑即可。</p>
 
-<h1 id="参考">参考</h1>
+<h2 id="参考">参考</h2>
 
 <ul>
 <li><p><a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/">Dynamic Admission Control</a></p></li>
@@ -436,14 +442,8 @@ func (vh *ValidatingHandler) InjectDecoder(d *admission.Decoder) error {
                         
                         
                         
-                        <a href="/tags/perf" title="Perf">
-                            Perf
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/profling" title="Profling">
-                            Profling
+                        <a href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                         

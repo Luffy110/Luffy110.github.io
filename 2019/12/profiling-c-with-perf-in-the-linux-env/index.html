@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="用 Perf 给 C&#43;&#43;代码做 Profiling" />
-    <meta property="og:title" content="用 Perf 给 C&#43;&#43;代码做 Profiling" />
-    <meta property="twitter:title" content="用 Perf 给 C&#43;&#43;代码做 Profiling" />
+    <meta name="title" content="用 Perf 给 C&#43;&#43; 代码做 Profiling" />
+    <meta property="og:title" content="用 Perf 给 C&#43;&#43; 代码做 Profiling" />
+    <meta property="twitter:title" content="用 Perf 给 C&#43;&#43; 代码做 Profiling" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>用 Perf 给 C&#43;&#43;代码做 Profiling-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>用 Perf 给 C&#43;&#43; 代码做 Profiling-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
     <link rel="canonical" href="/2019/12/profiling-c-with-perf-in-the-linux-env/">
 
@@ -170,12 +170,12 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/perf" title="Perf">
-                            Perf
+                        <a class="tag" href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                     </div>
-                    <h1>用 Perf 给 C&#43;&#43;代码做 Profiling</h1>
+                    <h1>用 Perf 给 C&#43;&#43; 代码做 Profiling</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -188,7 +188,7 @@
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 200 字|阅读大约 1 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 400 字|阅读大约 1 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -223,8 +223,10 @@
 <ul>
 <li>
 <ul>
+<li><a href="#前言">前言</a></li>
 <li><a href="#安装-perf">安装 perf</a></li>
-<li><a href="#特别配置">特别配置</a></li>
+<li><a href="#附加设置">附加设置</a></li>
+<li><a href="#容器中安装-perf">容器中安装 Perf</a></li>
 <li><a href="#记录-perf-示例">记录 perf 示例</a>
 <ul>
 <li><a href="#选项-1-启动应用程序后记录-perf">选项 1: 启动应用程序后记录 perf</a></li>
@@ -232,11 +234,16 @@
 </ul></li>
 <li><a href="#运行-load-测试-h2load">运行 load 测试 (h2load)</a></li>
 <li><a href="#检查报告-将存储在一个名为-perfl-data-的文件">检查报告 （将存储在一个名为 perfl.data 的文件）</a></li>
+<li><a href="#总结">总结</a></li>
 </ul></li>
 </ul>
 </nav>
                 
                 
+
+<h2 id="前言">前言</h2>
+
+<p>该篇主要是记录如何使用 Linux 自带的 Pref 工具看 C++程序的性能问题。该篇只是简单的记录如何收集性能数据，具体分析这里不做描述。</p>
 
 <h2 id="安装-perf">安装 perf</h2>
 
@@ -245,10 +252,27 @@ sudo apt-get install linux-tools-common
 sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic
 </code></pre>
 
-<h2 id="特别配置">特别配置</h2>
+<h2 id="附加设置">附加设置</h2>
 
 <pre><code class="language-shell">sudo sysctl kernel.perf_event_paranoid=-1
 sudo sysctl kernel.kptr_restrict=0
+</code></pre>
+
+<h2 id="容器中安装-perf">容器中安装 Perf</h2>
+
+<pre><code class="language-dockerfile">FROM ubuntu:16.04
+
+RUN apt-get update &amp;&amp; \
+      apt-get -y install sudo 
+RUN apt-get --assume-yes install linux-tools-generic
+RUN apt-get --assume-yes install linux-tools-4.4.0-116-generic linux-cloud-tools-4.4.0-116-generic linux-tools-generic linux-cloud-tools-generic
+
+RUN sudo sysctl kernel.perf_event_paranoid=-1
+RUN sudo sysctl kernel.kptr_restrict=0
+
+ARG             BUILD_TYPE
+ADD             ${BUILD_TYPE}/bin/application /bin/
+ENTRYPOINT      [&quot;/bin/application&quot;]
 </code></pre>
 
 <h2 id="记录-perf-示例">记录 perf 示例</h2>
@@ -267,10 +291,19 @@ perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk '{pri
 
 <h2 id="运行-load-测试-h2load">运行 load 测试 (h2load)</h2>
 
+<pre><code class="language-shell">h2load -D 2 -c 10 -m 10 -H':method:POST' -H'content-type:application/json' your_restful_uri -d data.txt
+</code></pre>
+
 <h2 id="检查报告-将存储在一个名为-perfl-data-的文件">检查报告 （将存储在一个名为 perfl.data 的文件）</h2>
 
-<pre><code class="language-shell">perf report -d applicationname -g graph,0.05,caller,function or perf report
+<pre><code class="language-shell">perf report -d applicationname -g graph,0.05,caller,function
+or 
+perf report
 </code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>这里就是简单的记录下如何安装 Perf 和如何收集 perf 数据，对于如何分析，还得根据自己的 C++程序，然后对收集到的数据，做具体分析。</p>
 
 
                 
@@ -384,14 +417,8 @@ perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk '{pri
                         
                         
                         
-                        <a href="/tags/perf" title="Perf">
-                            Perf
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/profling" title="Profling">
-                            Profling
+                        <a href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                         

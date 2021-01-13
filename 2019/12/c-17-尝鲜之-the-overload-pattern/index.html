@@ -188,7 +188,7 @@
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 100 字|阅读大约 0 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 400 字|阅读大约 1 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -223,15 +223,19 @@
 <ul>
 <li>
 <ul>
+<li><a href="#简单介绍">简单介绍</a></li>
 <li><a href="#总结">总结</a></li>
 </ul></li>
 </ul>
 </nav>
                 
-                <p>以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。</p>
+                
 
-<p>一般大家写出来的代码无非和我的差不多。
-</p>
+<h2 id="简单介绍">简单介绍</h2>
+
+<p>以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。</p>
+
+<p>一般大家写出来的代码无非和我的差不多。</p>
 
 <pre><code class="language-C++">struct PrintVisitor
 {
@@ -249,8 +253,7 @@
 };
 </code></pre>
 
-<p>C++17 对于这种情况做了代码优化，引入了 Overload Pattern。之后我们就可以像下面这样写了。看起来很难懂 (<strong>是真的很难理解</strong>)， 但是代码比较简洁了。
- </p>
+<p>C++17 对于这种情况做了代码优化，引入了 Overload Pattern。之后我们就可以像下面这样写了。看起来很难懂 (<strong>是真的很难理解</strong>)， 但是代码比较简洁了。</p>
 
 <pre><code class="language-C++">template&lt;class... Ts&gt; struct overload : Ts... { using Ts::operator()...; };
 template&lt;class... Ts&gt; overload(Ts...) -&gt; overload&lt;Ts...&gt;;
@@ -267,6 +270,7 @@ std::visit(overload(
 <h2 id="总结">总结</h2>
 
 <p>总之，C++新的标准，相对于老版本来说，高大上了不少，也更加现代化了，更加降低了使用者的入门基础了（简单的一个例子就是，以前让 C++程序员最头疼的指针，也是在 C++11 的时候引入了智能指针）。</p>
+
 
                 
 
@@ -379,14 +383,8 @@ std::visit(overload(
                         
                         
                         
-                        <a href="/tags/perf" title="Perf">
-                            Perf
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/profling" title="Profling">
-                            Profling
+                        <a href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                         

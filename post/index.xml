@@ -80,7 +80,7 @@
       <pubDate>Sun, 17 May 2020 13:04:02 +0800</pubDate>
       
       <guid>https://luffyao.com/2020/05/admission-controller-webhook/</guid>
-      <description>上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现</description>
+      <description>前言 上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以</description>
     </item>
     
     <item>
@@ -117,7 +117,7 @@ What is operator-sdk The SDK provides the tools to build, test and package Opera
       <pubDate>Sat, 07 Mar 2020 12:53:42 +0800</pubDate>
       
       <guid>https://luffyao.com/2020/03/%E5%A6%82%E4%BD%95%E5%9C%A8pod%E4%B8%AD%E5%81%9Agolang%E7%9A%84profiling/</guid>
-      <description>前言 相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的</description>
+      <description>前言 相比于 C++ 在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的系统</description>
     </item>
     
     <item>
@@ -166,10 +166,7 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       <pubDate>Sun, 08 Dec 2019 10:49:58 +0800</pubDate>
       
       <guid>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-the-overload-pattern/</guid>
-      <description>&lt;p&gt;以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。&lt;/p&gt;
-
-&lt;p&gt;一般大家写出来的代码无非和我的差不多。
-&lt;/p&gt;</description>
+      <description>简单介绍 以前在 C++98 的时候，咱们想要操作符重载怎么办？我们一般都是会将想要重载的操作符在自己的 class 或者 struct 里面写一遍。 一般大家写出来的代码无非和我的</description>
     </item>
     
     <item>
@@ -178,11 +175,11 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
       <pubDate>Sun, 08 Dec 2019 10:44:12 +0800</pubDate>
       
       <guid>https://luffyao.com/2019/12/c-17-%E5%B0%9D%E9%B2%9C%E4%B9%8B-structured-bindings/</guid>
-      <description>老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其返回。 但</description>
+      <description>简单介绍 老版本的 C++函数返回值都是只有一个内嵌类型或者自定义类型。所以 以前 我们如果想要返回多个值，就必须将其封装为 struct， 然后在将其</description>
     </item>
     
     <item>
-      <title>如何抓取 pod 中的 container 的 tcpdump</title>
+      <title>如何抓取 pod 中的 container 的 Tcpdump</title>
       <link>https://luffyao.com/2019/12/%E5%A6%82%E4%BD%95%E6%8A%93%E5%8F%96pod%E4%B8%AD%E7%9A%84container%E7%9A%84tcpdump/</link>
       <pubDate>Sat, 07 Dec 2019 18:44:49 +0800</pubDate>
       
@@ -200,12 +197,12 @@ kubectl get meshpolicy kubectl edit meshpolicy  ///// then manually update mtls.
     </item>
     
     <item>
-      <title>用 Perf 给 C&#43;&#43;代码做 Profiling</title>
+      <title>用 Perf 给 C&#43;&#43; 代码做 Profiling</title>
       <link>https://luffyao.com/2019/12/profiling-c-with-perf-in-the-linux-env/</link>
       <pubDate>Sun, 01 Dec 2019 20:32:51 +0800</pubDate>
       
       <guid>https://luffyao.com/2019/12/profiling-c-with-perf-in-the-linux-env/</guid>
-      <description>安装 perf uname -r # check your system tools version for the third command sudo apt-get install linux-tools-common sudo apt-get install linux-tools-4.15.0-47-generic linux-cloud-tools-4.15.0-47-generic 特别配置 sudo sysctl kernel.perf_event_paranoid=-1 sudo sysctl kernel.kptr_restrict=0 记录 perf 示例 选项 1: 启动应用程序后记录 perf ./application_name perf record -g -s -p `ps -ef | grep application_name | grep -v grep | awk &#39;{print</description>
+      <description>前言 该篇主要是记录如何使用 Linux 自带的 Pref 工具看 C++程序的性能问题。该篇只是简单的记录如何收集性能数据，具体分析这里不做描述。 安装 perf uname -r # check your system</description>
     </item>
     
     <item>

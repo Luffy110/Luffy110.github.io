@@ -174,8 +174,8 @@
                             Docker
                         </a>
                         
-                        <a class="tag" href="/tags/profling" title="Profling">
-                            Profling
+                        <a class="tag" href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                     </div>
@@ -225,89 +225,98 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
+<li>
+<ul>
 <li><a href="#前言">前言</a></li>
 <li><a href="#操作步骤">操作步骤</a>
 <ul>
-<li><a href="#注册-http-的-handlers-到-server">注册 HTTP 的 handlers 到 Server.</a></li>
-<li><a href="#部署-code-到-pod-中运行">部署 code 到 pod 中运行</a></li>
+<li><a href="#在代码中添加-handlers">在代码中添加 handlers</a></li>
+<li><a href="#编译代码并更新到-pod-中">编译代码并更新到 pod 中</a></li>
 <li><a href="#暴露-pod-中的-server-的端口">暴露 pod 中的 server 的端口</a></li>
 <li><a href="#load-测试">load 测试</a></li>
-<li><a href="#profiling-分析">Profiling 分析</a>
-<ul>
-<li><a href="#使用火焰图分析">使用火焰图分析</a></li>
-</ul></li>
+<li><a href="#profiling-分析">Profiling 分析</a></li>
+<li><a href="#火焰图分析">火焰图分析</a></li>
 </ul></li>
 <li><a href="#参考文章">参考文章</a></li>
+</ul></li>
 </ul>
 </nav>
                 
                 
 
-<h1 id="前言">前言</h1>
+<h2 id="前言">前言</h2>
 
-<p>相比于 C++在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的系统设计，所以以下 profiling 都是基于 http/pprof 做的分析。</p>
+<p>相比于 C++ 在 pod 中做 profiling， 那么对于云原生的 golang 来说就太方便了。下面我将讲述下我做 golang profiling 的具体过程和步骤。由于我们是基于 Restful 接口的系统设计，所以以下 profiling 都是基于 http/pprof 做的分析。</p>
 
-<h1 id="操作步骤">操作步骤</h1>
+<h2 id="操作步骤">操作步骤</h2>
 
-<h2 id="注册-http-的-handlers-到-server">注册 HTTP 的 handlers 到 Server.</h2>
+<h3 id="在代码中添加-handlers">在代码中添加 handlers</h3>
 
 <p>例如：</p>
 
 <pre><code class="language-go">// This is a function creating a HTTP2 server. and only registered profile and heap path,
 // for others profiling path, you can add it according to yourself.
-func NewServer(port string, enableProfiling uint) *http.Server {
-	handler := yourhandler
-	mux := http.NewServeMux()
+func profiling() {
+    mux := http.NewServeMux()
 
-	mux.Handle(&quot;/&quot;, handler)
-    // here add a flag for eliminating disturbtion of between these functions.
-	if enableProfiling != DISABLE_PROFILING {
-		if enableProfiling == ENABLE_PROFILE {
-			mux.HandleFunc(&quot;/debug/pprof/profile&quot;, pprof.Profile)
-		} else if enableProfiling == ENABLE_HEAP {
-			mux.Handle(&quot;/debug/pprof/heap&quot;, pprof.Handler(&quot;heap&quot;))
-		}
-	}
+    mux.HandleFunc(&quot;/debug/pprof/&quot;, pprof.Index)
+    mux.HandleFunc(&quot;/debug/pprof/cmdline&quot;, pprof.Cmdline)
+    mux.HandleFunc(&quot;/debug/pprof/profile&quot;, pprof.Profile)
+    mux.HandleFunc(&quot;/debug/pprof/symbol&quot;, pprof.Symbol)
+    mux.HandleFunc(&quot;/debug/pprof/trace&quot;, pprof.Trace)
+    mux.HandleFunc(&quot;/debug/memstat&quot;, func(w http.ResponseWriter, r *http.Request) {
 
-	h2s := &amp;http2.Server{}
+        var m runtime.MemStats
+        runtime.ReadMemStats(&amp;m)
+        //fmt.Println(m)
+        fmt.Printf(&quot;HeapSys %d, HeapAlloc %d, HeapIdle %d, HeapReleased%d,\n&quot;, m.HeapSys, m.HeapAlloc,
+            m.HeapIdle, m.HeapReleased)
+        //result := fmt.Sprintf(&quot;%v&quot;, m)
+        w.WriteHeader(http.StatusOK)
+        //w.Write([]byte(result))
+    })
 
-	return &amp;http.Server{
-		Addr:    port,
-		Handler: h2c.NewHandler(mux, h2s),
-	}
+    h2s := &amp;http2.Server{}
+
+    httpServer := &amp;http.Server{
+        Addr:    &quot;:10000&quot;,
+        Handler: h2c.NewHandler(mux, h2s),
+    }
+    if err := httpServer.ListenAndServe(); err != nil {
+        golog.Message(golog.Error, &quot;Error while listening&quot;)
+    }
 }
 
 // then in the main function, you can invoke it.
-s := httpserver.NewServer(fmt.Sprintf(&quot;:%d&quot;, *listeningPort), *enableProfiling)
+go profiling()
 
-if err = s.ListenAndServe(); err != nil {
-	// Print Err log
-}
 </code></pre>
 
-<h2 id="部署-code-到-pod-中运行">部署 code 到 pod 中运行</h2>
+<h3 id="编译代码并更新到-pod-中">编译代码并更新到 pod 中</h3>
 
-<p>创建 image，更新到 deployment 里面。这里根据自己的环境进行部署。</p>
+<p>编译代码，重新创建 image，并更新到 deployment 里面。这里根据自己的环境进行部署。</p>
 
-<h2 id="暴露-pod-中的-server-的端口">暴露 pod 中的 server 的端口</h2>
+<h3 id="暴露-pod-中的-server-的端口">暴露 pod 中的 server 的端口</h3>
 
 <pre><code class="language-shell">// you can use kubectl port-forward --help to view detailed useage.
 
 kubectl port-forward pods/yourpod port:port
 </code></pre>
 
-<h2 id="load-测试">load 测试</h2>
+<p>NOTE: 这里需要注意一点，就是如果是添加的新的端口，需要在 deployment 中的 container.ports 下面加上。</p>
+
+<h3 id="load-测试">load 测试</h3>
 
 <p>这里我用的是 h2load.</p>
 
-<pre><code>h2load -D 2 -c 10 -m 10 -H':method:POST' -H'content-type:application/json' your_restful_uri -d data.txt
+<pre><code class="language-shell">h2load -D 2 -c 10 -m 10 -H':method:POST' -H'content-type:application/json' your_restful_uri -d data.txt
 </code></pre>
 
-<h2 id="profiling-分析">Profiling 分析</h2>
+<h3 id="profiling-分析">Profiling 分析</h3>
 
 <p>你需要用 pprof 命令采集 sample, 然后对采集到的信息进行分析。</p>
 
-<pre><code>// more detailed command usage you can refer to https://golang.org/pkg/net/http/pprof/
+<pre><code class="language-shell">// more detailed command usage you can refer to https://golang.org/pkg/net/http/pprof/
 
 go tool pprof http://localhost:9001/debug/pprof/profile 
 go tool pprof -alloc_objects http://localhost:9001/debug/pprof/heap
@@ -317,45 +326,42 @@ go tool pprof  http://localhost:9001/debug/pprof/heap
 
 <p>如何进行分析，可以参考 <a href="https://golang.org/doc/diagnostics.html">diagnostics</a>, 如果你不能打开官方文档，可以参考 <a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/">performance optimization</a>, 里面讲述了详细的 profiling 的使用。</p>
 
-<h3 id="使用火焰图分析">使用火焰图分析</h3>
+<h3 id="火焰图分析">火焰图分析</h3>
 
 <ol>
 <li><p>安装 go-torch</p>
 
-<pre><code>go get github.com/uber/go-torch
+<pre><code class="language-shell">go get github.com/uber/go-torch
 </code></pre></li>
 
 <li><p>安装 FlameGraph</p>
 
-<pre><code>cd $WORK_PATH &amp;&amp; git clone https://github.com/brendangregg/FlameGraph.git
+<pre><code class="language-shell">cd $WORK_PATH &amp;&amp; git clone https://github.com/brendangregg/FlameGraph.git
 export PATH=$PATH:$WORK_PATH/FlameGraph
 </code></pre></li>
 
 <li><p>安装 graphviz</p>
 
-<pre><code>sudo apt-get install graphviz(ubuntu)
+<pre><code class="language-shell">sudo apt-get install graphviz(ubuntu)
 or 
 yum install graphviz(CentOS, Redhat)
 </code></pre></li>
 
 <li><p>使用</p>
 
-<pre><code>go-torch -u http://localhost:8888/debug/pprof/ -p &gt; profile-local.svg 
+<pre><code class="language-shell">go-torch -u http://localhost:8888/debug/pprof/ -p &gt; profile-local.svg 
 </code></pre>
 
 <p>然后浏览器打开生成的文件 profile-local.svg.</p></li>
 </ol>
 
-<h1 id="参考文章">参考文章</h1>
+<h2 id="参考文章">参考文章</h2>
 
 <ul>
-<li><p><a href="https://golang.org/pkg/net/http/pprof/">pprof</a></p></li>
-
-<li><p><a href="https://golang.org/doc/diagnostics.html">diagnostics</a></p></li>
-
-<li><p><a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/">performance optimization</a></p></li>
-
-<li><p><a href="https://www.jianshu.com/p/1e784c387f45">install FlameGraph</a></p></li>
+<li><a href="https://golang.org/pkg/net/http/pprof/">pprof</a></li>
+<li><a href="https://golang.org/doc/diagnostics.html">diagnostics</a></li>
+<li><a href="https://www.liwenzhou.com/posts/Go/performance_optimisation/">performance optimization</a></li>
+<li><a href="https://www.jianshu.com/p/1e784c387f45">install FlameGraph</a></li>
 </ul>
 
 
@@ -470,14 +476,8 @@ yum install graphviz(CentOS, Redhat)
                         
                         
                         
-                        <a href="/tags/perf" title="Perf">
-                            Perf
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/profling" title="Profling">
-                            Profling
+                        <a href="/tags/profiling" title="Profiling">
+                            Profiling
                         </a>
                         
                         

@@ -53,7 +53,7 @@
       <pubDate>Sun, 17 May 2020 13:04:02 +0800</pubDate>
       
       <guid>https://luffyao.com/2020/05/admission-controller-webhook/</guid>
-      <description>上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以实现</description>
+      <description>前言 上一篇 client-go 实现准入 webhook 讲的是直接用 client-go 去编写 webhook server. 这篇将讲述如何使用 controller-runtime 快速的写一个 webhook server. 编写 webhook server 这次是直接用 controller-runtime 的 webhook, 自己写一个 handle 处理逻辑就好了，所以</description>
     </item>
     
     <item>
