@@ -188,7 +188,7 @@
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1700 字|阅读大约 4 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1800 字|阅读大约 4 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -335,7 +335,7 @@ done
 <p>下面是相关参数解释：</p>
 
 <ul>
-<li>&ndash;apiserver-advertise-address: k8s 中的主要服务 apiserver 的部署地址，填自己的管理节点 ip。 这里我填的是 master 地址。</li>
+<li>&ndash;apiserver-advertise-address: k8s 中的主要服务 apiserver 的部署地址，<code>填自己的管理节点 ip。 这里我填的是 master 地址</code>。</li>
 <li>&ndash;image-repository: 拉取的 docker 镜像源，因为初始化的时候 kubeadm 会去拉 k8s 的很多组件来进行部署，所以需要指定国内镜像源，下不然会拉取不到镜像。</li>
 <li>&ndash;pod-network-cidr: 这个是 k8s 采用的节点网络，因为我们将要使用 flannel 作为 k8s 的网络，所以这里填 10.244.0.0/16 就好。</li>
 <li>&ndash;kubernetes-version: 这个是用来指定你要部署的 k8s 版本的，一般不用填，不过如果初始化过程中出现了因为版本不对导致的安装错误的话，可以用这个参数手动指定。</li>
@@ -410,10 +410,10 @@ EOF
 
 <p>需要在 <code>kubeadm init</code> 时设置 <code>--pod-network-cidr=10.244.0.0/16</code> 。然后执行下面那条命令。</p>
 
-<pre><code class="language-shell">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+<pre><code class="language-shell">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 </code></pre>
 
-<p>NOTE: 这里可以看到，我使用的是这种方式。</p></li>
+<p>NOTE: 这里可以看到，我使用的是这种方式。详细请看 <a href="https://github.com/flannel-io/flannel">flannel</a></p></li>
 
 <li><p>weave</p>
 
@@ -425,12 +425,18 @@ kubectl apply -f &quot;https://cloud.weave.works/k8s/net?k8s-version=$(kubectl v
 
 <p>需要在 <code>kubeadm init</code> 时设置 <code>--pod-network-cidr=10.244.0.0/16</code> 。然后执行下面那条命令。</p>
 
-<pre><code class="language-shell">kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
-</code></pre></li>
+<pre><code class="language-shell">kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+wget https://docs.projectcalico.org/manifests/custom-resources.yaml
+修改 CIDR 和 kubeadm init 时 --apiserver-advertise-address 的地址一致
+kubectl apply -f custom-resources.yaml
+</code></pre>
+
+<p>NOTE: 详细情况 <a href="https://docs.projectcalico.org/getting-started/kubernetes/quickstart">quickstart</a></p></li>
 </ol>
 
 <h3 id="将-node-节点加入到-master-节点">将 node 节点加入到 master 节点</h3>
+
+<p>如果只想部署单个 node 节点，则需要将 master 节点的污点删除。可以使用该命令去删除：<code>kubectl taint nodes --all node-role.kubernetes.io/master-</code></p>
 
 <p>首先同样需要在 node 节点的虚拟机上执行上面 [配置虚拟机网络](#配置虚拟机网络），[国内源配置](#国内源配置），<a href="#安装 docker">安装 docker</a>，[安装 k8s 组件](#安装 k8s 组件），<a href="#关闭 swap">关闭 swap</a> 这几步，
 然后执行 master 节点上 init 时产生的命令将 node 加入到 master 中。</p>
