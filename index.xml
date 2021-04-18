@@ -6,10 +6,19 @@
     <description>Recent content on Luffyao&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 17 Oct 2020 17:05:35 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Apr 2021 12:40:17 +0800</lastBuildDate>
     
 	<atom:link href="https://luffyao.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>分布式一致性算法 Raft 论文学习总结</title>
+      <link>https://luffyao.com/2021/04/raft-summary/</link>
+      <pubDate>Sun, 18 Apr 2021 12:40:17 +0800</pubDate>
+      
+      <guid>https://luffyao.com/2021/04/raft-summary/</guid>
+      <description>前言 最近准备去看看 ETCD 的源码，然后网上看到它是基于 Raft 论文实现的，所以为了后面更好的理解 ETCD，于是便想先来看看 Raft 论文，想先了解下这个分布式数</description>
+    </item>
     
     <item>
       <title>client-go 之 Informer 篇</title>
