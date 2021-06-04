@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="将博客从 Hexo 迁移到 Hugo" />
-    <meta property="og:title" content="将博客从 Hexo 迁移到 Hugo" />
-    <meta property="twitter:title" content="将博客从 Hexo 迁移到 Hugo" />
+    <meta name="title" content="为什么会出现随机 504，408 错误代码？（二）" />
+    <meta property="og:title" content="为什么会出现随机 504，408 错误代码？（二）" />
+    <meta property="twitter:title" content="为什么会出现随机 504，408 错误代码？（二）" />
     
 
     
-    <meta name="description" content="简单介绍如何使用 Hugo">
-    <meta property="og:description" content="简单介绍如何使用 Hugo" />
-    <meta property="twitter:description" content="简单介绍如何使用 Hugo" />
+    <meta name="description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。">
+    <meta property="og:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。" />
+    <meta property="twitter:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>将博客从 Hexo 迁移到 Hugo-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>为什么会出现随机 504，408 错误代码？（二）-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
-    <link rel="canonical" href="/2020/09/migratetohugo/">
+    <link rel="canonical" href="/2021/06/online_response_408_504_analysis_2/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -170,12 +170,16 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/hugo" title="Hugo">
-                            Hugo
+                        <a class="tag" href="/tags/istio" title="istio">
+                            istio
+                        </a>
+                        
+                        <a class="tag" href="/tags/envoy" title="envoy">
+                            envoy
                         </a>
                         
                     </div>
-                    <h1>将博客从 Hexo 迁移到 Hugo</h1>
+                    <h1>为什么会出现随机 504，408 错误代码？（二）</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -183,12 +187,12 @@
                             Luffyao
                          
                         on 
-                        Sunday, September 6, 2020
+                        Friday, June 4, 2021
                         
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1300 字|阅读大约 3 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 1700 字|阅读大约 4 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -223,215 +227,91 @@
 <ul>
 <li>
 <ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#安装-hugo">安装 Hugo</a></li>
-<li><a href="#hugo-使用">Hugo 使用</a>
-<ul>
-<li><a href="#生成站点">生成站点</a></li>
-<li><a href="#创建文章">创建文章</a></li>
-<li><a href="#导入-hexo-的文章">导入 Hexo 的文章</a></li>
-<li><a href="#安装主题">安装主题</a></li>
-<li><a href="#运行-hugo">运行 Hugo</a></li>
-<li><a href="#部署">部署</a></li>
-</ul></li>
-<li><a href="#高亮代码">高亮代码</a></li>
-<li><a href="#添加-cname">添加 CNAME</a></li>
-<li><a href="#添加字数统计和阅读时间">添加字数统计和阅读时间</a></li>
-<li><a href="#cdn-引用">CDN 引用</a></li>
-<li><a href="#参考">参考</a></li>
+<li><a href="#问题描述">问题描述</a></li>
+<li><a href="#问题复现">问题复现</a></li>
+<li><a href="#问题分析">问题分析</a></li>
+<li><a href="#解决方案">解决方案</a></li>
+<li><a href="#总结">总结</a></li>
 </ul></li>
 </ul>
 </nav>
                 
                 
 
-<h2 id="前言">前言</h2>
-
-<p>之前博客是使用 Hexo，但是最近接触了 Hugo， 然后对比了下，感觉 Hugo 性能好很多，然后就学习了下 Hugo，将自己的博客迁移到了 Hugo 上了。这篇主要总结下这个过程中的步骤。</p>
-
-<h2 id="安装-hugo">安装 Hugo</h2>
-
-<p>到 <a href="https://github.com/gohugoio/hugo/releases">Hugo 官网下载</a> 下载符合系统的最新版本，这里我们下载 hugo_xxx_Linux-64bit.deb</p>
-
-<pre><code class="language-shell">sudo dpkg -i hugo_xxx_Linux-64bit.deb  
-sudo apt install -f
-</code></pre>
-
-<h2 id="hugo-使用">Hugo 使用</h2>
-
-<h3 id="生成站点">生成站点</h3>
-
-<p>使用下面命令生成站点：</p>
-
-<pre><code>hugo new site /path/to/site
-</code></pre>
-
-<h3 id="创建文章">创建文章</h3>
-
-<p>使用下面命令创建一编文章：</p>
-
-<pre><code>hugo new post/first.md
-</code></pre>
-
-<h3 id="导入-hexo-的文章">导入 Hexo 的文章</h3>
-
-<p>这里我是直接将 Hexo 里面的博客文章直接复制到了 Hugo 下面，然后做了下格式的修改。比如什么时间格式什么的。基本上不用修改什么，直接迁移就好了。</p>
-
-<h3 id="安装主题">安装主题</h3>
-
-<p>这里我是安装的 hugo-theme-cleanwhite 主题：可以参考下面命令安装：</p>
-
-<pre><code class="language-shell">mkdir test
-cd test
-mkdir themes
-cd themes
-git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git
-cp -r hugo-theme-cleanwhite/exampleSite/** ../
-cd ..
-hugo serve
-</code></pre>
-
-<p>然后进行相关的修改</p>
-
-<p>详细的使用方式可以参考 <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite#quick-start">quick-start</a>。</p>
-
-<h3 id="运行-hugo">运行 Hugo</h3>
-
-<p>当你编写好一篇文章后，可以通过执行 <code>hugo server</code> 在本地浏览器输入 <code>http://localhost:1313</code> 预览。</p>
-
-<h3 id="部署">部署</h3>
-
-<p>假设你需要部署在 <code>GitHub Pages</code> 上，首先在 GitHub 上创建一个 Repository，命名为：<code>luffyao.github.io</code> luffyao 替换为你的 github 用户名）。
-然后在 <code>config.toml</code> 文件中修改对应的 URL 到你自己的即可。</p>
-
-<p>然后在执行 <code>hugo</code> 命令生成相应的静态页面。如果一切顺利，所有静态页面都会生成到 <code>public</code> 目录，将 pubilc 目录里所有文件 push 到刚创建的 Repository 的 master 分支。</p>
-
-<p>可以参考下面命令进行提交：（这里需要注意一点的是要在 public 目录下进行<code>git init</code>)</p>
-
-<pre><code class="language-shell">hugo
-cd public
-git init  #first time need this command
-git remote add origin https://github.com/luffyao/luffyao.github.io.git
-git add -A
-git commit -m &quot;first commit&quot;
-git push -u origin master
-</code></pre>
-
-<p>最后就可以在浏览器里访问：<code>http://luffyao.github.io/</code></p>
-
-<h2 id="高亮代码">高亮代码</h2>
-
-<p>在 <code>themes/cleanwhite/layouts/_default/baseof.html</code> 文件中添加下面这部分代码</p>
-
-<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot;
-      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
-&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-</code></pre>
-
-<p>这里可供参考：</p>
-
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;{{ .Site.LanguageCode }}&quot;&gt;
-{{ partial &quot;head.html&quot; . }}
-{{ partial &quot;nav.html&quot; . }}
-&lt;!-- Page Header --&gt;
-{{ block &quot;header&quot; .}}
-&lt;header class=&quot;intro-header&quot; style=&quot;background-image: url('{{ .Site.Params.header_image | relURL }}')&quot;&gt;
-    &lt;div class=&quot;container&quot;&gt;
-        &lt;div class=&quot;row&quot;&gt;
-            &lt;div class=&quot;col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 &quot;&gt;
-                &lt;div class=&quot;site-heading&quot;&gt;
-                    &lt;h1&gt;{{ .Site.Title}} &lt;/h1&gt;
-                    &lt;!--&lt;hr class=&quot;small&quot;&gt;--&gt;
-		    &lt;span class=&quot;subheading&quot;&gt;{{ .Site.Params.slogan }}&lt;/span&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/header&gt;
-{{ end }}
-
-&lt;link rel=&quot;stylesheet&quot;
-      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/styles/vs.min.css&quot;&gt;
-&lt;script src=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-
-{{ block &quot;main&quot; . }}
-{{ end }}
-
-{{ partial &quot;footer.html&quot; . }}
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<h2 id="添加-cname">添加 CNAME</h2>
-
-<p>如果你购买过自己的域名，则这里可以在 <code>public</code> 目录下添加一个 CNAME 文件，并将自己的域名添加进去即可。这样你就可以通过自己的域名访问到博客了。</p>
-
-<h2 id="添加字数统计和阅读时间">添加字数统计和阅读时间</h2>
-
-<ol>
-<li><p>在 <code>themes/layouts/partials/head.html</code> 文件中引入不蒜子 js 文件</p>
-
-<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
-&lt;script async src=&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;
-{{ end }}
-</code></pre></li>
-
-<li><p>在 <code>themes/layouts/_default/single.html</code> 中添加以下代码</p>
-
-<pre><code class="language-html">{{ if .Site.Params.busuanzi }}
-&lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
-{{ end }}
-</code></pre>
-
-<p>这里我是添加的 header 中的。具体可参考下面代码：</p>
-
-<pre><code class="language-html">&lt;span class=&quot;meta&quot;&gt;
-    Posted by 
-    {{ if .Params.author }}
-        {{ .Params.author }}
-    {{ else }}
-            {{ .Site.Title }}
-    {{ end }} 
-    on 
-    {{ .Date.Format &quot;Monday, January 2, 2006&quot; }}
-    {{ if .Site.Params.page_view_conter }}
-        {{ partial &quot;page_view_counter.html&quot; . }}
-    {{ end }}
-    &lt;!-- Don't show &quot;Last Modified on&quot; if update happened on the same day. --&gt;
-    {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat &quot;2006-01-02&quot; .Lastmod) (dateFormat &quot;2006-01-02&quot; .Date)))) }}
-    &lt;br&gt;Last Modified on {{ dateFormat &quot;Monday, January 2, 2006&quot; .Params.LastMod }}
-    {{ end }}
-    {{ if .Site.Params.busuanzi }}
-    &lt;h5 id=&quot;wc&quot; style=&quot;font-size: 2rem;text-align: right;&quot;&gt;本文共 {{ .FuzzyWordCount }} 字|阅读大约 {{ .ReadingTime }} 分钟|总阅读量&lt;span id=&quot;busuanzi_value_page_pv&quot;&gt;&lt;/span&gt;次&lt;/h5&gt;
-    {{ end }}
-&lt;/span&gt;
-</code></pre></li>
-
-<li><p>在 <code>config.toml</code> 文件中添加 <code>busuanzi=true</code></p>
-
-<pre><code>[params]
-  #字数统计
-  busuanzi = true
-</code></pre></li>
-</ol>
-
-<h2 id="cdn-引用">CDN 引用</h2>
-
-<p>使用 <a href="https://cloudinary.com/">Cloudinary</a> 存储图片，加快访问速度。</p>
-
-<h2 id="参考">参考</h2>
-
 <ul>
-<li><a href="https://www.gohugo.org/">hugo</a></li>
-<li><a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">hugo-theme-cleanwhite</a></li>
-<li><a href="https://www.gohugo.org/doc/overview/installing/">hugo installation</a></li>
-<li><a href="https://wefox.me/docs/create_blog_on_github_by_hugo/">ubuntu 安装 hugo</a></li>
-<li><a href="http://jonathanwayy.xyz/2020/blog2/">Hugo LeaveIt 添加网站流量统计</a></li>
-<li><a href="https://rootsongjc.gitbooks.io/hugo-handbook/content/steps/seo.html">hugo-handbook</a></li>
+<li><p><a href="./online_response_408_504_analysis_1.md">为什么会出现随机 504，408 错误代码？（一）</a></p></li>
+
+<li><p>为什么会出现随机 504，408 错误代码？（二）</p></li>
 </ul>
+
+<h2 id="问题描述">问题描述</h2>
+
+<p>在第一篇中讲述了这个问题的具体描述，这里不再赘述。由于这个问题比较复杂，在第一篇中分析出了，我们的 golang 程序编写存在问题，在 server 端断网的情况下，没有做特殊处理，导致 TCP 的发送缓冲区满了，进而导致死锁的情况。但是由于我们前面有 istio gateway，并且设置了 timeout 为 7s 钟，所以当请求在程序中死锁的情况下，最终会导致 istio timeout。所以这里会导致返回 <code>504 gateway timeout</code> 的情况，在这种情况下，回复 504 是期望的，但是回复 <code>408 request time</code>，这里就有些疑问了。这篇将分析为什么 istio 会随机回复 408 的情况。</p>
+
+<p>这里我们用的 istio 基于 1.8 的版本。</p>
+
+<h2 id="问题复现">问题复现</h2>
+
+<p>这里复现则比较简单了，因为我们知道了程序异常的条件是死锁了，于是我在程序中直接 sleep 一段时间（大于在 VS 里面设置的 timeout 值），这样就可以复现问题。果然，当我用 h2load 通过 istio gateway 发送请求时，就会出现线上的问题，istio 回复了 408，504 的错误代码。这里其实为了对比，我还直接向服务发请求，这个时候，和之前的测试是一样的结果，并没有什么错误代码回复。从而可以肯定是 istio gateway 出现了问题。</p>
+
+<h2 id="问题分析">问题分析</h2>
+
+<p>这里分析起来还是挺难的，毕竟涉及到了 istio 的处理，开始没什么头绪，然后咨询了一些人，刚好有个朋友有过类似的问题，他提出了 envoy 的 max_stream_duration 的参数，后来我在 envoy 代码里面看到这部分的处理，看到这种情况下这个时间超时的处理，正是回复 <code>408 downstream request timeout</code>，和我们这个情况很类似，于是这给我了一个分析方向，从结果看，这也是个正确的方向。</p>
+
+<p>既然知道和 envoy 这个 max_stream_duration 字段值有关，于是，首先我通过 <code>istioctl pc route</code> 查看了我本地环境上的 service 的 route 配置信息，看到我们的配置是 maxStreamDuration 和 timeout 设置的是同一个值，这和我们的期望很显然不符，因为我们根本没有设置 maxStreamDuration 这个值，并且 istio 也没有提供某个字段可以设置这个值。</p>
+
+<p>结合 istio 的 route 配置看到对应的参数值，然后看了下对应版本 envoy 这部分的处理 <code>onStreamMaxDurationReached</code>，源码在 <code>source/common/http/conn_manager_impl.cc</code> 文件下，它则是根据这些配置开启不同的 timer，如果 expire 了，则回复对应的错误代码，而对于 stream 超时的情况，则回复 408，对于 timeout 超时，则回复 504。</p>
+
+<p>从这里我试着猜想了一下，如果当我把 max_stream_duration 的值设置小于 timeout，按照 envoy 逻辑，则会全部回复 408；当大于 timeout 的时候，则会全部回复 504。然后我试着去修改这个 maxStreamDuration 的值，去测试我的猜测。</p>
+
+<p>我通过 envoyfilter 去修改这个参数，例如下面内容，这是修改 max_stream_duration 为 100s，去模拟大于 timeout 的情况。</p>
+
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: testenvoyfilter
+  namespace: default
+spec:
+  workloadSelector:
+    labels:
+      app: istio-ingressgateway
+  configPatches:
+    - applyTo: HTTP_ROUTE
+      match:
+        context: ANY
+        routeConfiguration:
+          vhost:
+            name: &quot;*:8082&quot;
+            route:
+              action: ANY
+      patch:
+        operation: MERGE
+        value:
+          route: 
+            timeout: 7s
+            max_stream_duration:
+              max_stream_duration: 100s
+</code></pre>
+
+<p>经过设置不同的值，测试结果和我的猜想完全符合。于是可以断定，这个 408 的原因，就是这个 max_stream_duration 所致。</p>
+
+<p>那为什么 istio 会自己给我们添加这个值呢，并且还是等于 timeout 的值。</p>
+
+<p>这里可以看一下对应的提交。首先我们可以看到 istio 的这个提交 <a href="https://github.com/istio/istio/pull/31575">set max stream duration to the value specified in VS</a>，它将 MaxStreamDuration 设置成了 Timeout 的值，所以这里也能够解释上面我环境里的问题，为什么我没有设置这个值，但是 istio 的 route 配置数据里面是有的，并且和 Timeout 的值是一样的。</p>
+
+<p>但是他们后来测试发现了问题 <a href="https://github.com/istio/istio/issues/31616">Regression: istio.io egress test case gets 408 instead of 504</a>，于是做了一轮讨论下来，发现有问题，最后他们又把这个部分 revert 了，可以参考这个提交 <a href="https://github.com/istio/istio/pull/32139">remove max stream duration</a>。</p>
+
+<p>这其中 istio 的人去 envoy 搞了个 PR <a href="https://github.com/envoyproxy/envoy/pull/15585#issuecomment-824155470">honour routes timeout if max stream duration is set with out stream duration</a>，但最后分析下来，这个是不对的，又将其 revert 出来了，参考这个提交 <a href="https://github.com/envoyproxy/envoy/pull/16133">Revert &ldquo;honour routes timeout if max stream duration is set with out …</a>。</p>
+
+<p>总之，他们对这个折腾了一番，然后 istio 觉得还是不设置 MaxStreamDuration 这个值。然后再 1.10 版本修复这个问题，具体可参考这个提交 <a href="https://github.com/istio/istio/pull/32426">[release-1.10] revert to use deprecated values for timeouts</a>。</p>
+
+<h2 id="解决方案">解决方案</h2>
+
+<p>目前没有什么好的解决方案，因为我们不想因为这个问题，用 envoyfilter 去修改这个值，而 istio 对于这个问题会在 1.10 版本才会修复。所以看后面我们自己的 mesh 同志们会怎么处理。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>对于这个问题，其实分析起来还是有点困难的，因为一般想不到那方面去，并且，我们这边对 mesh 也不是太了解。这次分析也是朋友提供了很有用的信息，才能朝着这个方向分析了下来。不然毫无可能怀疑到这上面来，更不能顺利找到这个问题的根本。</p>
 
 
                 
@@ -440,15 +320,10 @@ git push -u origin master
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2020/08/clientgooverall/" data-toggle="tooltip" data-placement="top" title="client-go 之概述篇">&larr;
+                        <a href="/2021/06/online_response_408_504_analysis_1/" data-toggle="tooltip" data-placement="top" title="为什么会出现随机 504，408 错误代码？（一）">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2020/09/clientgoworkqueue/" data-toggle="tooltip" data-placement="top" title="client-go 之 WorkQueue 篇">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 

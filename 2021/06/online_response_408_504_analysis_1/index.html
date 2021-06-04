@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="为什么会出现 504，408 错误代码？(一)" />
-    <meta property="og:title" content="为什么会出现 504，408 错误代码？(一)" />
-    <meta property="twitter:title" content="为什么会出现 504，408 错误代码？(一)" />
+    <meta name="title" content="为什么会出现随机 504，408 错误代码？（一）" />
+    <meta property="og:title" content="为什么会出现随机 504，408 错误代码？（一）" />
+    <meta property="twitter:title" content="为什么会出现随机 504，408 错误代码？（一）" />
     
 
     
-    <meta name="description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。">
-    <meta property="og:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。" />
-    <meta property="twitter:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。" />
+    <meta name="description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。">
+    <meta property="og:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。" />
+    <meta property="twitter:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是随机 504，408 错误代码的分析。" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>为什么会出现 504，408 错误代码？(一)-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>为什么会出现随机 504，408 错误代码？（一）-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
     <link rel="canonical" href="/2021/06/online_response_408_504_analysis_1/">
 
@@ -179,7 +179,7 @@
                         </a>
                         
                     </div>
-                    <h1>为什么会出现 504，408 错误代码？(一)</h1>
+                    <h1>为什么会出现随机 504，408 错误代码？（一）</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -250,9 +250,9 @@
                 
 
 <ul>
-<li><p>为什么会出现 504，408 错误代码？(一)</p></li>
+<li><p>为什么会出现随机 504，408 错误代码？（一）</p></li>
 
-<li><p><a href="TODO">为什么会出现 504，408 错误代码？(二)</a></p></li>
+<li><p><a href="./online_response_408_504_analysis_2.md">为什么会出现随机 504，408 错误代码？（二）</a></p></li>
 </ul>
 
 <h2 id="问题描述">问题描述</h2>
@@ -263,7 +263,7 @@
 <h2 id="问题分析">问题分析</h2>
 
 <p>我们的测试人员提供了下面可参考信息：
-istio 回复 408，504 的具体错误信息 408 downstream duration timeout 和 504 upstream request timeout，以及提供了 ss 命令的监控结果。</p>
+istio 回复 408，504 的具体错误信息 <code>408 downstream duration timeout</code> 和 <code>504 upstream request timeout</code>，以及提供了 ss 命令的监控结果。</p>
 
 <pre><code class="language-shell">Mon May 31 06:20:36 UTC 2021
 tcp    ESTAB      0      5809   192.168.209.20:41914                10.139.17.19:opsmessaging 
@@ -406,7 +406,7 @@ func main() {
 <li>开启服务端程序；</li>
 <li>开启 ss 命令监控 socket 状态；</li>
 <li>开启 tcpdump 查看数据包传输情况（由于 Server 端网络后面会被关闭，所以在 client 端监听）。</li>
-<li>运行客户端程序，并开启 GODEBUG=http2debug=2</li>
+<li>运行客户端程序，并开启 <code>GODEBUG=http2debug=2</code></li>
 </ul>
 
 <p>客户端输出日志如下：</p>
@@ -471,7 +471,7 @@ tcp               ESTAB               0                    0       192.168.56.22
 <h4 id="模拟-server-断网">模拟 Server 断网</h4>
 
 <ul>
-<li><p>在 Server 机器上 输入该命令进行断网<code>sudo ifdown enp0s8</code></p></li>
+<li><p>在 Server 机器上 输入该命令进行断网 <code>sudo ifdown enp0s8</code></p></li>
 
 <li><p>客户端程序发送消息</p></li>
 </ul>
@@ -498,7 +498,7 @@ tcp               ESTAB               0                    0       192.168.56.22
 2021/06/03 12:49:49 error Post &quot;http://192.168.56.21:10001&quot;: context deadline exceeded (Client.Timeout exceeded while awaiting headers)
 </code></pre>
 
-<p>ss 命令结果如下， 我们可以看到 SEND-Q 增加到 36 了。<strong><em>TODO: 这里为啥是涨了36？？？？</em></strong></p>
+<p>ss 命令结果如下， 我们可以看到 SEND-Q 增加到 36 了。<strong><em>TODO: 这里为啥是涨了 36？？？？</em></strong></p>
 
 <pre><code class="language-shell">2021 年 06 月 03 日 星期四 12:49:49 CST
 tcp               ESTAB               0                    36         192.168.56.22:47238      192.168.56.21:10001 
@@ -574,12 +574,12 @@ tcp              ESTAB                  0                  68891      192.168.56
 
 <p>这个时候基本上模拟出来 TCP 上 SEND-Q 满的情况，然后得到的结论是，此时发送出来的测试消息不能够被处理，并且一直阻塞，不能 timeout 出来。</p>
 
-<p>而之所以真实环境上，请求端收到了 <sup>408</sup>&frasl;<sub>504</sub> 的错误代码，是因为我们在 VS 里面设置了 Timeout，所以如果请求端发送的请求由于微服务接收，但是在处理消息的时候，阻塞住了，导致了 Timeout 了。
-这里下面会具体将为啥会回复 408 的错误代码，因为正常 Timeout，我们理解为，会回复 504 才对。对于Istio回复504/408的问题，我将在(二)中具体分析。</p>
+<p>而之所以真实环境上，请求端收到了 408,504 的错误代码，是因为我们在 VS 里面设置了 Timeout，所以如果请求端发送的请求由于微服务接收，但是在处理消息的时候，阻塞住了，导致了 Timeout 了。
+这里下面会具体将为啥会回复 408 的错误代码，因为正常 Timeout，我们理解为，会回复 504 才对。对于 Istio 回复 <sup>504</sup>&frasl;<sub>408</sub> 的问题，我将在（二）中具体分析。</p>
 
 <p><strong>程序阻塞分析</strong>：</p>
 
-<p>添加下面log</p>
+<p>添加下面 log</p>
 
 <pre><code class="language-golang">//add log in net/http2/transport.go
 func (cc *ClientConn) idleState() clientConnIdleState {
@@ -647,10 +647,10 @@ func (sew stickyErrWriter) Write(p []byte) (n int, err error) {
 2021/06/03 17:59:42 start t.connPool().GetClientConn
 </code></pre>
 
-<p>所以分析下来，当Write的不了的时候，就不会释放cc.mu，导致下一条请求拿不到cc.mu锁，从而阻塞了。
-其实在这里，我加了Pprof去分析goroutine的调度栈，也发现了死锁的问题，但是还是加了点log看的更明显一点。</p>
+<p>所以分析下来，当 Write 的不了的时候，就不会释放 cc.mu，导致下一条请求拿不到 cc.mu 锁，从而阻塞了。
+其实在这里，我加了 Pprof 去分析 goroutine 的调度栈，也发现了死锁的问题，但是还是加了点 log 看的更明显一点。</p>
 
-<p>然后发现也有人遇到这个问题:<a href="https://github.com/golang/go/issues/33425">x/net/http2: Blocked Write on single connection causes all future calls to block indefinitely</a>。</p>
+<p>然后发现也有人遇到这个问题：<a href="https://github.com/golang/go/issues/33425">x/net/http2: Blocked Write on single connection causes all future calls to block indefinitely</a>。</p>
 
 <h4 id="番外">番外</h4>
 
@@ -693,9 +693,9 @@ tcp              ESTAB                  0                   0             192.16
 
 <h2 id="总结">总结</h2>
 
-<p>这个问题从系统测试人员提供的信息上，我们大概能分析出来是我们的HTTP2客户端程序出现了问题，也就是对于Server端断网的情况下，我们的程序没有主动去关闭连接，或者说没有处理这种异常情况，导致连接的SEND-Q满了，还在发送消息。从而是后面的消息阻塞在那里，从而导致练级的问题。</p>
+<p>这个问题从系统测试人员提供的信息上，我们大概能分析出来是我们的 HTTP2 客户端程序出现了问题，也就是对于 Server 端断网的情况下，我们的程序没有主动去关闭连接，或者说没有处理这种异常情况，导致连接的 SEND-Q 满了，还在发送消息。从而是后面的消息阻塞在那里，从而导致练级的问题。</p>
 
-<p>该问题的出现，也是由于我们对golang net/HTTP2库的理解不够，对其中的很多参数并没有关注。</p>
+<p>该问题的出现，也是由于我们对 golang net/HTTP2 库的理解不够，对其中的很多参数并没有关注。</p>
 
 
                 
@@ -708,6 +708,11 @@ tcp              ESTAB                  0                   0             192.16
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/2021/06/online_response_408_504_analysis_2/" data-toggle="tooltip" data-placement="top" title="为什么会出现随机 504，408 错误代码？（二）">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -822,6 +827,12 @@ tcp              ESTAB                  0                   0             192.16
                         
                         
                         
+                        <a href="/tags/envoy" title="envoy">
+                            envoy
+                        </a>
+                        
+                        
+                        
                         <a href="/tags/git" title="git">
                             git
                         </a>
@@ -836,6 +847,12 @@ tcp              ESTAB                  0                   0             192.16
                         
                         <a href="/tags/golang" title="golang">
                             golang
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/istio" title="istio">
+                            istio
                         </a>
                         
                         
