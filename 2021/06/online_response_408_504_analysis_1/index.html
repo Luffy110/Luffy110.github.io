@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="记一次线上回复 503/408 错误代码分析(一)" />
-    <meta property="og:title" content="记一次线上回复 503/408 错误代码分析(一)" />
-    <meta property="twitter:title" content="记一次线上回复 503/408 错误代码分析(一)" />
+    <meta name="title" content="为什么会出现 504，408 错误代码？(一)" />
+    <meta property="og:title" content="为什么会出现 504，408 错误代码？(一)" />
+    <meta property="twitter:title" content="为什么会出现 504，408 错误代码？(一)" />
     
 
     
-    <meta name="description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 503/408 错误代码的分析。">
-    <meta property="og:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 503/408 错误代码的分析。" />
-    <meta property="twitter:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 503/408 错误代码的分析。" />
+    <meta name="description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。">
+    <meta property="og:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。" />
+    <meta property="twitter:description" content="记录一次系统测试人员测试 Server 端断网，微服务应该回复 500 错误代码给请求端，而不是 504，408 错误代码的分析。" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="博客, 个人网站, 互联网, Web, 云原生, Istio, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>记一次线上回复 503/408 错误代码分析(一)-Luffyao 的博客 | Luffyao&#39;s Blog</title>
+    <title>为什么会出现 504，408 错误代码？(一)-Luffyao 的博客 | Luffyao&#39;s Blog</title>
 
     <link rel="canonical" href="/2021/06/online_response_408_504_analysis_1/">
 
@@ -179,7 +179,7 @@
                         </a>
                         
                     </div>
-                    <h1>记一次线上回复 503/408 错误代码分析(一)</h1>
+                    <h1>为什么会出现 504，408 错误代码？(一)</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -192,7 +192,7 @@
                         
                         
                         
-                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 3700 字|阅读大约 8 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
+                        <h5 id="wc" style="font-size: 2rem;text-align: right;">本文共 3800 字|阅读大约 8 分钟|总阅读量<span id="busuanzi_value_page_pv"></span>次</h5>
                         
                     </span>
                 </div>
@@ -250,20 +250,20 @@
                 
 
 <ul>
-<li><p>记一次线上回复 <sup>503</sup>&frasl;<sub>408</sub> 错误代码分析(一)</p></li>
+<li><p>为什么会出现 504，408 错误代码？(一)</p></li>
 
-<li><p><a href="TODO">记一次线上回复 <sup>503</sup>&frasl;<sub>408</sub> 错误代码分析(二)</a></p></li>
+<li><p><a href="TODO">为什么会出现 504，408 错误代码？(二)</a></p></li>
 </ul>
 
 <h2 id="问题描述">问题描述</h2>
 
 <p>这是一个我们系统测试人员对我们的微服务请求的 Server 端做模拟断网的时候，发生的一种异常处理的情况。
-由于不是在 overload 情况下，所以如果微服务请求的 Server 断网，正常处理逻辑，我们的微服务会回复 500 错误代码给微服务的请求端。但是测试人员发现，这种情况下，我们的微服务会出现回复 <sup>504</sup>&frasl;<sub>408</sub> 的错误代码给请求端的异常情况。</p>
+由于不是在 overload 情况下，所以如果微服务请求的 Server 断网，正常处理逻辑，我们的微服务会回复 500 错误代码给微服务的请求端。但是测试人员发现，这种情况下，我们的微服务会出现回复 504，408 的错误代码给请求端的异常情况。</p>
 
 <h2 id="问题分析">问题分析</h2>
 
 <p>我们的测试人员提供了下面可参考信息：
-istio 回复 <sup>408</sup>&frasl;<sub>504</sub> 的具体错误信息 408 downstream duration timeout 和 504 upstream request timeout，以及提供了 ss 命令的监控结果。</p>
+istio 回复 408，504 的具体错误信息 408 downstream duration timeout 和 504 upstream request timeout，以及提供了 ss 命令的监控结果。</p>
 
 <pre><code class="language-shell">Mon May 31 06:20:36 UTC 2021
 tcp    ESTAB      0      5809   192.168.209.20:41914                10.139.17.19:opsmessaging 
@@ -647,7 +647,10 @@ func (sew stickyErrWriter) Write(p []byte) (n int, err error) {
 2021/06/03 17:59:42 start t.connPool().GetClientConn
 </code></pre>
 
-<p>所以分析下来，当Write的不了的时候，就不会释放cc.mu，导致下一条请求拿不到cc.mu锁，从而阻塞了。</p>
+<p>所以分析下来，当Write的不了的时候，就不会释放cc.mu，导致下一条请求拿不到cc.mu锁，从而阻塞了。
+其实在这里，我加了Pprof去分析goroutine的调度栈，也发现了死锁的问题，但是还是加了点log看的更明显一点。</p>
+
+<p>然后发现也有人遇到这个问题:<a href="https://github.com/golang/go/issues/33425">x/net/http2: Blocked Write on single connection causes all future calls to block indefinitely</a>。</p>
 
 <h4 id="番外">番外</h4>
 
